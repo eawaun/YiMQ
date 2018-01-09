@@ -1,0 +1,8 @@
+rootProject.name = 'YiMQ'
+include 'client'
+include 'broker'
+include 'namesrv'
+include 'test'
+include 'common'
+include 'remoting'
+
