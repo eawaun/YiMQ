@@ -13,7 +13,8 @@ subprojects {
 
     dependencies {
         compile (
-            'io.netty:netty-all:4.1.19.Final'
+            'io.netty:netty-all:4.1.19.Final',
+            'com.google.protobuf:protobuf-java:3.3.1'
         )
         testCompile group: 'junit', name: 'junit', version: '4.12'
     }

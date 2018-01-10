@@ -1,0 +1,12 @@
+syntax = "proto2";
+
+package com.yimq.common.protobuf;
+
+option java_package = "com.yimq.common.protocol.route";
+option java_outer_classname = "BrokerDataProto";
+
+message BrokerData {
+    optional string cluster = 1;
+    optional string brokerName = 2;
+    map<int32, string> brokerAddrs = 3;
+}

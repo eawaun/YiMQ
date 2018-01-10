@@ -1,7 +1,6 @@
 package com.yimq.remoting.netty;
 
 import com.yimq.remoting.RemotingClient;
-import com.yimq.remoting.protocol.RemotingCommand;
 import com.yimq.remoting.protocol.RemotingCommandProto;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -14,6 +13,8 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -23,6 +24,8 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     private final EventLoopGroup eventLoopGroup;
     private final NettyClientConfig nettyClientConfig;
     private final DefaultEventExecutorGroup defaultEventExecutorGroup;
+
+    private final ConcurrentMap<String/* addr */, Channel> channelTables = new ConcurrentHashMap<>();
 
     public NettyRemotingClient(final NettyClientConfig nettyClientConfig) {
         this.nettyClientConfig = nettyClientConfig;
@@ -48,7 +51,31 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     }
 
     @Override
-    public RemotingCommand invokeSync(String addr, RemotingCommand request, long timeoutMillis) {
+    public RemotingCommandProto.RemotingCommand invokeSync(String addr
+            , RemotingCommandProto.RemotingCommand request, long timeoutMillis) {
+        final Channel channel = this.getChannel(addr);
+
+        return null;
+    }
+
+    private Channel getChannel(String addr) {
+        if (null == addr) {
+            return this.getNamesrvChannel(addr);
+        }
+
+        Channel channel = this.channelTables.get(addr);
+        if (channel != null && channel.isActive()) {
+            return channel;
+        }
+
+        return this.createChannel(addr);
+    }
+
+    private Channel getNamesrvChannel(String addr) {
+        return null;
+    }
+
+    private Channel createChannel(String addr) {
         return null;
     }
 

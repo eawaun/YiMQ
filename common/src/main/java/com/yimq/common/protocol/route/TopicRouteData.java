@@ -2,6 +2,7 @@ package com.yimq.common.protocol.route;
 
 import java.util.List;
 
+@Deprecated
 public class TopicRouteData {
     private String topic;
     private List<BrokerData> brokerDatas;

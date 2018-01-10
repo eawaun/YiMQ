@@ -1,17 +1,17 @@
 package com.yimq.namesrv.processor;
 
-import com.yimq.common.protocol.ResponseCode;
-import com.yimq.common.protocol.route.TopicRouteData;
-import com.yimq.remoting.netty.NettyRequestProcessor;
-import static com.yimq.remoting.protocol.RemotingCommandProto.*;
-import com.yimq.remoting.protocol.RemotingCommandProto;
-import io.netty.channel.ChannelHandlerContext;
 import com.yimq.common.protocol.RequestCode;
+import com.yimq.remoting.netty.NettyRequestProcessor;
+import io.netty.channel.ChannelHandlerContext;
+import com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand;
+import com.yimq.common.protocol.route.BrokerDataProto.BrokerData;
+import com.yimq.common.protocol.route.TopicRouteDataProto.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import static com.yimq.common.protocol.RequestCode.*;
 
 public class DefaultNettyRequestProcessor implements NettyRequestProcessor {
     @Override
@@ -27,7 +27,20 @@ public class DefaultNettyRequestProcessor implements NettyRequestProcessor {
     private RemotingCommand.Builder getAllTopicRouteFromNamesrv() {
         //todo topic route列表
         Map<String, TopicRouteData> topicRouteDataMap = new HashMap<>();
-        RemotingCommand.Builder responseBuilder = null;
+
+        BrokerData brokerData = BrokerData.newBuilder().setBrokerName("brokerName1")
+            .putBrokerAddrs(1, "127.0.0.1:8899").build();
+        List<BrokerData> brokerDatas = Arrays.asList(brokerData);
+
+        TopicRouteData topicRouteData = TopicRouteData.newBuilder()
+            .setTopic("topic1").addAllBrokerDatas(brokerDatas).build();
+
+        TopicRouteDataMap topicRouteDataMapProto = TopicRouteDataMap.newBuilder()
+            .putTopicRouteDataMap("topic1", topicRouteData).build();
+
+        RemotingCommand.Builder responseBuilder = RemotingCommand.newBuilder()
+            .setBody(topicRouteDataMapProto.toByteString());
+
         return responseBuilder;
     }
 }

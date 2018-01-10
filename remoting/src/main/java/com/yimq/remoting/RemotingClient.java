@@ -1,10 +1,11 @@
 package com.yimq.remoting;
 
-import com.yimq.remoting.protocol.RemotingCommand;
+
+import com.yimq.remoting.protocol.RemotingCommandProto;
 
 public interface RemotingClient extends RemotingService {
 
-    RemotingCommand invokeSync(final String addr, final RemotingCommand request
+    RemotingCommandProto.RemotingCommand invokeSync(final String addr, final RemotingCommandProto.RemotingCommand request
             , final long timeoutMillis);
 
 }
