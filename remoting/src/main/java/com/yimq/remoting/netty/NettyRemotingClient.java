@@ -13,10 +13,13 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class NettyRemotingClient extends NettyRemotingAbstract implements RemotingClient {
 
@@ -26,6 +29,8 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     private final DefaultEventExecutorGroup defaultEventExecutorGroup;
 
     private final ConcurrentMap<String/* addr */, Channel> channelTables = new ConcurrentHashMap<>();
+
+    private final AtomicReference<List<String>> namesrvAddrList = new AtomicReference<>();
 
     public NettyRemotingClient(final NettyClientConfig nettyClientConfig) {
         this.nettyClientConfig = nettyClientConfig;
@@ -56,6 +61,32 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
         final Channel channel = this.getChannel(addr);
 
         return null;
+    }
+
+    @Override
+    public void updateNamesrvAddrList(List<String> addrs) {
+        List<String> old = this.namesrvAddrList.get();
+        boolean updated = false;
+
+        if (!addrs.isEmpty()) {
+            if (null == old) {
+                updated = true;
+            } else if (old.size() != addrs.size()) {
+                updated = true;
+            } else {
+                for (String addr : addrs) {
+                    if (!old.contains(addr)) {
+                        updated = true;
+                        break;
+                    }
+                }
+            }
+
+            if (updated) {
+                Collections.shuffle(addrs);
+                this.namesrvAddrList.set(addrs);
+            }
+        }
     }
 
     private Channel getChannel(String addr) {
