@@ -8,7 +8,7 @@ import java.util.List;
 public interface RemotingClient extends RemotingService {
 
     RemotingCommandProto.RemotingCommand invokeSync(final String addr, final RemotingCommandProto.RemotingCommand request
-            , final long timeoutMillis);
+            , final long timeoutMillis) throws InterruptedException;
 
     void updateNamesrvAddrList(final List<String> addrs);
 

@@ -32,7 +32,7 @@ public class DefaultMQProducer implements MQProducer {
 
     }
 
-    private TopicRouteData findTopicRouteData(String topic) {
+    private TopicRouteData findTopicRouteData(String topic) throws InterruptedException {
         TopicRouteData topicRouteData = topicRouteDataMap.get(topic);
         if (topicRouteData != null) {
             return topicRouteData;
