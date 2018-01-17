@@ -19,11 +19,20 @@ public final class RemotingCommandProto {
       com.google.protobuf.MessageOrBuilder {
 
     /**
+     * <code>required int32 requestId = 1;</code>
+     */
+    boolean hasRequestId();
+    /**
+     * <code>required int32 requestId = 1;</code>
+     */
+    int getRequestId();
+
+    /**
      * <pre>
      * 1:request command 2:response command 
      * </pre>
      *
-     * <code>required int32 type = 1;</code>
+     * <code>required int32 type = 2;</code>
      */
     boolean hasType();
     /**
@@ -31,39 +40,39 @@ public final class RemotingCommandProto {
      * 1:request command 2:response command 
      * </pre>
      *
-     * <code>required int32 type = 1;</code>
+     * <code>required int32 type = 2;</code>
      */
     int getType();
 
     /**
-     * <code>required int32 code = 2;</code>
+     * <code>required int32 code = 3;</code>
      */
     boolean hasCode();
     /**
-     * <code>required int32 code = 2;</code>
+     * <code>required int32 code = 3;</code>
      */
     int getCode();
 
     /**
-     * <code>optional string remark = 3;</code>
+     * <code>optional string remark = 4;</code>
      */
     boolean hasRemark();
     /**
-     * <code>optional string remark = 3;</code>
+     * <code>optional string remark = 4;</code>
      */
     java.lang.String getRemark();
     /**
-     * <code>optional string remark = 3;</code>
+     * <code>optional string remark = 4;</code>
      */
     com.google.protobuf.ByteString
         getRemarkBytes();
 
     /**
-     * <code>optional bytes body = 4;</code>
+     * <code>optional bytes body = 5;</code>
      */
     boolean hasBody();
     /**
-     * <code>optional bytes body = 4;</code>
+     * <code>optional bytes body = 5;</code>
      */
     com.google.protobuf.ByteString getBody();
   }
@@ -80,6 +89,7 @@ public final class RemotingCommandProto {
       super(builder);
     }
     private RemotingCommand() {
+      requestId_ = 0;
       type_ = 0;
       code_ = 0;
       remark_ = "";
@@ -119,22 +129,27 @@ public final class RemotingCommandProto {
             }
             case 8: {
               bitField0_ |= 0x00000001;
-              type_ = input.readInt32();
+              requestId_ = input.readInt32();
               break;
             }
             case 16: {
               bitField0_ |= 0x00000002;
+              type_ = input.readInt32();
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
               code_ = input.readInt32();
               break;
             }
-            case 26: {
+            case 34: {
               com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000004;
+              bitField0_ |= 0x00000008;
               remark_ = bs;
               break;
             }
-            case 34: {
-              bitField0_ |= 0x00000008;
+            case 42: {
+              bitField0_ |= 0x00000010;
               body_ = input.readBytes();
               break;
             }
@@ -163,54 +178,69 @@ public final class RemotingCommandProto {
     }
 
     private int bitField0_;
-    public static final int TYPE_FIELD_NUMBER = 1;
+    public static final int REQUESTID_FIELD_NUMBER = 1;
+    private int requestId_;
+    /**
+     * <code>required int32 requestId = 1;</code>
+     */
+    public boolean hasRequestId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required int32 requestId = 1;</code>
+     */
+    public int getRequestId() {
+      return requestId_;
+    }
+
+    public static final int TYPE_FIELD_NUMBER = 2;
     private int type_;
     /**
      * <pre>
      * 1:request command 2:response command 
      * </pre>
      *
-     * <code>required int32 type = 1;</code>
+     * <code>required int32 type = 2;</code>
      */
     public boolean hasType() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
+      return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
      * <pre>
      * 1:request command 2:response command 
      * </pre>
      *
-     * <code>required int32 type = 1;</code>
+     * <code>required int32 type = 2;</code>
      */
     public int getType() {
       return type_;
     }
 
-    public static final int CODE_FIELD_NUMBER = 2;
+    public static final int CODE_FIELD_NUMBER = 3;
     private int code_;
     /**
-     * <code>required int32 code = 2;</code>
+     * <code>required int32 code = 3;</code>
      */
     public boolean hasCode() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
+      return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>required int32 code = 2;</code>
+     * <code>required int32 code = 3;</code>
      */
     public int getCode() {
       return code_;
     }
 
-    public static final int REMARK_FIELD_NUMBER = 3;
+    public static final int REMARK_FIELD_NUMBER = 4;
     private volatile java.lang.Object remark_;
     /**
-     * <code>optional string remark = 3;</code>
+     * <code>optional string remark = 4;</code>
      */
     public boolean hasRemark() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+      return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>optional string remark = 3;</code>
+     * <code>optional string remark = 4;</code>
      */
     public java.lang.String getRemark() {
       java.lang.Object ref = remark_;
@@ -227,7 +257,7 @@ public final class RemotingCommandProto {
       }
     }
     /**
-     * <code>optional string remark = 3;</code>
+     * <code>optional string remark = 4;</code>
      */
     public com.google.protobuf.ByteString
         getRemarkBytes() {
@@ -243,16 +273,16 @@ public final class RemotingCommandProto {
       }
     }
 
-    public static final int BODY_FIELD_NUMBER = 4;
+    public static final int BODY_FIELD_NUMBER = 5;
     private com.google.protobuf.ByteString body_;
     /**
-     * <code>optional bytes body = 4;</code>
+     * <code>optional bytes body = 5;</code>
      */
     public boolean hasBody() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+      return ((bitField0_ & 0x00000010) == 0x00000010);
     }
     /**
-     * <code>optional bytes body = 4;</code>
+     * <code>optional bytes body = 5;</code>
      */
     public com.google.protobuf.ByteString getBody() {
       return body_;
@@ -264,6 +294,10 @@ public final class RemotingCommandProto {
       if (isInitialized == 1) return true;
       if (isInitialized == 0) return false;
 
+      if (!hasRequestId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
       if (!hasType()) {
         memoizedIsInitialized = 0;
         return false;
@@ -279,16 +313,19 @@ public final class RemotingCommandProto {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeInt32(1, type_);
+        output.writeInt32(1, requestId_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeInt32(2, code_);
+        output.writeInt32(2, type_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, remark_);
+        output.writeInt32(3, code_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeBytes(4, body_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, remark_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeBytes(5, body_);
       }
       unknownFields.writeTo(output);
     }
@@ -300,18 +337,22 @@ public final class RemotingCommandProto {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(1, type_);
+          .computeInt32Size(1, requestId_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(2, code_);
+          .computeInt32Size(2, type_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, remark_);
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(3, code_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, remark_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, body_);
+          .computeBytesSize(5, body_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -329,6 +370,11 @@ public final class RemotingCommandProto {
       com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand other = (com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand) obj;
 
       boolean result = true;
+      result = result && (hasRequestId() == other.hasRequestId());
+      if (hasRequestId()) {
+        result = result && (getRequestId()
+            == other.getRequestId());
+      }
       result = result && (hasType() == other.hasType());
       if (hasType()) {
         result = result && (getType()
@@ -360,6 +406,10 @@ public final class RemotingCommandProto {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasRequestId()) {
+        hash = (37 * hash) + REQUESTID_FIELD_NUMBER;
+        hash = (53 * hash) + getRequestId();
+      }
       if (hasType()) {
         hash = (37 * hash) + TYPE_FIELD_NUMBER;
         hash = (53 * hash) + getType();
@@ -505,14 +555,16 @@ public final class RemotingCommandProto {
       }
       public Builder clear() {
         super.clear();
-        type_ = 0;
+        requestId_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
-        code_ = 0;
+        type_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
-        remark_ = "";
+        code_ = 0;
         bitField0_ = (bitField0_ & ~0x00000004);
-        body_ = com.google.protobuf.ByteString.EMPTY;
+        remark_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
+        body_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -540,17 +592,21 @@ public final class RemotingCommandProto {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.type_ = type_;
+        result.requestId_ = requestId_;
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.code_ = code_;
+        result.type_ = type_;
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        result.remark_ = remark_;
+        result.code_ = code_;
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
+        }
+        result.remark_ = remark_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
         }
         result.body_ = body_;
         result.bitField0_ = to_bitField0_;
@@ -595,6 +651,9 @@ public final class RemotingCommandProto {
 
       public Builder mergeFrom(com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand other) {
         if (other == com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand.getDefaultInstance()) return this;
+        if (other.hasRequestId()) {
+          setRequestId(other.getRequestId());
+        }
         if (other.hasType()) {
           setType(other.getType());
         }
@@ -602,7 +661,7 @@ public final class RemotingCommandProto {
           setCode(other.getCode());
         }
         if (other.hasRemark()) {
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000008;
           remark_ = other.remark_;
           onChanged();
         }
@@ -615,6 +674,9 @@ public final class RemotingCommandProto {
       }
 
       public final boolean isInitialized() {
+        if (!hasRequestId()) {
+          return false;
+        }
         if (!hasType()) {
           return false;
         }
@@ -643,23 +705,55 @@ public final class RemotingCommandProto {
       }
       private int bitField0_;
 
+      private int requestId_ ;
+      /**
+       * <code>required int32 requestId = 1;</code>
+       */
+      public boolean hasRequestId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required int32 requestId = 1;</code>
+       */
+      public int getRequestId() {
+        return requestId_;
+      }
+      /**
+       * <code>required int32 requestId = 1;</code>
+       */
+      public Builder setRequestId(int value) {
+        bitField0_ |= 0x00000001;
+        requestId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required int32 requestId = 1;</code>
+       */
+      public Builder clearRequestId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        requestId_ = 0;
+        onChanged();
+        return this;
+      }
+
       private int type_ ;
       /**
        * <pre>
        * 1:request command 2:response command 
        * </pre>
        *
-       * <code>required int32 type = 1;</code>
+       * <code>required int32 type = 2;</code>
        */
       public boolean hasType() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
+        return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
        * <pre>
        * 1:request command 2:response command 
        * </pre>
        *
-       * <code>required int32 type = 1;</code>
+       * <code>required int32 type = 2;</code>
        */
       public int getType() {
         return type_;
@@ -669,10 +763,10 @@ public final class RemotingCommandProto {
        * 1:request command 2:response command 
        * </pre>
        *
-       * <code>required int32 type = 1;</code>
+       * <code>required int32 type = 2;</code>
        */
       public Builder setType(int value) {
-        bitField0_ |= 0x00000001;
+        bitField0_ |= 0x00000002;
         type_ = value;
         onChanged();
         return this;
@@ -682,10 +776,10 @@ public final class RemotingCommandProto {
        * 1:request command 2:response command 
        * </pre>
        *
-       * <code>required int32 type = 1;</code>
+       * <code>required int32 type = 2;</code>
        */
       public Builder clearType() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ = (bitField0_ & ~0x00000002);
         type_ = 0;
         onChanged();
         return this;
@@ -693,31 +787,31 @@ public final class RemotingCommandProto {
 
       private int code_ ;
       /**
-       * <code>required int32 code = 2;</code>
+       * <code>required int32 code = 3;</code>
        */
       public boolean hasCode() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
+        return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>required int32 code = 2;</code>
+       * <code>required int32 code = 3;</code>
        */
       public int getCode() {
         return code_;
       }
       /**
-       * <code>required int32 code = 2;</code>
+       * <code>required int32 code = 3;</code>
        */
       public Builder setCode(int value) {
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000004;
         code_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>required int32 code = 2;</code>
+       * <code>required int32 code = 3;</code>
        */
       public Builder clearCode() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000004);
         code_ = 0;
         onChanged();
         return this;
@@ -725,13 +819,13 @@ public final class RemotingCommandProto {
 
       private java.lang.Object remark_ = "";
       /**
-       * <code>optional string remark = 3;</code>
+       * <code>optional string remark = 4;</code>
        */
       public boolean hasRemark() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
+        return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>optional string remark = 3;</code>
+       * <code>optional string remark = 4;</code>
        */
       public java.lang.String getRemark() {
         java.lang.Object ref = remark_;
@@ -748,7 +842,7 @@ public final class RemotingCommandProto {
         }
       }
       /**
-       * <code>optional string remark = 3;</code>
+       * <code>optional string remark = 4;</code>
        */
       public com.google.protobuf.ByteString
           getRemarkBytes() {
@@ -764,36 +858,36 @@ public final class RemotingCommandProto {
         }
       }
       /**
-       * <code>optional string remark = 3;</code>
+       * <code>optional string remark = 4;</code>
        */
       public Builder setRemark(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
+  bitField0_ |= 0x00000008;
         remark_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string remark = 3;</code>
+       * <code>optional string remark = 4;</code>
        */
       public Builder clearRemark() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000008);
         remark_ = getDefaultInstance().getRemark();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string remark = 3;</code>
+       * <code>optional string remark = 4;</code>
        */
       public Builder setRemarkBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
+  bitField0_ |= 0x00000008;
         remark_ = value;
         onChanged();
         return this;
@@ -801,34 +895,34 @@ public final class RemotingCommandProto {
 
       private com.google.protobuf.ByteString body_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>optional bytes body = 4;</code>
+       * <code>optional bytes body = 5;</code>
        */
       public boolean hasBody() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
+        return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
-       * <code>optional bytes body = 4;</code>
+       * <code>optional bytes body = 5;</code>
        */
       public com.google.protobuf.ByteString getBody() {
         return body_;
       }
       /**
-       * <code>optional bytes body = 4;</code>
+       * <code>optional bytes body = 5;</code>
        */
       public Builder setBody(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000008;
+  bitField0_ |= 0x00000010;
         body_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional bytes body = 4;</code>
+       * <code>optional bytes body = 5;</code>
        */
       public Builder clearBody() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000010);
         body_ = getDefaultInstance().getBody();
         onChanged();
         return this;
@@ -897,10 +991,11 @@ public final class RemotingCommandProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\"src/protobuf/RemotingCommand.proto\022\032co" +
-      "m.yimq.remoting.protobuf\"K\n\017RemotingComm" +
-      "and\022\014\n\004type\030\001 \002(\005\022\014\n\004code\030\002 \002(\005\022\016\n\006remar" +
-      "k\030\003 \001(\t\022\014\n\004body\030\004 \001(\014B2\n\032com.yimq.remoti" +
-      "ng.protocolB\024RemotingCommandProto"
+      "m.yimq.remoting.protobuf\"^\n\017RemotingComm" +
+      "and\022\021\n\trequestId\030\001 \002(\005\022\014\n\004type\030\002 \002(\005\022\014\n\004" +
+      "code\030\003 \002(\005\022\016\n\006remark\030\004 \001(\t\022\014\n\004body\030\005 \001(\014" +
+      "B2\n\032com.yimq.remoting.protocolB\024Remoting" +
+      "CommandProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -919,7 +1014,7 @@ public final class RemotingCommandProto {
     internal_static_com_yimq_remoting_protobuf_RemotingCommand_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_yimq_remoting_protobuf_RemotingCommand_descriptor,
-        new java.lang.String[] { "Type", "Code", "Remark", "Body", });
+        new java.lang.String[] { "RequestId", "Type", "Code", "Remark", "Body", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

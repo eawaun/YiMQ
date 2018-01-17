@@ -2,7 +2,10 @@ package com.yimq.remoting.netty;
 
 import com.yimq.remoting.RemotingClient;
 import com.yimq.remoting.common.RemotingUtil;
-import com.yimq.remoting.protocol.RemotingCommandProto;
+import com.yimq.remoting.exception.RemotingConnectException;
+import com.yimq.remoting.exception.RemotingSendRequestException;
+import com.yimq.remoting.exception.RemotingTimeoutException;
+import com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -13,6 +16,8 @@ import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +32,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class NettyRemotingClient extends NettyRemotingAbstract implements RemotingClient {
+    private final static Logger logger = LoggerFactory.getLogger(NettyRemotingClient.class);
 
     private final static long LOCK_TIMEOUT_MILLIS = 3000;
 
@@ -66,12 +72,26 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
 
     }
 
-    @Override
-    public RemotingCommandProto.RemotingCommand invokeSync(String addr
-            , RemotingCommandProto.RemotingCommand request, long timeoutMillis) throws InterruptedException {
-        final Channel channel = this.getChannel(addr);
+    public void closeChannel(final String addr, final Channel channel) {
 
-        return null;
+    }
+
+    @Override
+    public RemotingCommand invokeSync(String addr
+            , RemotingCommand request, long timeoutMillis) throws InterruptedException, RemotingConnectException {
+        final Channel channel = this.getChannel(addr);
+        if (channel != null && channel.isActive()) {
+            RemotingCommand response = null;
+            try {
+                response = this.invokeSyncImpl(channel, request, timeoutMillis);
+                return response;
+            } catch (RemotingTimeoutException | RemotingSendRequestException e) {
+                logger.warn("invokeSync: {}, so close the channel", e.getMessage());
+                this.closeChannel(addr, channel);
+            }
+        }
+        this.closeChannel(addr, channel);
+        throw new RemotingConnectException(addr);
     }
 
     @Override
@@ -154,12 +174,12 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("getNamesrvChannel: create name server channel exception", e);
             } finally {
                 this.lockNamesrvChannel.unlock();
             }
         } else {
-
+            logger.warn("getNamesrvChannel: try to lock name server channel, but timeout, {}ms", LOCK_TIMEOUT_MILLIS);
         }
         return null;
     }
@@ -192,28 +212,32 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
 
                 if (createNewChannel) {
                     ChannelFuture channelFuture = this.bootstrap.connect(RemotingUtil.string2SocketAddress(addr));
-                    //create channel
+                    logger.info("createChannel: begin to connect remote host[{}] asynchronously", addr);
                     cw = new ChannelWrapper(channelFuture);
                     this.channelTables.putIfAbsent(addr, cw);
                 }
+            } catch (Exception e) {
+                logger.error("createChannel: create channel exception", e);
             } finally {
                 this.lockChannelTables.unlock();
             }
         } else {
-            //timeout
+            logger.warn("createChannel: try to lock channel table, but timeout, {}ms", LOCK_TIMEOUT_MILLIS);
         }
 
         if (cw != null) {
             ChannelFuture channelFuture = cw.getChannelFuture();
             if (channelFuture.awaitUninterruptibly(this.nettyClientConfig.getConnectTimeoutMillis())) {
                 if (cw.isActive()) {
-                    //success
+                    logger.info("createChannel: connect remote host[{}] successfully, {}", addr, channelFuture.toString());
                     return cw.getChannel();
                 } else {
-                    //fail
+                    logger.warn("createChannel: connect remote host[{}] fail, {}", addr, channelFuture.toString(),
+                        channelFuture.cause());
                 }
             } else {
-                //time out
+                logger.warn("createChannel: connect remote host[{}] but timeout[{}ms], {}", addr,
+                    this.nettyClientConfig.getConnectTimeoutMillis(), channelFuture.toString());
             }
         }
 
@@ -231,7 +255,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
                     pipeline.addLast(
                         defaultEventExecutorGroup,
                         new ProtobufVarint32FrameDecoder(),
-                        new ProtobufDecoder(RemotingCommandProto.RemotingCommand.getDefaultInstance()),
+                        new ProtobufDecoder(RemotingCommand.getDefaultInstance()),
                         new ProtobufVarint32LengthFieldPrepender(),
                         new ProtobufEncoder(),
                         new NettyClientHandler()
@@ -245,10 +269,10 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
 
     }
 
-    class NettyClientHandler extends SimpleChannelInboundHandler<RemotingCommandProto.RemotingCommand> {
+    class NettyClientHandler extends SimpleChannelInboundHandler<RemotingCommand> {
 
         @Override
-        protected void channelRead0(ChannelHandlerContext ctx, RemotingCommandProto.RemotingCommand cmd) throws Exception {
+        protected void channelRead0(ChannelHandlerContext ctx, RemotingCommand cmd) throws Exception {
             processMessageReceived(ctx, cmd);
         }
     }

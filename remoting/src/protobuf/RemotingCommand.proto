@@ -6,8 +6,9 @@ option java_package = "com.yimq.remoting.protocol";
 option java_outer_classname = "RemotingCommandProto";
 
 message RemotingCommand {
-    required int32 type = 1; /* 1:request command 2:response command */
-    required int32 code = 2;
-    optional string remark = 3;
-    optional bytes body = 4;
+    required int32 requestId = 1;
+    required int32 type = 2; /* 1:request command 2:response command */
+    required int32 code = 3;
+    optional string remark = 4;
+    optional bytes body = 5;
 }
