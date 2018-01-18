@@ -81,27 +81,30 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
 
         try {
             if (this.lockChannelTables.tryLock(LOCK_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)) {
-                boolean removeChannelFromTable = true;
-                final ChannelWrapper prevCW = this.channelTables.get(addrRemote);
+                try {
+                    boolean removeChannelFromTable = true;
+                    final ChannelWrapper prevCW = this.channelTables.get(addrRemote);
 
-                if (null == prevCW) {
-                    logger.info("closeChannel: the channel[{}] has been removed from the channel table before", addrRemote);
-                    removeChannelFromTable = false;
-                } else if (prevCW.getChannel() != channel) {
-                    logger.info("closeChannel: the channel[{}] has been closed before, and has been created again"
-                        , addrRemote);
-                    removeChannelFromTable = false;
+                    if (null == prevCW) {
+                        logger.info("closeChannel: the channel[{}] has been removed from the channel table before", addrRemote);
+                        removeChannelFromTable = false;
+                    } else if (prevCW.getChannel() != channel) {
+                        logger.info("closeChannel: the channel[{}] has been closed before, and has been created again"
+                            , addrRemote);
+                        removeChannelFromTable = false;
+                    }
+
+                    if (removeChannelFromTable) {
+                        this.channelTables.remove(addrRemote);
+                        logger.info("closeChannel: the channel[{}] was removed from channel table", addrRemote);
+                    }
+
+                    channel.close().addListener((ChannelFutureListener) future -> {
+                        logger.info("closeChannel: close the channel[{}], result: {}", addrRemote, future.isSuccess());
+                    });
+                } finally {
+                    this.lockChannelTables.unlock();
                 }
-
-                if (removeChannelFromTable) {
-                    this.channelTables.remove(addrRemote);
-                    logger.info("closeChannel: the channel[{}] was removed from channel table", addrRemote);
-                }
-
-                channel.close().addListener((ChannelFutureListener) future -> {
-                    logger.info("closeChannel: close the channel[{}], result: {}", addrRemote, future.isSuccess());
-                });
-
             }
         } catch (InterruptedException e) {
             logger.error("closeChannel: exception", e);
