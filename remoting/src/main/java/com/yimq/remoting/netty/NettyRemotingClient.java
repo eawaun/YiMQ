@@ -116,7 +116,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
             , RemotingCommand request, long timeoutMillis) throws InterruptedException, RemotingConnectException {
         final Channel channel = this.getChannel(addr);
         if (channel != null && channel.isActive()) {
-            RemotingCommand response = null;
+            RemotingCommand response;
             try {
                 response = this.invokeSyncImpl(channel, request, timeoutMillis);
                 return response;
@@ -222,11 +222,6 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     }
 
     private Channel createChannel(String addr) throws InterruptedException {
-//        ChannelWrapper cw = this.channelTables.get(addr);
-//        if (cw != null && cw.isActive()) {
-//            cw.getChannel().close();
-//            this.channelTables.remove(addr);
-//        }
         ChannelWrapper cw = null;
 
         if (this.lockChannelTables.tryLock(LOCK_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)) {

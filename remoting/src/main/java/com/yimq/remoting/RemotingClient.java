@@ -13,5 +13,4 @@ public interface RemotingClient extends RemotingService {
 
     void updateNamesrvAddrList(final List<String> addrs);
 
-
 }

@@ -8,8 +8,8 @@ import com.yimq.remoting.common.RemotingUtil;
 import com.yimq.remoting.exception.RemotingConnectException;
 import com.yimq.remoting.netty.NettyClientConfig;
 import com.yimq.remoting.netty.NettyRemotingClient;
+import com.yimq.remoting.protocol.RemotingCommandBuilder;
 import com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand;
-import com.yimq.remoting.protocol.RemotingCommandUtil;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,8 +41,7 @@ public class DefaultMQProducer implements MQProducer {
             return topicRouteData;
         }
         //查询namesrv是否有该topic的路由信息
-        RemotingCommand request = RemotingCommand.newBuilder()
-            .setRequestId(RemotingCommandUtil.requestIdGenerator.getAndIncrement())
+        RemotingCommand request = RemotingCommandBuilder.newBuilder()
             .setCode(GET_ALL_TOPIC_ROUTE_FROM_NAMESRV).build();
         RemotingCommand response =
             this.remotingClient.invokeSync(null, request, 3 * 1000);
