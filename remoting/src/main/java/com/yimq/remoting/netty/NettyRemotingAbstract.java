@@ -1,6 +1,7 @@
 package com.yimq.remoting.netty;
 
 import com.yimq.remoting.common.Pair;
+import com.yimq.remoting.common.RemotingUtil;
 import com.yimq.remoting.exception.RemotingSendRequestException;
 import com.yimq.remoting.exception.RemotingTimeoutException;
 import io.netty.channel.Channel;
@@ -61,6 +62,26 @@ public abstract class NettyRemotingAbstract {
     }
 
     private void processResponseCommand(ChannelHandlerContext ctx, RemotingCommand cmd) {
+        final int requestId = cmd.getRequestId();
+        final ResponseFuture responseFuture = responseTable.get(requestId);
+        if (responseFuture != null) {
+            responseTable.remove(requestId);
+
+            if (null != responseFuture.getInvokeCallback()) {
+                executeInvokeCallback(responseFuture);
+            } else {
+                responseFuture.putResponse(cmd);
+            }
+
+
+        } else {
+            logger.warn("processResponseCommand:receive response, but not match any request, addr[{}], remotingCommand[{}]",
+                RemotingUtil.channel2Addr(ctx.channel()), cmd.toString());
+        }
+
+    }
+
+    private void executeInvokeCallback(final ResponseFuture responseFuture) {
 
     }
 

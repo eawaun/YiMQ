@@ -1,13 +1,17 @@
 package com.yimq.remoting.netty;
 
+import com.yimq.remoting.InvokeCallback;
 import com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ResponseFuture {
     private final int requestId;
     private final long timeoutMillis;
+    private InvokeCallback invokeCallback;
+    private AtomicBoolean executeCallbackOnlyOnce = new AtomicBoolean(false);
 
     private final CountDownLatch countDownLatch = new CountDownLatch(1);
 
@@ -18,6 +22,20 @@ public class ResponseFuture {
     public ResponseFuture(int requestId, long timeoutMillis) {
         this.requestId = requestId;
         this.timeoutMillis = timeoutMillis;
+    }
+
+    public ResponseFuture(int requestId, long timeoutMillis, InvokeCallback invokeCallback) {
+        this.requestId = requestId;
+        this.timeoutMillis = timeoutMillis;
+        this.invokeCallback = invokeCallback;
+    }
+
+    public void executeInvokeCallback() {
+        if (invokeCallback != null) {
+            if (this.executeCallbackOnlyOnce.compareAndSet(false, true)) {
+                invokeCallback.operationComplete(this);
+            }
+        }
     }
 
     public RemotingCommand waitResponse(final long timeoutMillis) throws InterruptedException {
@@ -52,5 +70,17 @@ public class ResponseFuture {
 
     public void setCause(Throwable cause) {
         this.cause = cause;
+    }
+
+    public RemotingCommand getResponseCommand() {
+        return responseCommand;
+    }
+
+    public void setResponseCommand(RemotingCommand responseCommand) {
+        this.responseCommand = responseCommand;
+    }
+
+    public InvokeCallback getInvokeCallback() {
+        return invokeCallback;
     }
 }
