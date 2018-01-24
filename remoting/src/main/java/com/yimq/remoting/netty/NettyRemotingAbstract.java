@@ -65,23 +65,26 @@ public abstract class NettyRemotingAbstract {
         final int requestId = cmd.getRequestId();
         final ResponseFuture responseFuture = responseTable.get(requestId);
         if (responseFuture != null) {
+            responseFuture.setResponseCommand(cmd);
+
             responseTable.remove(requestId);
 
-            if (null != responseFuture.getInvokeCallback()) {
-                executeInvokeCallback(responseFuture);
+            if (responseFuture.getInvokeCallback() != null) {
+                try {
+                    responseFuture.executeInvokeCallback(); //run in this thread
+                } catch (Exception e) {
+                    logger.warn("processResponseCommand: execute invoke callback exception", e);
+                } finally {
+                    responseFuture.semaphoreRelease();
+                }
             } else {
-                responseFuture.putResponse(cmd);
+                responseFuture.responseLatchCountDown();
+                responseFuture.semaphoreRelease();
             }
-
-
         } else {
-            logger.warn("processResponseCommand:receive response, but not match any request, addr[{}], remotingCommand[{}]",
+            logger.warn("processResponseCommand: receive response, but not match any request, addr[{}], remotingCommand[{}]",
                 RemotingUtil.channel2Addr(ctx.channel()), cmd.toString());
         }
-
-    }
-
-    private void executeInvokeCallback(final ResponseFuture responseFuture) {
 
     }
 
@@ -100,7 +103,8 @@ public abstract class NettyRemotingAbstract {
                     responseFuture.setSendRequestOK(false);
                     responseTable.remove(requestId);
                     responseFuture.setCause(future.cause());
-                    responseFuture.putResponse(null);
+                    responseFuture.setResponseCommand(null);
+                    responseFuture.responseLatchCountDown();
                     logger.warn("invokeSyncImpl: send a request command to channel[{}] failed", socketAddress);
                 }
             });

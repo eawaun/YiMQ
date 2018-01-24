@@ -1,6 +1,7 @@
 package com.yimq.remoting.netty;
 
 import com.yimq.remoting.InvokeCallback;
+import com.yimq.remoting.SemaphoreReleaseOnlyOnce;
 import com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand;
 
 import java.util.concurrent.CountDownLatch;
@@ -13,21 +14,31 @@ public class ResponseFuture {
     private InvokeCallback invokeCallback;
     private AtomicBoolean executeCallbackOnlyOnce = new AtomicBoolean(false);
 
-    private final CountDownLatch countDownLatch = new CountDownLatch(1);
+    private final CountDownLatch waitResponseLatch = new CountDownLatch(1);
+
+    private SemaphoreReleaseOnlyOnce semaphoreReleaseOnlyOnce;
 
     private volatile RemotingCommand responseCommand;
     private volatile boolean sendRequestOK = true;
     private volatile Throwable cause;
 
+    /**
+     * for sync request
+     */
     public ResponseFuture(int requestId, long timeoutMillis) {
         this.requestId = requestId;
         this.timeoutMillis = timeoutMillis;
     }
 
-    public ResponseFuture(int requestId, long timeoutMillis, InvokeCallback invokeCallback) {
+    /**
+     * for async request
+     */
+    public ResponseFuture(int requestId, long timeoutMillis, InvokeCallback invokeCallback,
+        SemaphoreReleaseOnlyOnce semaphoreReleaseOnlyOnce) {
         this.requestId = requestId;
         this.timeoutMillis = timeoutMillis;
         this.invokeCallback = invokeCallback;
+        this.semaphoreReleaseOnlyOnce = semaphoreReleaseOnlyOnce;
     }
 
     public void executeInvokeCallback() {
@@ -38,14 +49,22 @@ public class ResponseFuture {
         }
     }
 
+    public void semaphoreRelease() {
+        if (this.semaphoreReleaseOnlyOnce != null) {
+            this.semaphoreReleaseOnlyOnce.release();
+        }
+    }
+
     public RemotingCommand waitResponse(final long timeoutMillis) throws InterruptedException {
-        this.countDownLatch.await(timeoutMillis, TimeUnit.MILLISECONDS);
+        this.waitResponseLatch.await(timeoutMillis, TimeUnit.MILLISECONDS);
         return this.responseCommand;
     }
 
-    public void putResponse(final RemotingCommand responseCommand) {
-        this.responseCommand = responseCommand;
-        this.countDownLatch.countDown();
+    /**
+     * wait response for a sync request rather than a async request
+     */
+    public void responseLatchCountDown() {
+        this.waitResponseLatch.countDown();
     }
 
     public boolean isSendRequestOK() {
