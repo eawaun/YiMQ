@@ -2,6 +2,7 @@ package com.yimq.remoting.netty;
 
 import com.yimq.remoting.RemotingClient;
 import com.yimq.remoting.common.RemotingUtil;
+import com.yimq.remoting.common.ThreadFactoryImpl;
 import com.yimq.remoting.exception.RemotingConnectException;
 import com.yimq.remoting.exception.RemotingSendRequestException;
 import com.yimq.remoting.exception.RemotingTimeoutException;
@@ -52,24 +53,10 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     public NettyRemotingClient(final NettyClientConfig nettyClientConfig) {
         this.nettyClientConfig = nettyClientConfig;
 
-        this.eventLoopGroup = new NioEventLoopGroup(1, new ThreadFactory() {
-            private AtomicInteger threadIndex = new AtomicInteger(1);
-
-            @Override
-            public Thread newThread(Runnable r) {
-                return new Thread(r, String.format("NettyClientChooser_%d", this.threadIndex.getAndIncrement()));
-            }
-        });
+        this.eventLoopGroup = new NioEventLoopGroup(1, new ThreadFactoryImpl("NettyClientChooser_"));
 
         this.defaultEventExecutorGroup = new DefaultEventExecutorGroup(this.nettyClientConfig.getWorkerThreads(),
-            new ThreadFactory() {
-                private AtomicInteger threadIndex = new AtomicInteger(1);
-                @Override
-                public Thread newThread(Runnable r) {
-                    return new Thread(r, String.format("NettyClientWorkerThread_%d", this.threadIndex.getAndIncrement()));
-                }
-            });
-
+            new ThreadFactoryImpl("NettyClientWorkerThread_"));
     }
 
     public void closeChannel(final String addr, final Channel channel) {
@@ -133,6 +120,10 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
 
     @Override
     public void updateNamesrvAddrList(List<String> addrs) {
+        if (addrs == null || addrs.isEmpty()) {
+            return;
+        }
+
         List<String> old = this.namesrvAddrList.get();
         boolean updated = false;
 

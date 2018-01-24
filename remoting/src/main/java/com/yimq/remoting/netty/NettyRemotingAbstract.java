@@ -4,6 +4,7 @@ import com.yimq.remoting.common.Pair;
 import com.yimq.remoting.common.RemotingUtil;
 import com.yimq.remoting.exception.RemotingSendRequestException;
 import com.yimq.remoting.exception.RemotingTimeoutException;
+import com.yimq.remoting.protocol.RemotingCommandBuilder;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -46,14 +47,12 @@ public abstract class NettyRemotingAbstract {
     private void processRequestCommand(ChannelHandlerContext ctx, RemotingCommand cmd) {
 
         Runnable run = () -> {
-            RemotingCommand.Builder responseBuilder = defaultRequestProcessor.getObj1().process(ctx, cmd);
-            if (responseBuilder != null) {
-                responseBuilder.setType(RESPONSE_COMMAND);
-                RemotingCommand response = responseBuilder.build();
+            RemotingCommand response = defaultRequestProcessor.getObj1().process(ctx, cmd);
+            if (response != null) {
                 ctx.writeAndFlush(response);
             } else {
                 String error = "request code " + cmd.getCode() + " not supported";
-                RemotingCommand response = RemotingCommand.newBuilder().setType(RESPONSE_COMMAND)
+                response = RemotingCommandBuilder.newRequestBuilder()
                     .setCode(REQUEST_CODE_NOT_SUPPORTED).setRemark(error).build();
                 ctx.writeAndFlush(response);
             }

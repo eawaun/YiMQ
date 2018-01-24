@@ -2,6 +2,7 @@ package com.yimq.namesrv.processor;
 
 import com.yimq.common.protocol.RequestCode;
 import com.yimq.remoting.netty.NettyRequestProcessor;
+import com.yimq.remoting.protocol.RemotingCommandBuilder;
 import io.netty.channel.ChannelHandlerContext;
 import com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand;
 import com.yimq.common.protocol.route.BrokerDataProto.BrokerData;
@@ -15,7 +16,7 @@ import java.util.Map;
 
 public class DefaultNettyRequestProcessor implements NettyRequestProcessor {
     @Override
-    public RemotingCommand.Builder process(ChannelHandlerContext ctx, RemotingCommand request) {
+    public RemotingCommand process(ChannelHandlerContext ctx, RemotingCommand request) {
         switch (request.getCode()) {
             case RequestCode.GET_ALL_TOPIC_ROUTE_FROM_NAMESRV:
                 return this.getAllTopicRouteFromNamesrv();
@@ -24,13 +25,16 @@ public class DefaultNettyRequestProcessor implements NettyRequestProcessor {
         return null;
     }
 
-    private RemotingCommand.Builder getAllTopicRouteFromNamesrv() {
+    private RemotingCommand getAllTopicRouteFromNamesrv() {
         //todo topic route列表
         Map<String, TopicRouteData> topicRouteDataMap = new HashMap<>();
 
         BrokerData brokerData = BrokerData.newBuilder().setBrokerName("brokerName1")
-            .putBrokerAddrs(1, "127.0.0.1:8899").build();
-        List<BrokerData> brokerDatas = Arrays.asList(brokerData);
+            .putBrokerAddrs(1, "127.0.0.1:8881").build();
+        BrokerData brokerData2 = BrokerData.newBuilder().setBrokerName("brokerName2")
+            .putBrokerAddrs(1, "127.0.0.1:8882").build();
+
+        List<BrokerData> brokerDatas = Arrays.asList(brokerData, brokerData2);
 
         TopicRouteData topicRouteData = TopicRouteData.newBuilder()
             .setTopic("topic1").addAllBrokerDatas(brokerDatas).build();
@@ -38,9 +42,9 @@ public class DefaultNettyRequestProcessor implements NettyRequestProcessor {
         TopicRouteDataMap topicRouteDataMapProto = TopicRouteDataMap.newBuilder()
             .putTopicRouteDataMap("topic1", topicRouteData).build();
 
-        RemotingCommand.Builder responseBuilder = RemotingCommand.newBuilder()
-            .setBody(topicRouteDataMapProto.toByteString());
+        RemotingCommand response = RemotingCommandBuilder.newRequestBuilder()
+            .setBody(topicRouteDataMapProto.toByteString()).build();
 
-        return responseBuilder;
+        return response;
     }
 }

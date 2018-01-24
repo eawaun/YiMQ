@@ -4,6 +4,11 @@ public class Message {
     private String topic;
     private byte[] body;
 
+    public Message(String topic, byte[] body) {
+        this.topic = topic;
+        this.body = body;
+    }
+
     public String getTopic() {
         return topic;
     }

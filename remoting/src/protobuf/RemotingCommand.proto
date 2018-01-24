@@ -8,7 +8,7 @@ option java_outer_classname = "RemotingCommandProto";
 message RemotingCommand {
     required int32 requestId = 1;
     required int32 type = 2; /* 1:request command 2:response command */
-    required int32 code = 3;
+    optional int32 code = 3;
     optional string remark = 4;
     optional bytes body = 5;
 }

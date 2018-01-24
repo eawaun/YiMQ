@@ -1,6 +1,7 @@
 package com.yimq.remoting.netty;
 
 import com.yimq.remoting.RemotingServer;
+import com.yimq.remoting.common.Pair;
 import com.yimq.remoting.protocol.RemotingCommandProto;
 import com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand;
 import io.netty.bootstrap.ServerBootstrap;
@@ -12,10 +13,12 @@ import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
+import io.netty.handler.logging.LoggingHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -58,6 +61,7 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
         this.serverBootstrap.group(this.bossGroup, this.workerGroup)
             .channel(NioServerSocketChannel.class)
             .localAddress(new InetSocketAddress(this.nettyServerConfig.getListenPort()))
+            .handler(new LoggingHandler())
             .childHandler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
@@ -83,6 +87,11 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
     @Override
     public void shutdown() {
 
+    }
+
+    @Override
+    public void registerDefaultProcessor(NettyRequestProcessor processor, ExecutorService executorService) {
+        this.defaultRequestProcessor = new Pair<>(processor, executorService);
     }
 
     class NettyServerHandler extends SimpleChannelInboundHandler<RemotingCommand> {

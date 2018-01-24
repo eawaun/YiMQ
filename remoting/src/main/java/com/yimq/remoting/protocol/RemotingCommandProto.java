@@ -45,11 +45,11 @@ public final class RemotingCommandProto {
     int getType();
 
     /**
-     * <code>required int32 code = 3;</code>
+     * <code>optional int32 code = 3;</code>
      */
     boolean hasCode();
     /**
-     * <code>required int32 code = 3;</code>
+     * <code>optional int32 code = 3;</code>
      */
     int getCode();
 
@@ -219,13 +219,13 @@ public final class RemotingCommandProto {
     public static final int CODE_FIELD_NUMBER = 3;
     private int code_;
     /**
-     * <code>required int32 code = 3;</code>
+     * <code>optional int32 code = 3;</code>
      */
     public boolean hasCode() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>required int32 code = 3;</code>
+     * <code>optional int32 code = 3;</code>
      */
     public int getCode() {
       return code_;
@@ -299,10 +299,6 @@ public final class RemotingCommandProto {
         return false;
       }
       if (!hasType()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasCode()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -680,9 +676,6 @@ public final class RemotingCommandProto {
         if (!hasType()) {
           return false;
         }
-        if (!hasCode()) {
-          return false;
-        }
         return true;
       }
 
@@ -787,19 +780,19 @@ public final class RemotingCommandProto {
 
       private int code_ ;
       /**
-       * <code>required int32 code = 3;</code>
+       * <code>optional int32 code = 3;</code>
        */
       public boolean hasCode() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>required int32 code = 3;</code>
+       * <code>optional int32 code = 3;</code>
        */
       public int getCode() {
         return code_;
       }
       /**
-       * <code>required int32 code = 3;</code>
+       * <code>optional int32 code = 3;</code>
        */
       public Builder setCode(int value) {
         bitField0_ |= 0x00000004;
@@ -808,7 +801,7 @@ public final class RemotingCommandProto {
         return this;
       }
       /**
-       * <code>required int32 code = 3;</code>
+       * <code>optional int32 code = 3;</code>
        */
       public Builder clearCode() {
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -993,7 +986,7 @@ public final class RemotingCommandProto {
       "\n\"src/protobuf/RemotingCommand.proto\022\032co" +
       "m.yimq.remoting.protobuf\"^\n\017RemotingComm" +
       "and\022\021\n\trequestId\030\001 \002(\005\022\014\n\004type\030\002 \002(\005\022\014\n\004" +
-      "code\030\003 \002(\005\022\016\n\006remark\030\004 \001(\t\022\014\n\004body\030\005 \001(\014" +
+      "code\030\003 \001(\005\022\016\n\006remark\030\004 \001(\t\022\014\n\004body\030\005 \001(\014" +
       "B2\n\032com.yimq.remoting.protocolB\024Remoting" +
       "CommandProto"
     };
