@@ -44,14 +44,14 @@ public abstract class NettyRemotingAbstract {
         }
     }
 
-    private void processRequestCommand(ChannelHandlerContext ctx, RemotingCommand cmd) {
+    private void processRequestCommand(ChannelHandlerContext ctx, RemotingCommand request) {
 
         Runnable run = () -> {
-            RemotingCommand response = defaultRequestProcessor.getObj1().process(ctx, cmd);
+            RemotingCommand response = defaultRequestProcessor.getObj1().process(ctx, request);
             if (response != null) {
                 ctx.writeAndFlush(response);
             } else {
-                String error = "request code " + cmd.getCode() + " not supported";
+                String error = "request code " + request.getCode() + " not supported";
                 response = RemotingCommandBuilder.newRequestBuilder()
                     .setCode(REQUEST_CODE_NOT_SUPPORTED).setRemark(error).build();
                 ctx.writeAndFlush(response);
@@ -60,11 +60,11 @@ public abstract class NettyRemotingAbstract {
         this.defaultRequestProcessor.getObj2().submit(run);
     }
 
-    private void processResponseCommand(ChannelHandlerContext ctx, RemotingCommand cmd) {
-        final int requestId = cmd.getRequestId();
+    private void processResponseCommand(ChannelHandlerContext ctx, RemotingCommand response) {
+        final int requestId = response.getRequestId();
         final ResponseFuture responseFuture = responseTable.get(requestId);
         if (responseFuture != null) {
-            responseFuture.setResponseCommand(cmd);
+            responseFuture.setResponseCommand(response);
 
             responseTable.remove(requestId);
 
@@ -82,7 +82,7 @@ public abstract class NettyRemotingAbstract {
             }
         } else {
             logger.warn("processResponseCommand: receive response, but not match any request, addr[{}], remotingCommand[{}]",
-                RemotingUtil.channel2Addr(ctx.channel()), cmd.toString());
+                RemotingUtil.channel2Addr(ctx.channel()), response.toString());
         }
 
     }

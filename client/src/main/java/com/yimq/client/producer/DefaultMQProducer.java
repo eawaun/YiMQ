@@ -54,7 +54,7 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
             return topicRouteData;
         }
         //查询namesrv是否有该topic的路由信息
-        RemotingCommand request = RemotingCommandBuilder.newResponseBuilder()
+        RemotingCommand request = RemotingCommandBuilder.newRequestBuilder()
             .setCode(GET_ALL_TOPIC_ROUTE_FROM_NAMESRV).build();
         RemotingCommand response =
             this.remotingClient.invokeSync(null, request, 3 * 1000);

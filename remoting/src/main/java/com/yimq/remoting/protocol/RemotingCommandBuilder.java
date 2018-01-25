@@ -13,8 +13,8 @@ public class RemotingCommandBuilder {
             setRequestId(requestIdGenerator.getAndIncrement());
     }
 
-    public static RemotingCommand.Builder newResponseBuilder() {
+    public static RemotingCommand.Builder newResponseBuilder(RemotingCommand request) {
         return RemotingCommand.newBuilder().setType(RemotingCommandType.RESPONSE_COMMAND).
-            setRequestId(requestIdGenerator.getAndIncrement());
+            setRequestId(request.getRequestId());
     }
 }

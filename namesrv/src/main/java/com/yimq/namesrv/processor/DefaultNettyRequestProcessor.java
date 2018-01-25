@@ -19,13 +19,13 @@ public class DefaultNettyRequestProcessor implements NettyRequestProcessor {
     public RemotingCommand process(ChannelHandlerContext ctx, RemotingCommand request) {
         switch (request.getCode()) {
             case RequestCode.GET_ALL_TOPIC_ROUTE_FROM_NAMESRV:
-                return this.getAllTopicRouteFromNamesrv();
+                return this.getAllTopicRouteFromNamesrv(ctx, request);
         }
 
         return null;
     }
 
-    private RemotingCommand getAllTopicRouteFromNamesrv() {
+    private RemotingCommand getAllTopicRouteFromNamesrv(ChannelHandlerContext ctx, RemotingCommand request) {
         //todo topic route列表
         Map<String, TopicRouteData> topicRouteDataMap = new HashMap<>();
 
@@ -37,12 +37,12 @@ public class DefaultNettyRequestProcessor implements NettyRequestProcessor {
         List<BrokerData> brokerDatas = Arrays.asList(brokerData, brokerData2);
 
         TopicRouteData topicRouteData = TopicRouteData.newBuilder()
-            .setTopic("topic1").addAllBrokerDatas(brokerDatas).build();
+            .setTopic("TopicTest1").addAllBrokerDatas(brokerDatas).build();
 
         TopicRouteDataMap topicRouteDataMapProto = TopicRouteDataMap.newBuilder()
-            .putTopicRouteDataMap("topic1", topicRouteData).build();
+            .putTopicRouteDataMap("TopicTest1", topicRouteData).build();
 
-        RemotingCommand response = RemotingCommandBuilder.newRequestBuilder()
+        RemotingCommand response = RemotingCommandBuilder.newResponseBuilder(request)
             .setBody(topicRouteDataMapProto.toByteString()).build();
 
         return response;
