@@ -68,11 +68,28 @@ public final class RemotingCommandProto {
         getRemarkBytes();
 
     /**
-     * <code>optional bytes body = 5;</code>
+     * <pre>
+     * business request or response parameter 
+     * </pre>
+     *
+     * <code>optional bytes customHeader = 5;</code>
+     */
+    boolean hasCustomHeader();
+    /**
+     * <pre>
+     * business request or response parameter 
+     * </pre>
+     *
+     * <code>optional bytes customHeader = 5;</code>
+     */
+    com.google.protobuf.ByteString getCustomHeader();
+
+    /**
+     * <code>optional bytes body = 6;</code>
      */
     boolean hasBody();
     /**
-     * <code>optional bytes body = 5;</code>
+     * <code>optional bytes body = 6;</code>
      */
     com.google.protobuf.ByteString getBody();
   }
@@ -93,6 +110,7 @@ public final class RemotingCommandProto {
       type_ = 0;
       code_ = 0;
       remark_ = "";
+      customHeader_ = com.google.protobuf.ByteString.EMPTY;
       body_ = com.google.protobuf.ByteString.EMPTY;
     }
 
@@ -150,6 +168,11 @@ public final class RemotingCommandProto {
             }
             case 42: {
               bitField0_ |= 0x00000010;
+              customHeader_ = input.readBytes();
+              break;
+            }
+            case 50: {
+              bitField0_ |= 0x00000020;
               body_ = input.readBytes();
               break;
             }
@@ -273,16 +296,39 @@ public final class RemotingCommandProto {
       }
     }
 
-    public static final int BODY_FIELD_NUMBER = 5;
-    private com.google.protobuf.ByteString body_;
+    public static final int CUSTOMHEADER_FIELD_NUMBER = 5;
+    private com.google.protobuf.ByteString customHeader_;
     /**
-     * <code>optional bytes body = 5;</code>
+     * <pre>
+     * business request or response parameter 
+     * </pre>
+     *
+     * <code>optional bytes customHeader = 5;</code>
      */
-    public boolean hasBody() {
+    public boolean hasCustomHeader() {
       return ((bitField0_ & 0x00000010) == 0x00000010);
     }
     /**
-     * <code>optional bytes body = 5;</code>
+     * <pre>
+     * business request or response parameter 
+     * </pre>
+     *
+     * <code>optional bytes customHeader = 5;</code>
+     */
+    public com.google.protobuf.ByteString getCustomHeader() {
+      return customHeader_;
+    }
+
+    public static final int BODY_FIELD_NUMBER = 6;
+    private com.google.protobuf.ByteString body_;
+    /**
+     * <code>optional bytes body = 6;</code>
+     */
+    public boolean hasBody() {
+      return ((bitField0_ & 0x00000020) == 0x00000020);
+    }
+    /**
+     * <code>optional bytes body = 6;</code>
      */
     public com.google.protobuf.ByteString getBody() {
       return body_;
@@ -321,7 +367,10 @@ public final class RemotingCommandProto {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 4, remark_);
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeBytes(5, body_);
+        output.writeBytes(5, customHeader_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        output.writeBytes(6, body_);
       }
       unknownFields.writeTo(output);
     }
@@ -348,7 +397,11 @@ public final class RemotingCommandProto {
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(5, body_);
+          .computeBytesSize(5, customHeader_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(6, body_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -386,6 +439,11 @@ public final class RemotingCommandProto {
         result = result && getRemark()
             .equals(other.getRemark());
       }
+      result = result && (hasCustomHeader() == other.hasCustomHeader());
+      if (hasCustomHeader()) {
+        result = result && getCustomHeader()
+            .equals(other.getCustomHeader());
+      }
       result = result && (hasBody() == other.hasBody());
       if (hasBody()) {
         result = result && getBody()
@@ -417,6 +475,10 @@ public final class RemotingCommandProto {
       if (hasRemark()) {
         hash = (37 * hash) + REMARK_FIELD_NUMBER;
         hash = (53 * hash) + getRemark().hashCode();
+      }
+      if (hasCustomHeader()) {
+        hash = (37 * hash) + CUSTOMHEADER_FIELD_NUMBER;
+        hash = (53 * hash) + getCustomHeader().hashCode();
       }
       if (hasBody()) {
         hash = (37 * hash) + BODY_FIELD_NUMBER;
@@ -559,8 +621,10 @@ public final class RemotingCommandProto {
         bitField0_ = (bitField0_ & ~0x00000004);
         remark_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
-        body_ = com.google.protobuf.ByteString.EMPTY;
+        customHeader_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000010);
+        body_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
 
@@ -603,6 +667,10 @@ public final class RemotingCommandProto {
         result.remark_ = remark_;
         if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
           to_bitField0_ |= 0x00000010;
+        }
+        result.customHeader_ = customHeader_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000020;
         }
         result.body_ = body_;
         result.bitField0_ = to_bitField0_;
@@ -660,6 +728,9 @@ public final class RemotingCommandProto {
           bitField0_ |= 0x00000008;
           remark_ = other.remark_;
           onChanged();
+        }
+        if (other.hasCustomHeader()) {
+          setCustomHeader(other.getCustomHeader());
         }
         if (other.hasBody()) {
           setBody(other.getBody());
@@ -886,36 +957,87 @@ public final class RemotingCommandProto {
         return this;
       }
 
-      private com.google.protobuf.ByteString body_ = com.google.protobuf.ByteString.EMPTY;
+      private com.google.protobuf.ByteString customHeader_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>optional bytes body = 5;</code>
+       * <pre>
+       * business request or response parameter 
+       * </pre>
+       *
+       * <code>optional bytes customHeader = 5;</code>
        */
-      public boolean hasBody() {
+      public boolean hasCustomHeader() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
-       * <code>optional bytes body = 5;</code>
+       * <pre>
+       * business request or response parameter 
+       * </pre>
+       *
+       * <code>optional bytes customHeader = 5;</code>
+       */
+      public com.google.protobuf.ByteString getCustomHeader() {
+        return customHeader_;
+      }
+      /**
+       * <pre>
+       * business request or response parameter 
+       * </pre>
+       *
+       * <code>optional bytes customHeader = 5;</code>
+       */
+      public Builder setCustomHeader(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        customHeader_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * business request or response parameter 
+       * </pre>
+       *
+       * <code>optional bytes customHeader = 5;</code>
+       */
+      public Builder clearCustomHeader() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        customHeader_ = getDefaultInstance().getCustomHeader();
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString body_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes body = 6;</code>
+       */
+      public boolean hasBody() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      /**
+       * <code>optional bytes body = 6;</code>
        */
       public com.google.protobuf.ByteString getBody() {
         return body_;
       }
       /**
-       * <code>optional bytes body = 5;</code>
+       * <code>optional bytes body = 6;</code>
        */
       public Builder setBody(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000010;
+  bitField0_ |= 0x00000020;
         body_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional bytes body = 5;</code>
+       * <code>optional bytes body = 6;</code>
        */
       public Builder clearBody() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000020);
         body_ = getDefaultInstance().getBody();
         onChanged();
         return this;
@@ -984,11 +1106,11 @@ public final class RemotingCommandProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\"src/protobuf/RemotingCommand.proto\022\032co" +
-      "m.yimq.remoting.protobuf\"^\n\017RemotingComm" +
+      "m.yimq.remoting.protobuf\"t\n\017RemotingComm" +
       "and\022\021\n\trequestId\030\001 \002(\005\022\014\n\004type\030\002 \002(\005\022\014\n\004" +
-      "code\030\003 \001(\005\022\016\n\006remark\030\004 \001(\t\022\014\n\004body\030\005 \001(\014" +
-      "B2\n\032com.yimq.remoting.protocolB\024Remoting" +
-      "CommandProto"
+      "code\030\003 \001(\005\022\016\n\006remark\030\004 \001(\t\022\024\n\014customHead" +
+      "er\030\005 \001(\014\022\014\n\004body\030\006 \001(\014B2\n\032com.yimq.remot" +
+      "ing.protocolB\024RemotingCommandProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1007,7 +1129,7 @@ public final class RemotingCommandProto {
     internal_static_com_yimq_remoting_protobuf_RemotingCommand_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_yimq_remoting_protobuf_RemotingCommand_descriptor,
-        new java.lang.String[] { "RequestId", "Type", "Code", "Remark", "Body", });
+        new java.lang.String[] { "RequestId", "Type", "Code", "Remark", "CustomHeader", "Body", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

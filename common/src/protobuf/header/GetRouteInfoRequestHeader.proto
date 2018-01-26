@@ -1,0 +1,10 @@
+syntax = "proto2";
+
+package com.yimq.common.protobuf.header;
+
+option java_package = "com.yimq.common.protocol.header";
+option java_outer_classname = "GetRouteInfoRequestHeaderProto";
+
+message GetRouteInfoRequestHeader {
+    required string topic = 1;
+}

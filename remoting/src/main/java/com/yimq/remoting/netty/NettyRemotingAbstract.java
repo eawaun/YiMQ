@@ -1,5 +1,6 @@
 package com.yimq.remoting.netty;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.remoting.common.Pair;
 import com.yimq.remoting.common.RemotingUtil;
 import com.yimq.remoting.exception.RemotingSendRequestException;
@@ -47,7 +48,12 @@ public abstract class NettyRemotingAbstract {
     private void processRequestCommand(ChannelHandlerContext ctx, RemotingCommand request) {
 
         Runnable run = () -> {
-            RemotingCommand response = defaultRequestProcessor.getObj1().process(ctx, request);
+            RemotingCommand response = null;
+            try {
+                response = defaultRequestProcessor.getObj1().process(ctx, request);
+            } catch (InvalidProtocolBufferException e) {
+                logger.error("processRequestCommand: InvalidProtocolBufferException", e);
+            }
             if (response != null) {
                 ctx.writeAndFlush(response);
             } else {

@@ -10,5 +10,6 @@ message RemotingCommand {
     required int32 type = 2; /* 1:request command 2:response command */
     optional int32 code = 3;
     optional string remark = 4;
-    optional bytes body = 5;
+    optional bytes customHeader = 5; /* business request or response parameter */
+    optional bytes body = 6;
 }
