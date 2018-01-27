@@ -1,0 +1,13 @@
+syntax = "proto2";
+
+package com.yimq.common.protobuf.route;
+
+option java_package = "com.yimq.common.protocol.route";
+option java_outer_classname = "QueueDataProto";
+
+message QueueData {
+    required string brokerName = 1;
+    optional int32 readQueueNums = 2;
+    optional int32 writeQueueNums = 3;
+    optional int32 permission = 4;
+}

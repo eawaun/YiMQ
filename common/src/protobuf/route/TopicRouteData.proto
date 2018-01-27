@@ -1,8 +1,9 @@
 syntax = "proto2";
 
-import "src/protobuf/BrokerData.proto";
+import "src/protobuf/route/BrokerData.proto";
+import "src/protobuf/route/QueueData.proto";
 
-package com.yimq.common.protobuf;
+package com.yimq.common.protobuf.route;
 
 option java_package = "com.yimq.common.protocol.route";
 option java_outer_classname = "TopicRouteDataProto";
@@ -10,6 +11,7 @@ option java_outer_classname = "TopicRouteDataProto";
 message TopicRouteData {
     required string topic = 1;
     repeated BrokerData brokerDatas = 2;
+    repeated QueueData queueDatas = 3;
 }
 
 message TopicRouteDataMap {

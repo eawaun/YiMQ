@@ -3,6 +3,7 @@ package com.yimq.namesrv.processor;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.common.protocol.RequestCode;
 import com.yimq.common.protocol.header.GetRouteInfoRequestHeaderProto.GetRouteInfoRequestHeader;
+import com.yimq.namesrv.NamesrvController;
 import com.yimq.remoting.netty.NettyRequestProcessor;
 import com.yimq.remoting.protocol.RemotingCommandBuilder;
 import io.netty.channel.ChannelHandlerContext;
@@ -17,6 +18,13 @@ import java.util.Map;
 
 
 public class DefaultNettyRequestProcessor implements NettyRequestProcessor {
+
+    private final NamesrvController namesrvController;
+
+    public DefaultNettyRequestProcessor(NamesrvController namesrvController) {
+        this.namesrvController = namesrvController;
+    }
+
     @Override
     public RemotingCommand process(ChannelHandlerContext ctx, RemotingCommand request) throws InvalidProtocolBufferException {
         switch (request.getCode()) {
@@ -58,22 +66,11 @@ public class DefaultNettyRequestProcessor implements NettyRequestProcessor {
 
     private RemotingCommand getRouteInfoByTopic(ChannelHandlerContext ctx, RemotingCommand request) throws InvalidProtocolBufferException {
         GetRouteInfoRequestHeader requestHeader = GetRouteInfoRequestHeader.parseFrom(request.getCustomHeader());
-        String topic = requestHeader.getTopic();
 
+        TopicRouteData topicRouteData = this.namesrvController.getRouteInfoManager().getTopicRouteDataByTopic(requestHeader.getTopic());
 
-        BrokerData brokerData = BrokerData.newBuilder().setBrokerName("brokerName1")
-            .putBrokerAddrs(1, "127.0.0.1:8881").build();
-        BrokerData brokerData2 = BrokerData.newBuilder().setBrokerName("brokerName2")
-            .putBrokerAddrs(1, "127.0.0.1:8882").build();
-
-        List<BrokerData> brokerDatas = Arrays.asList(brokerData, brokerData2);
-
-        TopicRouteData topicRouteData = TopicRouteData.newBuilder()
-            .setTopic("TopicTest1").addAllBrokerDatas(brokerDatas).build();
-
-        RemotingCommand response = RemotingCommandBuilder.newResponseBuilder(request)
-            .setBody(topicRouteData.toByteString()).build();
-        return response;
+        return RemotingCommandBuilder.newResponseBuilder(request).
+            setBody(topicRouteData.toByteString()).build();
     }
 
     private RemotingCommand registerBroker(ChannelHandlerContext ctx, RemotingCommand request) {

@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package com.yimq.common.protobuf;
+package com.yimq.common.protobuf.route;
 
 option java_package = "com.yimq.common.protocol.route";
 option java_outer_classname = "BrokerDataProto";

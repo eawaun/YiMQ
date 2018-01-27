@@ -1,5 +1,6 @@
 package com.yimq.namesrv;
 
+import com.yimq.common.protocol.route.TopicRouteDataProto.TopicRouteData;
 import com.yimq.namesrv.processor.DefaultNettyRequestProcessor;
 import com.yimq.namesrv.routeinfo.RouteInfoManager;
 import com.yimq.remoting.RemotingServer;
@@ -35,7 +36,7 @@ public class NamesrvController {
     }
 
     private void registerProcessor() {
-        this.remotingServer.registerDefaultProcessor(new DefaultNettyRequestProcessor(), this.remotingExecutor);
+        this.remotingServer.registerDefaultProcessor(new DefaultNettyRequestProcessor(this), this.remotingExecutor);
     }
 
     public void start() {
@@ -45,4 +46,6 @@ public class NamesrvController {
     public RouteInfoManager getRouteInfoManager() {
         return routeInfoManager;
     }
+
+
 }
