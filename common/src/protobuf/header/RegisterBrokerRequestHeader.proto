@@ -1,0 +1,14 @@
+syntax = "proto2";
+
+package com.yimq.common.protobuf.header;
+
+option java_package = "com.yimq.common.protocol.header";
+option java_outer_classname = "RegisterBrokerRequestHeaderProto";
+
+message RegisterBrokerRequestHeader {
+    optional string brokerName = 1;
+    optional string brokerAddr = 2;
+    optional string clusterName = 3;
+    optional int32 brokerId = 4;
+}
+

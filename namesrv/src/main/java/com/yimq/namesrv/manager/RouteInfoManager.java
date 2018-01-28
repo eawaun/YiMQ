@@ -3,7 +3,7 @@ package com.yimq.namesrv.manager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.yimq.common.protocol.broker.BrokerTopicConfigWrapper;
+import com.yimq.common.topic.BrokerTopicConfigWrapper;
 import com.yimq.common.protocol.route.BrokerData;
 import com.yimq.common.protocol.route.QueueData;
 import com.yimq.common.protocol.route.TopicRouteData;

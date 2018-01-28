@@ -1,0 +1,13 @@
+syntax = "proto2";
+
+import "src/protobuf/topic/TopicConfig.proto";
+
+package com.yimq.common.protobuf.topic;
+
+
+option java_package = "com.yimq.common.topic";
+option java_outer_classname = "BrokerTopicConfigWrapperProto";
+
+message BrokerTopicConfigWrapper {
+    map<string, TopicConfig> brokerTopicConfigMap = 1;
+}

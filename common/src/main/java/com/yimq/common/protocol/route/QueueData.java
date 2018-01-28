@@ -1,6 +1,8 @@
 package com.yimq.common.protocol.route;
 
-public class QueueData {
+import com.yimq.common.ProtobufConver;
+
+public class QueueData implements ProtobufConver<QueueDataProto.QueueData> {
     private String brokerName;
     private Integer readQueueNums;
     private Integer writeQueueNums;
@@ -14,11 +16,6 @@ public class QueueData {
         this.readQueueNums = readQueueNums;
         this.writeQueueNums = writeQueueNums;
         this.permission = permission;
-    }
-
-    public QueueDataProto.QueueData generateProto() {
-        return QueueDataProto.QueueData.newBuilder().setBrokerName(this.brokerName).setReadQueueNums(this.readQueueNums).
-            setWriteQueueNums(this.writeQueueNums).setPermission(this.permission).build();
     }
 
     public String getBrokerName() {
@@ -51,5 +48,15 @@ public class QueueData {
 
     public void setPermission(Integer permission) {
         this.permission = permission;
+    }
+
+    public static QueueData fromProto(QueueDataProto.QueueData proto) {
+        return new QueueData(proto.getBrokerName(), proto.getReadQueueNums(), proto.getWriteQueueNums(), proto.getPermission());
+    }
+
+    @Override
+    public QueueDataProto.QueueData toProto() {
+        return QueueDataProto.QueueData.newBuilder().setBrokerName(this.brokerName).setReadQueueNums(this.readQueueNums).
+            setWriteQueueNums(this.writeQueueNums).setPermission(this.permission).build();
     }
 }

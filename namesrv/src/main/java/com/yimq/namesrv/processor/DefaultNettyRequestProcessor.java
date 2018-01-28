@@ -3,9 +3,12 @@ package com.yimq.namesrv.processor;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.common.protocol.RequestCode;
 import com.yimq.common.protocol.header.GetRouteInfoRequestHeaderProto.GetRouteInfoRequestHeader;
+import com.yimq.common.protocol.header.RegisterBrokerRequestHeaderProto.RegisterBrokerRequestHeader;
 import com.yimq.common.protocol.route.BrokerDataProto;
 import com.yimq.common.protocol.route.TopicRouteData;
 import com.yimq.common.protocol.route.TopicRouteDataProto;
+import com.yimq.common.topic.BrokerTopicConfigWrapper;
+import com.yimq.common.topic.BrokerTopicConfigWrapperProto;
 import com.yimq.namesrv.NamesrvController;
 import com.yimq.remoting.netty.NettyRequestProcessor;
 import com.yimq.remoting.protocol.RemotingCommandBuilder;
@@ -51,13 +54,27 @@ public class DefaultNettyRequestProcessor implements NettyRequestProcessor {
 
         TopicRouteData topicRouteData = this.namesrvController.getRouteInfoManager().getTopicRouteDataByTopic(requestHeader.getTopic());
 
-        TopicRouteDataProto.TopicRouteData topicRouteDataProto = topicRouteData.generateProto();
+        TopicRouteDataProto.TopicRouteData topicRouteDataProto = topicRouteData.toProto();
 
         return RemotingCommandBuilder.newResponseBuilder(request).
             setBody(topicRouteDataProto.toByteString()).build();
     }
 
-    private RemotingCommand registerBroker(ChannelHandlerContext ctx, RemotingCommand request) {
+    private RemotingCommand registerBroker(ChannelHandlerContext ctx, RemotingCommand request) throws InvalidProtocolBufferException {
+        RegisterBrokerRequestHeader registerBrokerRequestHeader = RegisterBrokerRequestHeader.parseFrom(request.getCustomHeader());
+
+        BrokerTopicConfigWrapperProto.BrokerTopicConfigWrapper brokerTopicConfigWrapper =
+            BrokerTopicConfigWrapperProto.BrokerTopicConfigWrapper.parseFrom(request.getBody());
+
+        this.namesrvController.getRouteInfoManager().registerBroker(
+            registerBrokerRequestHeader.getClusterName(),
+            registerBrokerRequestHeader.getBrokerAddr(),
+            registerBrokerRequestHeader.getBrokerName(),
+            registerBrokerRequestHeader.getBrokerId(),
+            BrokerTopicConfigWrapper.fromProto(brokerTopicConfigWrapper),
+            ctx.channel()
+        );
+
         return null;
     }
 

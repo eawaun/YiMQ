@@ -6,4 +6,6 @@ public class RequestCode {
     public static final int GET_ROUTEINFO_BY_TOPIC = 101;
     public static final int REGISTER_BROKER = 102;
     public static final int UNREGISTER_BROKER = 103;
+
+    public static final int SEND_MESSAGE = 200;
 }

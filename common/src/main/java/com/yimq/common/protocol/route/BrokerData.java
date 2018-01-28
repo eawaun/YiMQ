@@ -1,8 +1,10 @@
 package com.yimq.common.protocol.route;
 
+import com.yimq.common.ProtobufConver;
+
 import java.util.Map;
 
-public class BrokerData {
+public class BrokerData implements ProtobufConver<BrokerDataProto.BrokerData> {
     private String cluster;
     private String brokerName;
     private Map<Integer, String> brokerAddrs;
@@ -14,11 +16,6 @@ public class BrokerData {
         this.cluster = cluster;
         this.brokerName = brokerName;
         this.brokerAddrs = brokerAddrs;
-    }
-
-    public BrokerDataProto.BrokerData generateProto() {
-        return BrokerDataProto.BrokerData.newBuilder().setCluster(this.cluster).
-            setBrokerName(this.brokerName).putAllBrokerAddrs(this.brokerAddrs).build();
     }
 
     public String getCluster() {
@@ -43,5 +40,15 @@ public class BrokerData {
 
     public void setBrokerAddrs(Map<Integer, String> brokerAddrs) {
         this.brokerAddrs = brokerAddrs;
+    }
+
+    public static BrokerData fromProto(BrokerDataProto.BrokerData brokerDataProto) {
+        return new BrokerData(brokerDataProto.getCluster(), brokerDataProto.getBrokerName(), brokerDataProto.getBrokerAddrsMap());
+    }
+
+    @Override
+    public BrokerDataProto.BrokerData toProto() {
+        return BrokerDataProto.BrokerData.newBuilder().setCluster(this.cluster).
+            setBrokerName(this.brokerName).putAllBrokerAddrs(this.brokerAddrs).build();
     }
 }

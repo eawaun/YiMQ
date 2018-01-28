@@ -1,6 +1,6 @@
 dependencies {
     compile (
+            project(':remoting'),
             project(':common'),
-            project(':remoting')
     )
 }

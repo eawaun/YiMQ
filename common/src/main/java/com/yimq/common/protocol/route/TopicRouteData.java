@@ -1,9 +1,12 @@
 package com.yimq.common.protocol.route;
 
+import com.sun.corba.se.pept.broker.Broker;
+import com.yimq.common.ProtobufConver;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TopicRouteData {
+public class TopicRouteData implements ProtobufConver<TopicRouteDataProto.TopicRouteData> {
     private String topic;
     private List<BrokerData> brokerDatas;
     private List<QueueData> queueDatas;
@@ -17,11 +20,21 @@ public class TopicRouteData {
         this.queueDatas = queueDatas;
     }
 
-    public TopicRouteDataProto.TopicRouteData generateProto() {
+    public static TopicRouteData fromProto(TopicRouteDataProto.TopicRouteData proto) {
+        List<BrokerData> brokerDataList = proto.getBrokerDatasList().stream().map(BrokerData::fromProto)
+            .collect(Collectors.toList());
+        List<QueueData> queueDataList = proto.getQueueDatasList().stream().map(QueueData::fromProto)
+            .collect(Collectors.toList());
+
+        return new TopicRouteData(proto.getTopic(), brokerDataList, queueDataList);
+    }
+
+    @Override
+    public TopicRouteDataProto.TopicRouteData toProto() {
         List<BrokerDataProto.BrokerData> brokerDataProtoList =
-            brokerDatas.stream().map(BrokerData::generateProto).collect(Collectors.toList());
+            brokerDatas.stream().map(BrokerData::toProto).collect(Collectors.toList());
         List<QueueDataProto.QueueData> queueDataProtoList =
-            queueDatas.stream().map(QueueData::generateProto).collect(Collectors.toList());
+            queueDatas.stream().map(QueueData::toProto).collect(Collectors.toList());
 
         return TopicRouteDataProto.TopicRouteData.newBuilder().setTopic(this.topic).addAllBrokerDatas(brokerDataProtoList)
             .addAllQueueDatas(queueDataProtoList).build();
