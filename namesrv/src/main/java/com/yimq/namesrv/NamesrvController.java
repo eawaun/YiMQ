@@ -1,8 +1,7 @@
 package com.yimq.namesrv;
 
-import com.yimq.common.protocol.route.TopicRouteDataProto.TopicRouteData;
 import com.yimq.namesrv.processor.DefaultNettyRequestProcessor;
-import com.yimq.namesrv.routeinfo.RouteInfoManager;
+import com.yimq.namesrv.manager.RouteInfoManager;
 import com.yimq.remoting.RemotingServer;
 import com.yimq.remoting.common.ThreadFactoryImpl;
 import com.yimq.remoting.netty.NettyRemotingServer;

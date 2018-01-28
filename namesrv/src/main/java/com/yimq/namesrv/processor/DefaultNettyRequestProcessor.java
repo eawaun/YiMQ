@@ -3,13 +3,14 @@ package com.yimq.namesrv.processor;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.common.protocol.RequestCode;
 import com.yimq.common.protocol.header.GetRouteInfoRequestHeaderProto.GetRouteInfoRequestHeader;
+import com.yimq.common.protocol.route.BrokerDataProto;
+import com.yimq.common.protocol.route.TopicRouteData;
+import com.yimq.common.protocol.route.TopicRouteDataProto;
 import com.yimq.namesrv.NamesrvController;
 import com.yimq.remoting.netty.NettyRequestProcessor;
 import com.yimq.remoting.protocol.RemotingCommandBuilder;
 import io.netty.channel.ChannelHandlerContext;
 import com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand;
-import com.yimq.common.protocol.route.BrokerDataProto.BrokerData;
-import com.yimq.common.protocol.route.TopicRouteDataProto.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -42,26 +43,7 @@ public class DefaultNettyRequestProcessor implements NettyRequestProcessor {
     }
 
     private RemotingCommand getAllTopicRouteFromNamesrv(ChannelHandlerContext ctx, RemotingCommand request) {
-        //todo topic route列表
-        Map<String, TopicRouteData> topicRouteDataMap = new HashMap<>();
-
-        BrokerData brokerData = BrokerData.newBuilder().setBrokerName("brokerName1")
-            .putBrokerAddrs(1, "127.0.0.1:8881").build();
-        BrokerData brokerData2 = BrokerData.newBuilder().setBrokerName("brokerName2")
-            .putBrokerAddrs(1, "127.0.0.1:8882").build();
-
-        List<BrokerData> brokerDatas = Arrays.asList(brokerData, brokerData2);
-
-        TopicRouteData topicRouteData = TopicRouteData.newBuilder()
-            .setTopic("TopicTest1").addAllBrokerDatas(brokerDatas).build();
-
-        TopicRouteDataMap topicRouteDataMapProto = TopicRouteDataMap.newBuilder()
-            .putTopicRouteDataMap("TopicTest1", topicRouteData).build();
-
-        RemotingCommand response = RemotingCommandBuilder.newResponseBuilder(request)
-            .setBody(topicRouteDataMapProto.toByteString()).build();
-
-        return response;
+        return null;
     }
 
     private RemotingCommand getRouteInfoByTopic(ChannelHandlerContext ctx, RemotingCommand request) throws InvalidProtocolBufferException {
@@ -69,8 +51,10 @@ public class DefaultNettyRequestProcessor implements NettyRequestProcessor {
 
         TopicRouteData topicRouteData = this.namesrvController.getRouteInfoManager().getTopicRouteDataByTopic(requestHeader.getTopic());
 
+        TopicRouteDataProto.TopicRouteData topicRouteDataProto = topicRouteData.generateProto();
+
         return RemotingCommandBuilder.newResponseBuilder(request).
-            setBody(topicRouteData.toByteString()).build();
+            setBody(topicRouteDataProto.toByteString()).build();
     }
 
     private RemotingCommand registerBroker(ChannelHandlerContext ctx, RemotingCommand request) {
