@@ -25,7 +25,7 @@ import static com.yimq.common.protocol.ResponseCode.*;
 public abstract class NettyRemotingAbstract {
     private final static Logger logger = LoggerFactory.getLogger(NettyRemotingAbstract.class);
 
-    protected final Map<Integer /* requestId */, ResponseFuture> responseTable =
+    protected final Map<Long /* requestId */, ResponseFuture> responseTable =
         new ConcurrentHashMap<>(256);
 
     protected Pair<NettyRequestProcessor, ExecutorService> defaultRequestProcessor;
@@ -50,7 +50,7 @@ public abstract class NettyRemotingAbstract {
         Runnable run = () -> {
             RemotingCommand response = null;
             try {
-                response = defaultRequestProcessor.getObj1().process(ctx, request);
+                response = defaultRequestProcessor.getLeft().process(ctx, request);
             } catch (InvalidProtocolBufferException e) {
                 logger.error("processRequestCommand: InvalidProtocolBufferException", e);
             }
@@ -63,11 +63,11 @@ public abstract class NettyRemotingAbstract {
                 ctx.writeAndFlush(response);
             }
         };
-        this.defaultRequestProcessor.getObj2().submit(run);
+        this.defaultRequestProcessor.getRight().submit(run);
     }
 
     private void processResponseCommand(ChannelHandlerContext ctx, RemotingCommand response) {
-        final int requestId = response.getRequestId();
+        final long requestId = response.getRequestId();
         final ResponseFuture responseFuture = responseTable.get(requestId);
         if (responseFuture != null) {
             responseFuture.setResponseCommand(response);
@@ -95,7 +95,7 @@ public abstract class NettyRemotingAbstract {
 
     protected RemotingCommand invokeSyncImpl(final Channel channel, final RemotingCommand request
         , final long timeoutMillis) throws InterruptedException, RemotingTimeoutException, RemotingSendRequestException {
-        final int requestId = request.getRequestId();
+        final long requestId = request.getRequestId();
 
         try {
             final ResponseFuture responseFuture = new ResponseFuture(requestId, timeoutMillis);

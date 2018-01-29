@@ -28,14 +28,14 @@ public class NamesrvController {
     public void init() {
         this.remotingServer = new NettyRemotingServer(this.nettyServerConfig);
 
-        this.remotingExecutor = Executors.newFixedThreadPool(this.nettyServerConfig.getWorkerGroupThreads(),
+        this.remotingExecutor = Executors.newFixedThreadPool(this.nettyServerConfig.getWorkerThreads(),
             new ThreadFactoryImpl("RemotingExecutorThread_"));
 
         this.registerProcessor();
     }
 
     private void registerProcessor() {
-        this.remotingServer.registerDefaultProcessor(new DefaultNettyRequestProcessor(this), this.remotingExecutor);
+        this.remotingServer.registerProcessor(new DefaultNettyRequestProcessor(this), this.remotingExecutor);
     }
 
     public void start() {

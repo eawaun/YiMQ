@@ -31,29 +31,6 @@ public final class SendMsgRequestHeaderProto {
      */
     com.google.protobuf.ByteString
         getTopicBytes();
-
-    /**
-     * <code>optional string producerGroup = 2;</code>
-     */
-    boolean hasProducerGroup();
-    /**
-     * <code>optional string producerGroup = 2;</code>
-     */
-    java.lang.String getProducerGroup();
-    /**
-     * <code>optional string producerGroup = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getProducerGroupBytes();
-
-    /**
-     * <code>optional int32 queueId = 3;</code>
-     */
-    boolean hasQueueId();
-    /**
-     * <code>optional int32 queueId = 3;</code>
-     */
-    int getQueueId();
   }
   /**
    * Protobuf type {@code com.yimq.common.protobuf.header.SendMsgRequestHeader}
@@ -69,8 +46,6 @@ public final class SendMsgRequestHeaderProto {
     }
     private SendMsgRequestHeader() {
       topic_ = "";
-      producerGroup_ = "";
-      queueId_ = 0;
     }
 
     @java.lang.Override
@@ -108,17 +83,6 @@ public final class SendMsgRequestHeaderProto {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000001;
               topic_ = bs;
-              break;
-            }
-            case 18: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000002;
-              producerGroup_ = bs;
-              break;
-            }
-            case 24: {
-              bitField0_ |= 0x00000004;
-              queueId_ = input.readInt32();
               break;
             }
           }
@@ -188,63 +152,6 @@ public final class SendMsgRequestHeaderProto {
       }
     }
 
-    public static final int PRODUCERGROUP_FIELD_NUMBER = 2;
-    private volatile java.lang.Object producerGroup_;
-    /**
-     * <code>optional string producerGroup = 2;</code>
-     */
-    public boolean hasProducerGroup() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>optional string producerGroup = 2;</code>
-     */
-    public java.lang.String getProducerGroup() {
-      java.lang.Object ref = producerGroup_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          producerGroup_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>optional string producerGroup = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getProducerGroupBytes() {
-      java.lang.Object ref = producerGroup_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        producerGroup_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int QUEUEID_FIELD_NUMBER = 3;
-    private int queueId_;
-    /**
-     * <code>optional int32 queueId = 3;</code>
-     */
-    public boolean hasQueueId() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    /**
-     * <code>optional int32 queueId = 3;</code>
-     */
-    public int getQueueId() {
-      return queueId_;
-    }
-
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -260,12 +167,6 @@ public final class SendMsgRequestHeaderProto {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, topic_);
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, producerGroup_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeInt32(3, queueId_);
-      }
       unknownFields.writeTo(output);
     }
 
@@ -276,13 +177,6 @@ public final class SendMsgRequestHeaderProto {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, topic_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, producerGroup_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(3, queueId_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -305,16 +199,6 @@ public final class SendMsgRequestHeaderProto {
         result = result && getTopic()
             .equals(other.getTopic());
       }
-      result = result && (hasProducerGroup() == other.hasProducerGroup());
-      if (hasProducerGroup()) {
-        result = result && getProducerGroup()
-            .equals(other.getProducerGroup());
-      }
-      result = result && (hasQueueId() == other.hasQueueId());
-      if (hasQueueId()) {
-        result = result && (getQueueId()
-            == other.getQueueId());
-      }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -329,14 +213,6 @@ public final class SendMsgRequestHeaderProto {
       if (hasTopic()) {
         hash = (37 * hash) + TOPIC_FIELD_NUMBER;
         hash = (53 * hash) + getTopic().hashCode();
-      }
-      if (hasProducerGroup()) {
-        hash = (37 * hash) + PRODUCERGROUP_FIELD_NUMBER;
-        hash = (53 * hash) + getProducerGroup().hashCode();
-      }
-      if (hasQueueId()) {
-        hash = (37 * hash) + QUEUEID_FIELD_NUMBER;
-        hash = (53 * hash) + getQueueId();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -469,10 +345,6 @@ public final class SendMsgRequestHeaderProto {
         super.clear();
         topic_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
-        producerGroup_ = "";
-        bitField0_ = (bitField0_ & ~0x00000002);
-        queueId_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -501,14 +373,6 @@ public final class SendMsgRequestHeaderProto {
           to_bitField0_ |= 0x00000001;
         }
         result.topic_ = topic_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.producerGroup_ = producerGroup_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
-        }
-        result.queueId_ = queueId_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -555,14 +419,6 @@ public final class SendMsgRequestHeaderProto {
           bitField0_ |= 0x00000001;
           topic_ = other.topic_;
           onChanged();
-        }
-        if (other.hasProducerGroup()) {
-          bitField0_ |= 0x00000002;
-          producerGroup_ = other.producerGroup_;
-          onChanged();
-        }
-        if (other.hasQueueId()) {
-          setQueueId(other.getQueueId());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -667,114 +523,6 @@ public final class SendMsgRequestHeaderProto {
         onChanged();
         return this;
       }
-
-      private java.lang.Object producerGroup_ = "";
-      /**
-       * <code>optional string producerGroup = 2;</code>
-       */
-      public boolean hasProducerGroup() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>optional string producerGroup = 2;</code>
-       */
-      public java.lang.String getProducerGroup() {
-        java.lang.Object ref = producerGroup_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            producerGroup_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string producerGroup = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getProducerGroupBytes() {
-        java.lang.Object ref = producerGroup_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          producerGroup_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string producerGroup = 2;</code>
-       */
-      public Builder setProducerGroup(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        producerGroup_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string producerGroup = 2;</code>
-       */
-      public Builder clearProducerGroup() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        producerGroup_ = getDefaultInstance().getProducerGroup();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string producerGroup = 2;</code>
-       */
-      public Builder setProducerGroupBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        producerGroup_ = value;
-        onChanged();
-        return this;
-      }
-
-      private int queueId_ ;
-      /**
-       * <code>optional int32 queueId = 3;</code>
-       */
-      public boolean hasQueueId() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      /**
-       * <code>optional int32 queueId = 3;</code>
-       */
-      public int getQueueId() {
-        return queueId_;
-      }
-      /**
-       * <code>optional int32 queueId = 3;</code>
-       */
-      public Builder setQueueId(int value) {
-        bitField0_ |= 0x00000004;
-        queueId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional int32 queueId = 3;</code>
-       */
-      public Builder clearQueueId() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        queueId_ = 0;
-        onChanged();
-        return this;
-      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
@@ -840,8 +588,7 @@ public final class SendMsgRequestHeaderProto {
     java.lang.String[] descriptorData = {
       "\n.src/protobuf/header/SendMsgRequestHead" +
       "er.proto\022\037com.yimq.common.protobuf.heade" +
-      "r\"M\n\024SendMsgRequestHeader\022\r\n\005topic\030\001 \001(\t" +
-      "\022\025\n\rproducerGroup\030\002 \001(\t\022\017\n\007queueId\030\003 \001(\005" +
+      "r\"%\n\024SendMsgRequestHeader\022\r\n\005topic\030\001 \001(\t" +
       "B<\n\037com.yimq.common.protocol.headerB\031Sen" +
       "dMsgRequestHeaderProto"
     };
@@ -862,7 +609,7 @@ public final class SendMsgRequestHeaderProto {
     internal_static_com_yimq_common_protobuf_header_SendMsgRequestHeader_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_yimq_common_protobuf_header_SendMsgRequestHeader_descriptor,
-        new java.lang.String[] { "Topic", "ProducerGroup", "QueueId", });
+        new java.lang.String[] { "Topic", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

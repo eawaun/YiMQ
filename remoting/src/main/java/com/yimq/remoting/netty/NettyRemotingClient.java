@@ -1,6 +1,7 @@
 package com.yimq.remoting.netty;
 
 import com.yimq.remoting.RemotingClient;
+import com.yimq.remoting.common.Pair;
 import com.yimq.remoting.common.RemotingUtil;
 import com.yimq.remoting.common.ThreadFactoryImpl;
 import com.yimq.remoting.exception.RemotingConnectException;
@@ -23,10 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
@@ -55,7 +53,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
 
         this.eventLoopGroup = new NioEventLoopGroup(1, new ThreadFactoryImpl("NettyClientChooser_"));
 
-        this.defaultEventExecutorGroup = new DefaultEventExecutorGroup(this.nettyClientConfig.getWorkerThreads(),
+        this.defaultEventExecutorGroup = new DefaultEventExecutorGroup(this.nettyClientConfig.getProcessRequestTaskThreads(),
             new ThreadFactoryImpl("NettyClientWorkerThread_"));
     }
 
@@ -291,6 +289,11 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     @Override
     public void shutdown() {
 
+    }
+
+    @Override
+    public void registerProcessor(NettyRequestProcessor processor, ExecutorService executorService) {
+        this.defaultRequestProcessor = new Pair<>(processor, executorService);
     }
 
     class NettyClientHandler extends SimpleChannelInboundHandler<RemotingCommand> {

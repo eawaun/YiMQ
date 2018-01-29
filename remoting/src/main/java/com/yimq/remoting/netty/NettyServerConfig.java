@@ -2,7 +2,7 @@ package com.yimq.remoting.netty;
 
 public class NettyServerConfig {
     private int listenPort = 8888;
-    private int workerGroupThreads = 3;
+    private int workerThreads = 3;
 
     public int getListenPort() {
         return listenPort;
@@ -12,11 +12,11 @@ public class NettyServerConfig {
         this.listenPort = listenPort;
     }
 
-    public int getWorkerGroupThreads() {
-        return workerGroupThreads;
+    public int getWorkerThreads() {
+        return workerThreads;
     }
 
-    public void setWorkerGroupThreads(int workerGroupThreads) {
-        this.workerGroupThreads = workerGroupThreads;
+    public void setWorkerThreads(int workerThreads) {
+        this.workerThreads = workerThreads;
     }
 }

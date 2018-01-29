@@ -1,5 +1,9 @@
 package com.yimq.client;
 
-public interface MQAction {
+import com.yimq.remoting.exception.RemotingConnectException;
 
+public interface MQAction {
+    void start() throws InterruptedException, RemotingConnectException;
+
+    void shutdown();
 }

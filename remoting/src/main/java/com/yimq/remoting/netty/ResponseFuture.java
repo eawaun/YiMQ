@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ResponseFuture {
-    private final int requestId;
+    private final long requestId;
     private final long timeoutMillis;
     private InvokeCallback invokeCallback;
     private AtomicBoolean executeCallbackOnlyOnce = new AtomicBoolean(false);
@@ -25,7 +25,7 @@ public class ResponseFuture {
     /**
      * for sync request
      */
-    public ResponseFuture(int requestId, long timeoutMillis) {
+    public ResponseFuture(long requestId, long timeoutMillis) {
         this.requestId = requestId;
         this.timeoutMillis = timeoutMillis;
     }
@@ -33,7 +33,7 @@ public class ResponseFuture {
     /**
      * for async request
      */
-    public ResponseFuture(int requestId, long timeoutMillis, InvokeCallback invokeCallback,
+    public ResponseFuture(long requestId, long timeoutMillis, InvokeCallback invokeCallback,
         SemaphoreReleaseOnlyOnce semaphoreReleaseOnlyOnce) {
         this.requestId = requestId;
         this.timeoutMillis = timeoutMillis;
@@ -75,12 +75,8 @@ public class ResponseFuture {
         this.sendRequestOK = sendRequestOK;
     }
 
-    public int getRequestId() {
+    public long getRequestId() {
         return requestId;
-    }
-
-    public long getTimeoutMillis() {
-        return timeoutMillis;
     }
 
     public Throwable getCause() {

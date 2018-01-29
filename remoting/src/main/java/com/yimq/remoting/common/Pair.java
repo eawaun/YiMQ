@@ -1,27 +1,27 @@
 package com.yimq.remoting.common;
 
-public class Pair<T1, T2> {
-    private T1 obj1;
-    private T2 obj2;
+public class Pair<L, R> {
+    private L left;
+    private R right;
 
-    public Pair(T1 obj1, T2 obj2) {
-        this.obj1 = obj1;
-        this.obj2 = obj2;
+    public Pair(L left, R right) {
+        this.left = left;
+        this.right = right;
     }
 
-    public T1 getObj1() {
-        return obj1;
+    public L getLeft() {
+        return left;
     }
 
-    public void setObj1(T1 obj1) {
-        this.obj1 = obj1;
+    public void setLeft(L left) {
+        this.left = left;
     }
 
-    public T2 getObj2() {
-        return obj2;
+    public R getRight() {
+        return right;
     }
 
-    public void setObj2(T2 obj2) {
-        this.obj2 = obj2;
+    public void setRight(R right) {
+        this.right = right;
     }
 }

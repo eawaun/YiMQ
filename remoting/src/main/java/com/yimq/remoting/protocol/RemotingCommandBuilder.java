@@ -1,12 +1,13 @@
 package com.yimq.remoting.protocol;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import com.yimq.common.protocol.RemotingCommandType;
 import com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand;
 
 public class RemotingCommandBuilder {
-    private static AtomicInteger requestIdGenerator = new AtomicInteger(0);
+    private static AtomicLong requestIdGenerator = new AtomicLong(0);
 
     public static RemotingCommand.Builder newRequestBuilder() {
         return RemotingCommand.newBuilder().setType(RemotingCommandType.REQUEST_COMMAND).

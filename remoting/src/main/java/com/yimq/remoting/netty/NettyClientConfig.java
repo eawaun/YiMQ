@@ -2,15 +2,15 @@ package com.yimq.remoting.netty;
 
 public class NettyClientConfig {
 
-    private int workerThreads = 4;
+    private int processRequestTaskThreads = 4;
     private int connectTimeoutMillis = 3000;
 
-    public int getWorkerThreads() {
-        return workerThreads;
+    public int getProcessRequestTaskThreads() {
+        return processRequestTaskThreads;
     }
 
-    public void setWorkerThreads(int workerThreads) {
-        this.workerThreads = workerThreads;
+    public void setProcessRequestTaskThreads(int processRequestTaskThreads) {
+        this.processRequestTaskThreads = processRequestTaskThreads;
     }
 
     public int getConnectTimeoutMillis() {

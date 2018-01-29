@@ -90,7 +90,7 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
     }
 
     @Override
-    public void registerDefaultProcessor(NettyRequestProcessor processor, ExecutorService executorService) {
+    public void registerProcessor(NettyRequestProcessor processor, ExecutorService executorService) {
         this.defaultRequestProcessor = new Pair<>(processor, executorService);
     }
 

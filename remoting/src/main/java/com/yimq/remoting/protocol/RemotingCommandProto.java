@@ -19,13 +19,13 @@ public final class RemotingCommandProto {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>required int32 requestId = 1;</code>
+     * <code>required int64 requestId = 1;</code>
      */
     boolean hasRequestId();
     /**
-     * <code>required int32 requestId = 1;</code>
+     * <code>required int64 requestId = 1;</code>
      */
-    int getRequestId();
+    long getRequestId();
 
     /**
      * <pre>
@@ -106,7 +106,7 @@ public final class RemotingCommandProto {
       super(builder);
     }
     private RemotingCommand() {
-      requestId_ = 0;
+      requestId_ = 0L;
       type_ = 0;
       code_ = 0;
       remark_ = "";
@@ -147,7 +147,7 @@ public final class RemotingCommandProto {
             }
             case 8: {
               bitField0_ |= 0x00000001;
-              requestId_ = input.readInt32();
+              requestId_ = input.readInt64();
               break;
             }
             case 16: {
@@ -202,17 +202,17 @@ public final class RemotingCommandProto {
 
     private int bitField0_;
     public static final int REQUESTID_FIELD_NUMBER = 1;
-    private int requestId_;
+    private long requestId_;
     /**
-     * <code>required int32 requestId = 1;</code>
+     * <code>required int64 requestId = 1;</code>
      */
     public boolean hasRequestId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required int32 requestId = 1;</code>
+     * <code>required int64 requestId = 1;</code>
      */
-    public int getRequestId() {
+    public long getRequestId() {
       return requestId_;
     }
 
@@ -355,7 +355,7 @@ public final class RemotingCommandProto {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeInt32(1, requestId_);
+        output.writeInt64(1, requestId_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeInt32(2, type_);
@@ -382,7 +382,7 @@ public final class RemotingCommandProto {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(1, requestId_);
+          .computeInt64Size(1, requestId_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
@@ -462,7 +462,8 @@ public final class RemotingCommandProto {
       hash = (19 * hash) + getDescriptor().hashCode();
       if (hasRequestId()) {
         hash = (37 * hash) + REQUESTID_FIELD_NUMBER;
-        hash = (53 * hash) + getRequestId();
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getRequestId());
       }
       if (hasType()) {
         hash = (37 * hash) + TYPE_FIELD_NUMBER;
@@ -613,7 +614,7 @@ public final class RemotingCommandProto {
       }
       public Builder clear() {
         super.clear();
-        requestId_ = 0;
+        requestId_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000001);
         type_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -769,34 +770,34 @@ public final class RemotingCommandProto {
       }
       private int bitField0_;
 
-      private int requestId_ ;
+      private long requestId_ ;
       /**
-       * <code>required int32 requestId = 1;</code>
+       * <code>required int64 requestId = 1;</code>
        */
       public boolean hasRequestId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required int32 requestId = 1;</code>
+       * <code>required int64 requestId = 1;</code>
        */
-      public int getRequestId() {
+      public long getRequestId() {
         return requestId_;
       }
       /**
-       * <code>required int32 requestId = 1;</code>
+       * <code>required int64 requestId = 1;</code>
        */
-      public Builder setRequestId(int value) {
+      public Builder setRequestId(long value) {
         bitField0_ |= 0x00000001;
         requestId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>required int32 requestId = 1;</code>
+       * <code>required int64 requestId = 1;</code>
        */
       public Builder clearRequestId() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        requestId_ = 0;
+        requestId_ = 0L;
         onChanged();
         return this;
       }
@@ -1107,7 +1108,7 @@ public final class RemotingCommandProto {
     java.lang.String[] descriptorData = {
       "\n\"src/protobuf/RemotingCommand.proto\022\032co" +
       "m.yimq.remoting.protobuf\"t\n\017RemotingComm" +
-      "and\022\021\n\trequestId\030\001 \002(\005\022\014\n\004type\030\002 \002(\005\022\014\n\004" +
+      "and\022\021\n\trequestId\030\001 \002(\003\022\014\n\004type\030\002 \002(\005\022\014\n\004" +
       "code\030\003 \001(\005\022\016\n\006remark\030\004 \001(\t\022\024\n\014customHead" +
       "er\030\005 \001(\014\022\014\n\004body\030\006 \001(\014B2\n\032com.yimq.remot" +
       "ing.protocolB\024RemotingCommandProto"

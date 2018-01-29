@@ -1,0 +1,12 @@
+syntax = "proto2";
+
+package com.yimq.common.protobuf.header;
+
+option java_package = "com.yimq.common.protocol.header";
+option java_outer_classname = "RegisterConsumerRequestHeaderProto";
+
+message RegisterConsumerRequestHeader {
+    optional string consumerGroup = 1;
+    optional string topic = 2;
+    optional int32 subscribeType = 3;
+}

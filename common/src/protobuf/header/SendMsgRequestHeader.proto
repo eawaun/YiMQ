@@ -7,6 +7,4 @@ option java_outer_classname = "SendMsgRequestHeaderProto";
 
 message SendMsgRequestHeader {
     optional string topic = 1;
-    optional string producerGroup = 2;
-    optional int32 queueId = 3;
 }
