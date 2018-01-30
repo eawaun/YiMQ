@@ -20,7 +20,6 @@ import java.util.concurrent.Executors;
 public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsumer {
 
     private String consumerGroup;
-    private final int subscribeType;
     private String topic;
 
     private long registerConsumerTimeoutMills = 3000;
@@ -31,9 +30,8 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
 
     private MessageReceivedListener messageReceivedListener;
 
-    public DefaultMQPushConsumer(String consumerGroup, int subscribeType) {
+    public DefaultMQPushConsumer(String consumerGroup) {
         this.consumerGroup = consumerGroup;
-        this.subscribeType = subscribeType;
     }
 
     @Override
@@ -56,7 +54,7 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
 
     private void registerConsumer() throws RemotingConnectException, InterruptedException {
         RegisterConsumerRequestHeader requestHeader = RegisterConsumerRequestHeader.newBuilder().setConsumerGroup(this.consumerGroup)
-            .setTopic(this.topic).setSubscribeType(this.subscribeType).build();
+            .setTopic(this.topic).build();
 
         RemotingCommand request = RemotingCommandBuilder.newRequestBuilder().setCode(RequestCode.REGISTER_CONSUMER)
             .setCustomHeader(requestHeader.toByteString()).build();

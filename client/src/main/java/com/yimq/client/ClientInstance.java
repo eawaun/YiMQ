@@ -31,7 +31,6 @@ public class ClientInstance {
     private NettyClientConfig nettyClientConfig;
     private NettyRemotingClient remotingClient;
 
-
     private final Map<String/* topic */, TopicRouteData> topicRouteMap = new ConcurrentHashMap<>();
 
     private final Random random = new Random();

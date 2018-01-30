@@ -4,11 +4,11 @@ import com.yimq.remoting.netty.NettyClientConfig;
 import com.yimq.remoting.netty.NettyServerConfig;
 
 public class BrokerStarter {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         start(args);
     }
 
-    private static void start(String[] args) {
+    private static void start(String[] args) throws InterruptedException {
         final BrokerConfig brokerConfig = new BrokerConfig();
         final NettyServerConfig nettyServerConfig = new NettyServerConfig();
         final NettyClientConfig nettyClientConfig = new NettyClientConfig();

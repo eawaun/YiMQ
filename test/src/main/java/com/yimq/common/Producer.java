@@ -14,6 +14,6 @@ public class Producer {
 
         Message msg = new Message("TopicTest1", "hello".getBytes());
 
-        producer.sendSync(msg);
+        producer.send(msg);
     }
 }

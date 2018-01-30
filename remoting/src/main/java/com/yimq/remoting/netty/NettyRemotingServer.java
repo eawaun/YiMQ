@@ -2,6 +2,8 @@ package com.yimq.remoting.netty;
 
 import com.yimq.remoting.RemotingServer;
 import com.yimq.remoting.common.Pair;
+import com.yimq.remoting.exception.RemotingSendRequestException;
+import com.yimq.remoting.exception.RemotingTimeoutException;
 import com.yimq.remoting.protocol.RemotingCommandProto;
 import com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand;
 import io.netty.bootstrap.ServerBootstrap;
@@ -45,9 +47,9 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
             }
         });
 
-        this.workerGroup = new NioEventLoopGroup(this.nettyServerConfig.getWorkerGroupThreads(), new ThreadFactory() {
+        this.workerGroup = new NioEventLoopGroup(this.nettyServerConfig.getWorkerThreads(), new ThreadFactory() {
             private AtomicInteger threadIndex = new AtomicInteger(1);
-            private int threadTotal = nettyServerConfig.getWorkerGroupThreads();
+            private int threadTotal = nettyServerConfig.getWorkerThreads();
 
             @Override
             public Thread newThread(Runnable r) {
@@ -92,6 +94,11 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
     @Override
     public void registerProcessor(NettyRequestProcessor processor, ExecutorService executorService) {
         this.defaultRequestProcessor = new Pair<>(processor, executorService);
+    }
+
+    @Override
+    public RemotingCommand invokeSync(Channel channel, RemotingCommand request, long timeoutMills) throws InterruptedException, RemotingSendRequestException, RemotingTimeoutException {
+        return this.invokeSyncImpl(channel, request, timeoutMills);
     }
 
     class NettyServerHandler extends SimpleChannelInboundHandler<RemotingCommand> {

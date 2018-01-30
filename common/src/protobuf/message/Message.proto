@@ -1,0 +1,12 @@
+syntax = "proto2";
+
+package com.yimq.common.protobuf.message;
+
+option java_package = "com.yimq.common.message";
+option java_outer_classname = "MessageProto";
+
+message Message {
+    optional string topic = 1;
+    optional bytes body = 2;
+
+}
