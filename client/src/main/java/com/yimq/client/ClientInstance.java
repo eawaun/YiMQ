@@ -4,6 +4,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.client.producer.SendResult;
 import com.yimq.common.protocol.header.GetRouteInfoRequestHeaderProto;
 import com.yimq.common.protocol.route.BrokerData;
+import com.yimq.common.protocol.route.QueueData;
 import com.yimq.common.protocol.route.TopicRouteData;
 import com.yimq.common.protocol.route.TopicRouteDataProto;
 import com.yimq.remoting.common.ThreadFactoryImpl;
@@ -67,10 +68,12 @@ public class ClientInstance {
     public BrokerData chooseBroker(String topic) throws RemotingConnectException, InterruptedException {
         TopicRouteData topicRouteData = findTopicRouteDataFromNamesrv(topic);
         List<BrokerData> brokerDatas = topicRouteData.getBrokerDatas();
+        List<QueueData> queueDatas = topicRouteData.getQueueDatas();
 
         int index = Math.abs(this.brokerChooser.getAndIncrement()) % brokerDatas.size();
         return brokerDatas.get(index);
     }
+
 
     public SendResult sendSync(final String addr, final RemotingCommand request, final long timeoutMills) throws RemotingConnectException, InterruptedException {
         RemotingCommand response = this.remotingClient.invokeSync(addr, request, timeoutMills);

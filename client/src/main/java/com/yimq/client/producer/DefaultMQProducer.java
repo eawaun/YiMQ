@@ -51,6 +51,10 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
      */
     @Override
     public SendResult send(Message msg) throws RemotingConnectException, InterruptedException {
+        TopicRouteData topicRouteData = this.clientInstance.findTopicRouteDataFromNamesrv(msg.getTopic());
+
+
+
         BrokerData brokerData = this.clientInstance.chooseBroker(msg.getTopic());
 
         SendMsgRequestHeader sendMsgRequestHeader = SendMsgRequestHeader.newBuilder().setTopic(msg.getTopic()).build();

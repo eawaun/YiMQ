@@ -1,83 +1,91 @@
 package com.yimq.common.broker;
 
+import com.yimq.common.consumer.ConsumerGroupInfo;
 import com.yimq.common.consumer.ConsumerInfo;
-import com.yimq.common.protocol.route.TopicInfo;
 import com.yimq.common.consumer.SubscribeType;
+import com.yimq.common.message.MessageQueue;
+import com.yimq.common.topic.TopicConfig;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConsumerManager {
-    private Map<String/* topic */, Map<String/* consumerGroup */, List<ConsumerInfo>>> topicConsumerGroupMap
+
+    private BrokerController brokerController;
+
+    private Map<String/* topic */, Map<String/* consumerGroup */, ConsumerGroupInfo>> topicConsumerGroupMap
         = new ConcurrentHashMap<>();
 
-    private final Random random = new Random();
-    private AtomicInteger groupConcurrentlySelector = new AtomicInteger(random.nextInt());
+    /**
+     * 队列与消费者列表之间的映射，当从队列当中取消息时，会发送到对应的消费者列表
+     */
+    private Map<String/* topic */, Map<Integer/* queueId */, List<ConsumerInfo>>> topicQueueConsumersMap =
+        new ConcurrentHashMap<>();
+
+    private Map<String/* topic */, List<MessageQueue>> messageQueueInTopic = new ConcurrentHashMap<>();
+
+    public ConsumerManager(BrokerController brokerController) {
+        this.brokerController = brokerController;
+    }
 
     public void addConsumer(String topic, ConsumerInfo newConsumer) {
-        Map<String, List<ConsumerInfo>> consumerGroupMap = this.topicConsumerGroupMap.get(topic);
+        Map<String, ConsumerGroupInfo> consumerGroupMap = this.topicConsumerGroupMap.get(topic);
         if (consumerGroupMap == null) {
             consumerGroupMap = new ConcurrentHashMap<>();
             topicConsumerGroupMap.put(topic, consumerGroupMap);
         }
 
-        List<ConsumerInfo> consumers = consumerGroupMap.get(newConsumer.getConsumerGroup());
-        for (ConsumerInfo consumer : consumers) {
-            if (newConsumer.equals(consumer)) {
-                //覆盖掉原来的
-                consumers.remove(consumer);
-                break;
-            }
-        }
-        consumers.add(newConsumer);
-    }
-
-    public List<ConsumerInfo> findConsumers(TopicInfo topicInfo) {
-        String topic = topicInfo.getTopic();
-        switch (topicInfo.getSubscribeType()) {
-            case SubscribeType.BROADCAST:
-                return this.findConsumersForBroadcast(topic);
-            case SubscribeType.GROUP_CONCURRENTLY:
-                return this.findConsumersForGroupConcurrently(topic);
-            case SubscribeType.GROUP_SERIAL:
-                return this.findConsumersForGroupSerial(topic);
-            default:
-                return null;
-        }
-
-    }
-
-    private List<ConsumerInfo> findConsumersForBroadcast(String topic) {
-        Collection<List<ConsumerInfo>> consumersInGroups = topicConsumerGroupMap.get(topic).values();
-
-        List<ConsumerInfo> targetConsumers = new ArrayList<>();
-        for (List<ConsumerInfo> consumers : consumersInGroups) {
-            targetConsumers.addAll(consumers);
-        }
-        return targetConsumers;
+        ConsumerGroupInfo consumerGroup = consumerGroupMap.get(newConsumer.getConsumerGroup());
+        consumerGroup.addConsumer(newConsumer);
     }
 
     /**
-     * 随机选择一个消费者
-     * @param topic
-     * @return
+     * 队列与消费者关联关系 重新平衡
+     *
+     * 根据消费类型不同，分配方法不同，包括：
+     * 广播：1条队列包含所有的消费者
+     * 组内单播：一条队列只分配到组内一个消费者。如果有两个组，那队列就与两个消费者（一组一个）关联
+     *
+     * 有三层循环，但在轻量级应用的场景下，实际上每个循环的次数都很少
+     * 第一层是遍历所有topic
+     * 第二层是遍历topic内所有消费者组
+     * 第三层是一个topic配置的消息队列数量
      */
-    private List<ConsumerInfo> findConsumersForGroupConcurrently(String topic) {
-        Collection<List<ConsumerInfo>> consumersInGroups = topicConsumerGroupMap.get(topic).values();
+    public void rebalanceRelation() {
+        this.topicConsumerGroupMap.forEach((topic, consumerGroupMap) -> { //遍历所有topic
+            TopicConfig topicConfig = this.brokerController.getTopicManager().getTopicConfigMap().get(topic);
+            List<MessageQueue> messageQueues = this.messageQueueInTopic.get(topic);
 
-        List<ConsumerInfo> targetConsumers = new ArrayList<>();
-        for (List<ConsumerInfo> consumers : consumersInGroups) {
-            int index = Math.abs(this.groupConcurrentlySelector.getAndIncrement()) % consumers.size();
-            targetConsumers.add(consumers.get(index));
-        }
-        return targetConsumers;
+            Map<Integer/* queueId */, List<ConsumerInfo>> queueConsumersMap = this.topicQueueConsumersMap.get(topic);
+
+            Collection<ConsumerGroupInfo> consumerGroups = consumerGroupMap.values();
+            for (ConsumerGroupInfo consumerGroup : consumerGroups) {//遍历topic下的消费者组
+                List<ConsumerInfo> consumersInGroup = consumerGroup.getConsumers();//消费者组内的消费者
+
+                if (SubscribeType.BROADCAST == topicConfig.getSubscribeType()) {
+                    //一个队列分配给所有消费者
+                    messageQueues.forEach(messageQueue -> {
+                        List<ConsumerInfo> consumers = queueConsumersMap.get(messageQueue.getQueueId());
+                        consumers.addAll(consumersInGroup);//组里的所有消费者都与队列关联
+                    });
+                } else if (SubscribeType.GROUP_UNICAST == topicConfig.getSubscribeType()) {
+                    //队列平均分配给消费者，一个队列只能与一个消费者关联
+                    int queueSizes = messageQueues.size();
+                    int consumerSizes = consumersInGroup.size();
+                    for (int i = 0; i < queueSizes; i++) {
+                        MessageQueue messageQueue = messageQueues.get(i);
+                        List<ConsumerInfo> consumers = queueConsumersMap.get(messageQueue.getQueueId());//与队列关联的消费者
+                        consumers.add(consumersInGroup.get(i % consumerSizes));//将消费者组内的消费者 添加到与队列关联的消费者列表
+                    }
+                }
+            }
+        });
     }
 
-    private List<ConsumerInfo> findConsumersForGroupSerial(String topic) {
-        //todo
-        return null;
+    public List<ConsumerInfo> findConsumers(final TopicConfig topicConfig, final int queueId) {
+        String topic = topicConfig.getTopic();
+        return this.topicQueueConsumersMap.get(topic).get(queueId);
     }
-
-
 }

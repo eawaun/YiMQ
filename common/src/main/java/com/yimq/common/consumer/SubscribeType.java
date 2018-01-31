@@ -7,12 +7,7 @@ public class SubscribeType {
     public static final int BROADCAST = 1;
 
     /**
-     * 组间广播，组内单播，并发执行，不保证消息顺序
+     * 组间广播，组内单播
      */
-    public static final int GROUP_CONCURRENTLY = 2;
-
-    /**
-     * 组间广播，组内单播，严格按照顺序执行
-     */
-    public static final int GROUP_SERIAL = 3;
+    public static final int GROUP_UNICAST = 2;
 }

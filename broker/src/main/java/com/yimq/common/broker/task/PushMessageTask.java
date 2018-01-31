@@ -28,6 +28,7 @@ public class PushMessageTask implements Runnable {
 
     @Override
     public void run() {
+        //todo 添加重试，成功时修改db
         RemotingCommand request = RemotingCommandBuilder.newRequestBuilder()
             .setCode(RequestCode.CONSUME_MESSAGE_DIRECTLY)
             .setBody(ByteString.copyFrom(message.getBody())).build();

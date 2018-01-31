@@ -2,11 +2,20 @@ package com.yimq.common.message;
 
 public class Message {
     private String topic;
+    private int queueId;
     private byte[] body;
 
     public Message(String topic, byte[] body) {
         this.topic = topic;
         this.body = body;
+    }
+
+    public int getQueueId() {
+        return queueId;
+    }
+
+    public void setQueueId(int queueId) {
+        this.queueId = queueId;
     }
 
     public String getTopic() {

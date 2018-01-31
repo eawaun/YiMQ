@@ -17,6 +17,7 @@ public class BrokerController {
 
     private ConsumerManager consumerManager;
     private MessageManager messageManager;
+    private TopicManager topicManager;
 
     private RemotingServer remotingServer;
     private ExecutorService remotingExecutor;
@@ -28,8 +29,9 @@ public class BrokerController {
     }
 
     public void init() {
-        this.consumerManager = new ConsumerManager();
+        this.consumerManager = new ConsumerManager(this);
         this.messageManager = new MessageManager(this);
+        this.topicManager = new TopicManager(this);
         this.remotingExecutor = Executors.newFixedThreadPool(this.nettyServerConfig.getWorkerThreads(),
             new ThreadFactoryImpl("BrokerExecutorThread_"));
         this.remotingServer = new NettyRemotingServer(this.nettyServerConfig);
@@ -59,5 +61,9 @@ public class BrokerController {
 
     public MessageManager getMessageManager() {
         return messageManager;
+    }
+
+    public TopicManager getTopicManager() {
+        return topicManager;
     }
 }

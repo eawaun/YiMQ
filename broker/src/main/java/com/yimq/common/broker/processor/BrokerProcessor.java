@@ -35,11 +35,11 @@ public class BrokerProcessor implements NettyRequestProcessor {
         try {
             String topic = null;
             Message message = new Message(topic, new byte[12]);
-            //添加到消息队列中
-            this.brokerController.getMessageManager().addMessage(topic, message);
-
             //落地
             this.brokerController.getMessageManager().saveMessage(topic, message);
+
+            //todo 添加到消息队列中，如果是延迟任务，则不添加到队列中，而是放到数据库中
+            this.brokerController.getMessageManager().addMessage(topic, message);
 
             //返回成功
             //todo

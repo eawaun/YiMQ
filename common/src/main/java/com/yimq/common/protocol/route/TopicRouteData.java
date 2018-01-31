@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 public class TopicRouteData implements ProtobufConver<TopicRouteDataProto.TopicRouteData> {
     private String topic;
     private List<BrokerData> brokerDatas;
+    private List<QueueData> queueDatas;
 
     public TopicRouteData() {
     }
@@ -46,5 +47,13 @@ public class TopicRouteData implements ProtobufConver<TopicRouteDataProto.TopicR
 
     public void setBrokerDatas(List<BrokerData> brokerDatas) {
         this.brokerDatas = brokerDatas;
+    }
+
+    public List<QueueData> getQueueDatas() {
+        return queueDatas;
+    }
+
+    public void setQueueDatas(List<QueueData> queueDatas) {
+        this.queueDatas = queueDatas;
     }
 }
