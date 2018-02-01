@@ -1,5 +1,8 @@
 package com.yimq.common.broker;
 
+import com.yimq.common.broker.manager.ConsumerManager;
+import com.yimq.common.broker.manager.MessageManager;
+import com.yimq.common.broker.manager.TopicManager;
 import com.yimq.common.broker.processor.BrokerProcessor;
 import com.yimq.remoting.RemotingServer;
 import com.yimq.remoting.common.ThreadFactoryImpl;

@@ -4,21 +4,15 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.common.protocol.RequestCode;
 import com.yimq.common.protocol.header.GetRouteInfoRequestHeaderProto.GetRouteInfoRequestHeader;
 import com.yimq.common.protocol.header.RegisterBrokerRequestHeaderProto.RegisterBrokerRequestHeader;
-import com.yimq.common.protocol.route.BrokerDataProto;
 import com.yimq.common.protocol.route.TopicRouteData;
 import com.yimq.common.protocol.route.TopicRouteDataProto;
-import com.yimq.common.topic.BrokerTopicConfigWrapper;
-import com.yimq.common.topic.BrokerTopicConfigWrapperProto;
+import com.yimq.common.topic.TopicConfigProto;
+import com.yimq.common.topic.TopicConfigWrapper;
 import com.yimq.namesrv.NamesrvController;
 import com.yimq.remoting.netty.NettyRequestProcessor;
 import com.yimq.remoting.protocol.RemotingCommandBuilder;
 import io.netty.channel.ChannelHandlerContext;
 import com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 public class DefaultNettyRequestProcessor implements NettyRequestProcessor {
@@ -63,15 +57,14 @@ public class DefaultNettyRequestProcessor implements NettyRequestProcessor {
     private RemotingCommand registerBroker(ChannelHandlerContext ctx, RemotingCommand request) throws InvalidProtocolBufferException {
         RegisterBrokerRequestHeader registerBrokerRequestHeader = RegisterBrokerRequestHeader.parseFrom(request.getCustomHeader());
 
-        BrokerTopicConfigWrapperProto.BrokerTopicConfigWrapper brokerTopicConfigWrapper =
-            BrokerTopicConfigWrapperProto.BrokerTopicConfigWrapper.parseFrom(request.getBody());
+        TopicConfigProto.TopicConfigWrapper topicConfigWrapperProto = TopicConfigProto.TopicConfigWrapper.parseFrom(request.getBody());
 
         this.namesrvController.getRouteInfoManager().registerBroker(
             registerBrokerRequestHeader.getClusterName(),
             registerBrokerRequestHeader.getBrokerAddr(),
             registerBrokerRequestHeader.getBrokerName(),
             registerBrokerRequestHeader.getBrokerId(),
-            BrokerTopicConfigWrapper.fromProto(brokerTopicConfigWrapper),
+            TopicConfigWrapper.fromProto(topicConfigWrapperProto),
             ctx.channel()
         );
 

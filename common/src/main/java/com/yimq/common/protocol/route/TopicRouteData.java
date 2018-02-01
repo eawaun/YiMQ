@@ -1,20 +1,27 @@
 package com.yimq.common.protocol.route;
 
 import com.yimq.common.ProtobufConver;
+import com.yimq.common.topic.TopicConfig;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class TopicRouteData implements ProtobufConver<TopicRouteDataProto.TopicRouteData> {
     private String topic;
+    private TopicConfig topicConfig;
     private List<BrokerData> brokerDatas;
-    private List<QueueData> queueDatas;
 
     public TopicRouteData() {
     }
 
     public TopicRouteData(String topic, List<BrokerData> brokerDatas) {
         this.topic = topic;
+        this.brokerDatas = brokerDatas;
+    }
+
+    public TopicRouteData(String topic, TopicConfig topicConfig, List<BrokerData> brokerDatas) {
+        this.topic = topic;
+        this.topicConfig = topicConfig;
         this.brokerDatas = brokerDatas;
     }
 
@@ -49,11 +56,11 @@ public class TopicRouteData implements ProtobufConver<TopicRouteDataProto.TopicR
         this.brokerDatas = brokerDatas;
     }
 
-    public List<QueueData> getQueueDatas() {
-        return queueDatas;
+    public TopicConfig getTopicConfig() {
+        return topicConfig;
     }
 
-    public void setQueueDatas(List<QueueData> queueDatas) {
-        this.queueDatas = queueDatas;
+    public void setTopicConfig(TopicConfig topicConfig) {
+        this.topicConfig = topicConfig;
     }
 }

@@ -1,18 +1,19 @@
 package com.yimq.client;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.yimq.client.producer.SendResult;
+import com.yimq.client.common.SendResult;
+import com.yimq.client.producer.DefaultMessageQueueSelector;
+import com.yimq.client.producer.MessageQueueSelector;
 import com.yimq.common.protocol.header.GetRouteInfoRequestHeaderProto;
 import com.yimq.common.protocol.route.BrokerData;
-import com.yimq.common.protocol.route.QueueData;
 import com.yimq.common.protocol.route.TopicRouteData;
 import com.yimq.common.protocol.route.TopicRouteDataProto;
-import com.yimq.remoting.common.ThreadFactoryImpl;
 import com.yimq.remoting.exception.RemotingConnectException;
 import com.yimq.remoting.netty.NettyClientConfig;
 import com.yimq.remoting.netty.NettyRemotingClient;
 import com.yimq.remoting.protocol.RemotingCommandBuilder;
 import com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand;
+import com.yimq.common.protocol.ResponseCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,8 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.yimq.common.protocol.RequestCode.GET_ROUTEINFO_BY_TOPIC;
@@ -37,10 +36,11 @@ public class ClientInstance {
     private final Random random = new Random();
     private final AtomicInteger brokerChooser = new AtomicInteger(random.nextInt());
 
+    private MessageQueueSelector queueSelector;
+
     public ClientInstance(NettyClientConfig nettyClientConfig) {
         this.nettyClientConfig = nettyClientConfig;
         this.remotingClient = new NettyRemotingClient(this.nettyClientConfig);
-
     }
 
     public TopicRouteData findTopicRouteDataFromNamesrv(String topic) throws InterruptedException, RemotingConnectException {
@@ -68,12 +68,14 @@ public class ClientInstance {
     public BrokerData chooseBroker(String topic) throws RemotingConnectException, InterruptedException {
         TopicRouteData topicRouteData = findTopicRouteDataFromNamesrv(topic);
         List<BrokerData> brokerDatas = topicRouteData.getBrokerDatas();
-        List<QueueData> queueDatas = topicRouteData.getQueueDatas();
 
         int index = Math.abs(this.brokerChooser.getAndIncrement()) % brokerDatas.size();
         return brokerDatas.get(index);
     }
 
+    public int chooseQueueId(int queueNums, Object id) {
+        return this.queueSelector.select(queueNums, id);
+    }
 
     public SendResult sendSync(final String addr, final RemotingCommand request, final long timeoutMills) throws RemotingConnectException, InterruptedException {
         RemotingCommand response = this.remotingClient.invokeSync(addr, request, timeoutMills);
@@ -81,11 +83,20 @@ public class ClientInstance {
     }
 
     private SendResult processSendResponse(RemotingCommand response) {
-        //todo
-        return null;
+        switch (response.getCode()) {
+            case ResponseCode.SUCCESS:
+                return SendResult.SUCCESS;
+            case ResponseCode.SYSTEM_ERROR:
+                return SendResult.SYSTEM_ERROR;
+            default:
+                return null;
+        }
     }
 
     public void start() {
+        if (this.queueSelector == null) {
+            this.queueSelector = new DefaultMessageQueueSelector();
+        }
         this.remotingClient.start();
     }
 
@@ -100,4 +111,9 @@ public class ClientInstance {
     public void setRemotingClient(NettyRemotingClient remotingClient) {
         this.remotingClient = remotingClient;
     }
+
+    public void setQueueSelector(MessageQueueSelector queueSelector) {
+        this.queueSelector = queueSelector;
+    }
 }
+

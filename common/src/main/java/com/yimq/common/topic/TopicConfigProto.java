@@ -33,31 +33,22 @@ public final class TopicConfigProto {
         getTopicBytes();
 
     /**
-     * <code>optional int32 readQueueNums = 2;</code>
+     * <code>optional int32 queueNums = 2;</code>
      */
-    boolean hasReadQueueNums();
+    boolean hasQueueNums();
     /**
-     * <code>optional int32 readQueueNums = 2;</code>
+     * <code>optional int32 queueNums = 2;</code>
      */
-    int getReadQueueNums();
+    int getQueueNums();
 
     /**
-     * <code>optional int32 writeQueueNums = 3;</code>
+     * <code>optional int32 subscribeType = 3;</code>
      */
-    boolean hasWriteQueueNums();
+    boolean hasSubscribeType();
     /**
-     * <code>optional int32 writeQueueNums = 3;</code>
+     * <code>optional int32 subscribeType = 3;</code>
      */
-    int getWriteQueueNums();
-
-    /**
-     * <code>optional int32 permission = 4;</code>
-     */
-    boolean hasPermission();
-    /**
-     * <code>optional int32 permission = 4;</code>
-     */
-    int getPermission();
+    int getSubscribeType();
   }
   /**
    * Protobuf type {@code com.yimq.common.protobuf.topic.TopicConfig}
@@ -73,9 +64,8 @@ public final class TopicConfigProto {
     }
     private TopicConfig() {
       topic_ = "";
-      readQueueNums_ = 0;
-      writeQueueNums_ = 0;
-      permission_ = 0;
+      queueNums_ = 0;
+      subscribeType_ = 0;
     }
 
     @java.lang.Override
@@ -117,17 +107,12 @@ public final class TopicConfigProto {
             }
             case 16: {
               bitField0_ |= 0x00000002;
-              readQueueNums_ = input.readInt32();
+              queueNums_ = input.readInt32();
               break;
             }
             case 24: {
               bitField0_ |= 0x00000004;
-              writeQueueNums_ = input.readInt32();
-              break;
-            }
-            case 32: {
-              bitField0_ |= 0x00000008;
-              permission_ = input.readInt32();
+              subscribeType_ = input.readInt32();
               break;
             }
           }
@@ -197,49 +182,34 @@ public final class TopicConfigProto {
       }
     }
 
-    public static final int READQUEUENUMS_FIELD_NUMBER = 2;
-    private int readQueueNums_;
+    public static final int QUEUENUMS_FIELD_NUMBER = 2;
+    private int queueNums_;
     /**
-     * <code>optional int32 readQueueNums = 2;</code>
+     * <code>optional int32 queueNums = 2;</code>
      */
-    public boolean hasReadQueueNums() {
+    public boolean hasQueueNums() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional int32 readQueueNums = 2;</code>
+     * <code>optional int32 queueNums = 2;</code>
      */
-    public int getReadQueueNums() {
-      return readQueueNums_;
+    public int getQueueNums() {
+      return queueNums_;
     }
 
-    public static final int WRITEQUEUENUMS_FIELD_NUMBER = 3;
-    private int writeQueueNums_;
+    public static final int SUBSCRIBETYPE_FIELD_NUMBER = 3;
+    private int subscribeType_;
     /**
-     * <code>optional int32 writeQueueNums = 3;</code>
+     * <code>optional int32 subscribeType = 3;</code>
      */
-    public boolean hasWriteQueueNums() {
+    public boolean hasSubscribeType() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional int32 writeQueueNums = 3;</code>
+     * <code>optional int32 subscribeType = 3;</code>
      */
-    public int getWriteQueueNums() {
-      return writeQueueNums_;
-    }
-
-    public static final int PERMISSION_FIELD_NUMBER = 4;
-    private int permission_;
-    /**
-     * <code>optional int32 permission = 4;</code>
-     */
-    public boolean hasPermission() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
-    }
-    /**
-     * <code>optional int32 permission = 4;</code>
-     */
-    public int getPermission() {
-      return permission_;
+    public int getSubscribeType() {
+      return subscribeType_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -258,13 +228,10 @@ public final class TopicConfigProto {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, topic_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeInt32(2, readQueueNums_);
+        output.writeInt32(2, queueNums_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeInt32(3, writeQueueNums_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeInt32(4, permission_);
+        output.writeInt32(3, subscribeType_);
       }
       unknownFields.writeTo(output);
     }
@@ -279,15 +246,11 @@ public final class TopicConfigProto {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(2, readQueueNums_);
+          .computeInt32Size(2, queueNums_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(3, writeQueueNums_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(4, permission_);
+          .computeInt32Size(3, subscribeType_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -310,20 +273,15 @@ public final class TopicConfigProto {
         result = result && getTopic()
             .equals(other.getTopic());
       }
-      result = result && (hasReadQueueNums() == other.hasReadQueueNums());
-      if (hasReadQueueNums()) {
-        result = result && (getReadQueueNums()
-            == other.getReadQueueNums());
+      result = result && (hasQueueNums() == other.hasQueueNums());
+      if (hasQueueNums()) {
+        result = result && (getQueueNums()
+            == other.getQueueNums());
       }
-      result = result && (hasWriteQueueNums() == other.hasWriteQueueNums());
-      if (hasWriteQueueNums()) {
-        result = result && (getWriteQueueNums()
-            == other.getWriteQueueNums());
-      }
-      result = result && (hasPermission() == other.hasPermission());
-      if (hasPermission()) {
-        result = result && (getPermission()
-            == other.getPermission());
+      result = result && (hasSubscribeType() == other.hasSubscribeType());
+      if (hasSubscribeType()) {
+        result = result && (getSubscribeType()
+            == other.getSubscribeType());
       }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
@@ -340,17 +298,13 @@ public final class TopicConfigProto {
         hash = (37 * hash) + TOPIC_FIELD_NUMBER;
         hash = (53 * hash) + getTopic().hashCode();
       }
-      if (hasReadQueueNums()) {
-        hash = (37 * hash) + READQUEUENUMS_FIELD_NUMBER;
-        hash = (53 * hash) + getReadQueueNums();
+      if (hasQueueNums()) {
+        hash = (37 * hash) + QUEUENUMS_FIELD_NUMBER;
+        hash = (53 * hash) + getQueueNums();
       }
-      if (hasWriteQueueNums()) {
-        hash = (37 * hash) + WRITEQUEUENUMS_FIELD_NUMBER;
-        hash = (53 * hash) + getWriteQueueNums();
-      }
-      if (hasPermission()) {
-        hash = (37 * hash) + PERMISSION_FIELD_NUMBER;
-        hash = (53 * hash) + getPermission();
+      if (hasSubscribeType()) {
+        hash = (37 * hash) + SUBSCRIBETYPE_FIELD_NUMBER;
+        hash = (53 * hash) + getSubscribeType();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -483,12 +437,10 @@ public final class TopicConfigProto {
         super.clear();
         topic_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
-        readQueueNums_ = 0;
+        queueNums_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
-        writeQueueNums_ = 0;
+        subscribeType_ = 0;
         bitField0_ = (bitField0_ & ~0x00000004);
-        permission_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -520,15 +472,11 @@ public final class TopicConfigProto {
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.readQueueNums_ = readQueueNums_;
+        result.queueNums_ = queueNums_;
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        result.writeQueueNums_ = writeQueueNums_;
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-          to_bitField0_ |= 0x00000008;
-        }
-        result.permission_ = permission_;
+        result.subscribeType_ = subscribeType_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -576,14 +524,11 @@ public final class TopicConfigProto {
           topic_ = other.topic_;
           onChanged();
         }
-        if (other.hasReadQueueNums()) {
-          setReadQueueNums(other.getReadQueueNums());
+        if (other.hasQueueNums()) {
+          setQueueNums(other.getQueueNums());
         }
-        if (other.hasWriteQueueNums()) {
-          setWriteQueueNums(other.getWriteQueueNums());
-        }
-        if (other.hasPermission()) {
-          setPermission(other.getPermission());
+        if (other.hasSubscribeType()) {
+          setSubscribeType(other.getSubscribeType());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -689,98 +634,66 @@ public final class TopicConfigProto {
         return this;
       }
 
-      private int readQueueNums_ ;
+      private int queueNums_ ;
       /**
-       * <code>optional int32 readQueueNums = 2;</code>
+       * <code>optional int32 queueNums = 2;</code>
        */
-      public boolean hasReadQueueNums() {
+      public boolean hasQueueNums() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional int32 readQueueNums = 2;</code>
+       * <code>optional int32 queueNums = 2;</code>
        */
-      public int getReadQueueNums() {
-        return readQueueNums_;
+      public int getQueueNums() {
+        return queueNums_;
       }
       /**
-       * <code>optional int32 readQueueNums = 2;</code>
+       * <code>optional int32 queueNums = 2;</code>
        */
-      public Builder setReadQueueNums(int value) {
+      public Builder setQueueNums(int value) {
         bitField0_ |= 0x00000002;
-        readQueueNums_ = value;
+        queueNums_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 readQueueNums = 2;</code>
+       * <code>optional int32 queueNums = 2;</code>
        */
-      public Builder clearReadQueueNums() {
+      public Builder clearQueueNums() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        readQueueNums_ = 0;
+        queueNums_ = 0;
         onChanged();
         return this;
       }
 
-      private int writeQueueNums_ ;
+      private int subscribeType_ ;
       /**
-       * <code>optional int32 writeQueueNums = 3;</code>
+       * <code>optional int32 subscribeType = 3;</code>
        */
-      public boolean hasWriteQueueNums() {
+      public boolean hasSubscribeType() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional int32 writeQueueNums = 3;</code>
+       * <code>optional int32 subscribeType = 3;</code>
        */
-      public int getWriteQueueNums() {
-        return writeQueueNums_;
+      public int getSubscribeType() {
+        return subscribeType_;
       }
       /**
-       * <code>optional int32 writeQueueNums = 3;</code>
+       * <code>optional int32 subscribeType = 3;</code>
        */
-      public Builder setWriteQueueNums(int value) {
+      public Builder setSubscribeType(int value) {
         bitField0_ |= 0x00000004;
-        writeQueueNums_ = value;
+        subscribeType_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 writeQueueNums = 3;</code>
+       * <code>optional int32 subscribeType = 3;</code>
        */
-      public Builder clearWriteQueueNums() {
+      public Builder clearSubscribeType() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        writeQueueNums_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private int permission_ ;
-      /**
-       * <code>optional int32 permission = 4;</code>
-       */
-      public boolean hasPermission() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
-      }
-      /**
-       * <code>optional int32 permission = 4;</code>
-       */
-      public int getPermission() {
-        return permission_;
-      }
-      /**
-       * <code>optional int32 permission = 4;</code>
-       */
-      public Builder setPermission(int value) {
-        bitField0_ |= 0x00000008;
-        permission_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional int32 permission = 4;</code>
-       */
-      public Builder clearPermission() {
-        bitField0_ = (bitField0_ & ~0x00000008);
-        permission_ = 0;
+        subscribeType_ = 0;
         onChanged();
         return this;
       }
@@ -833,11 +746,717 @@ public final class TopicConfigProto {
 
   }
 
+  public interface TopicConfigWrapperOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.yimq.common.protobuf.topic.TopicConfigWrapper)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>map&lt;string, .com.yimq.common.protobuf.topic.TopicConfig&gt; topicConfigMap = 1;</code>
+     */
+    int getTopicConfigMapCount();
+    /**
+     * <code>map&lt;string, .com.yimq.common.protobuf.topic.TopicConfig&gt; topicConfigMap = 1;</code>
+     */
+    boolean containsTopicConfigMap(
+        java.lang.String key);
+    /**
+     * Use {@link #getTopicConfigMapMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig>
+    getTopicConfigMap();
+    /**
+     * <code>map&lt;string, .com.yimq.common.protobuf.topic.TopicConfig&gt; topicConfigMap = 1;</code>
+     */
+    java.util.Map<java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig>
+    getTopicConfigMapMap();
+    /**
+     * <code>map&lt;string, .com.yimq.common.protobuf.topic.TopicConfig&gt; topicConfigMap = 1;</code>
+     */
+
+    com.yimq.common.topic.TopicConfigProto.TopicConfig getTopicConfigMapOrDefault(
+        java.lang.String key,
+        com.yimq.common.topic.TopicConfigProto.TopicConfig defaultValue);
+    /**
+     * <code>map&lt;string, .com.yimq.common.protobuf.topic.TopicConfig&gt; topicConfigMap = 1;</code>
+     */
+
+    com.yimq.common.topic.TopicConfigProto.TopicConfig getTopicConfigMapOrThrow(
+        java.lang.String key);
+  }
+  /**
+   * Protobuf type {@code com.yimq.common.protobuf.topic.TopicConfigWrapper}
+   */
+  public  static final class TopicConfigWrapper extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.yimq.common.protobuf.topic.TopicConfigWrapper)
+      TopicConfigWrapperOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use TopicConfigWrapper.newBuilder() to construct.
+    private TopicConfigWrapper(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private TopicConfigWrapper() {
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private TopicConfigWrapper(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                topicConfigMap_ = com.google.protobuf.MapField.newMapField(
+                    TopicConfigMapDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000001;
+              }
+              com.google.protobuf.MapEntry<java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig>
+              topicConfigMap__ = input.readMessage(
+                  TopicConfigMapDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              topicConfigMap_.getMutableMap().put(
+                  topicConfigMap__.getKey(), topicConfigMap__.getValue());
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.yimq.common.topic.TopicConfigProto.internal_static_com_yimq_common_protobuf_topic_TopicConfigWrapper_descriptor;
+    }
+
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMapField(
+        int number) {
+      switch (number) {
+        case 1:
+          return internalGetTopicConfigMap();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.yimq.common.topic.TopicConfigProto.internal_static_com_yimq_common_protobuf_topic_TopicConfigWrapper_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper.class, com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper.Builder.class);
+    }
+
+    public static final int TOPICCONFIGMAP_FIELD_NUMBER = 1;
+    private static final class TopicConfigMapDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig>newDefaultInstance(
+                  com.yimq.common.topic.TopicConfigProto.internal_static_com_yimq_common_protobuf_topic_TopicConfigWrapper_TopicConfigMapEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                  com.yimq.common.topic.TopicConfigProto.TopicConfig.getDefaultInstance());
+    }
+    private com.google.protobuf.MapField<
+        java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig> topicConfigMap_;
+    private com.google.protobuf.MapField<java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig>
+    internalGetTopicConfigMap() {
+      if (topicConfigMap_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            TopicConfigMapDefaultEntryHolder.defaultEntry);
+      }
+      return topicConfigMap_;
+    }
+
+    public int getTopicConfigMapCount() {
+      return internalGetTopicConfigMap().getMap().size();
+    }
+    /**
+     * <code>map&lt;string, .com.yimq.common.protobuf.topic.TopicConfig&gt; topicConfigMap = 1;</code>
+     */
+
+    public boolean containsTopicConfigMap(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      return internalGetTopicConfigMap().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getTopicConfigMapMap()} instead.
+     */
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig> getTopicConfigMap() {
+      return getTopicConfigMapMap();
+    }
+    /**
+     * <code>map&lt;string, .com.yimq.common.protobuf.topic.TopicConfig&gt; topicConfigMap = 1;</code>
+     */
+
+    public java.util.Map<java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig> getTopicConfigMapMap() {
+      return internalGetTopicConfigMap().getMap();
+    }
+    /**
+     * <code>map&lt;string, .com.yimq.common.protobuf.topic.TopicConfig&gt; topicConfigMap = 1;</code>
+     */
+
+    public com.yimq.common.topic.TopicConfigProto.TopicConfig getTopicConfigMapOrDefault(
+        java.lang.String key,
+        com.yimq.common.topic.TopicConfigProto.TopicConfig defaultValue) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig> map =
+          internalGetTopicConfigMap().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <code>map&lt;string, .com.yimq.common.protobuf.topic.TopicConfig&gt; topicConfigMap = 1;</code>
+     */
+
+    public com.yimq.common.topic.TopicConfigProto.TopicConfig getTopicConfigMapOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig> map =
+          internalGetTopicConfigMap().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetTopicConfigMap(),
+          TopicConfigMapDefaultEntryHolder.defaultEntry,
+          1);
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (java.util.Map.Entry<java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig> entry
+           : internalGetTopicConfigMap().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig>
+        topicConfigMap__ = TopicConfigMapDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(1, topicConfigMap__);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper)) {
+        return super.equals(obj);
+      }
+      com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper other = (com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper) obj;
+
+      boolean result = true;
+      result = result && internalGetTopicConfigMap().equals(
+          other.internalGetTopicConfigMap());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (!internalGetTopicConfigMap().getMap().isEmpty()) {
+        hash = (37 * hash) + TOPICCONFIGMAP_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetTopicConfigMap().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.yimq.common.protobuf.topic.TopicConfigWrapper}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.yimq.common.protobuf.topic.TopicConfigWrapper)
+        com.yimq.common.topic.TopicConfigProto.TopicConfigWrapperOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.yimq.common.topic.TopicConfigProto.internal_static_com_yimq_common_protobuf_topic_TopicConfigWrapper_descriptor;
+      }
+
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMapField(
+          int number) {
+        switch (number) {
+          case 1:
+            return internalGetTopicConfigMap();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMutableMapField(
+          int number) {
+        switch (number) {
+          case 1:
+            return internalGetMutableTopicConfigMap();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.yimq.common.topic.TopicConfigProto.internal_static_com_yimq_common_protobuf_topic_TopicConfigWrapper_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper.class, com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper.Builder.class);
+      }
+
+      // Construct using com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        internalGetMutableTopicConfigMap().clear();
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.yimq.common.topic.TopicConfigProto.internal_static_com_yimq_common_protobuf_topic_TopicConfigWrapper_descriptor;
+      }
+
+      public com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper getDefaultInstanceForType() {
+        return com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper.getDefaultInstance();
+      }
+
+      public com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper build() {
+        com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper buildPartial() {
+        com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper result = new com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper(this);
+        int from_bitField0_ = bitField0_;
+        result.topicConfigMap_ = internalGetTopicConfigMap();
+        result.topicConfigMap_.makeImmutable();
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper) {
+          return mergeFrom((com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper other) {
+        if (other == com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper.getDefaultInstance()) return this;
+        internalGetMutableTopicConfigMap().mergeFrom(
+            other.internalGetTopicConfigMap());
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private com.google.protobuf.MapField<
+          java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig> topicConfigMap_;
+      private com.google.protobuf.MapField<java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig>
+      internalGetTopicConfigMap() {
+        if (topicConfigMap_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              TopicConfigMapDefaultEntryHolder.defaultEntry);
+        }
+        return topicConfigMap_;
+      }
+      private com.google.protobuf.MapField<java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig>
+      internalGetMutableTopicConfigMap() {
+        onChanged();;
+        if (topicConfigMap_ == null) {
+          topicConfigMap_ = com.google.protobuf.MapField.newMapField(
+              TopicConfigMapDefaultEntryHolder.defaultEntry);
+        }
+        if (!topicConfigMap_.isMutable()) {
+          topicConfigMap_ = topicConfigMap_.copy();
+        }
+        return topicConfigMap_;
+      }
+
+      public int getTopicConfigMapCount() {
+        return internalGetTopicConfigMap().getMap().size();
+      }
+      /**
+       * <code>map&lt;string, .com.yimq.common.protobuf.topic.TopicConfig&gt; topicConfigMap = 1;</code>
+       */
+
+      public boolean containsTopicConfigMap(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        return internalGetTopicConfigMap().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getTopicConfigMapMap()} instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig> getTopicConfigMap() {
+        return getTopicConfigMapMap();
+      }
+      /**
+       * <code>map&lt;string, .com.yimq.common.protobuf.topic.TopicConfig&gt; topicConfigMap = 1;</code>
+       */
+
+      public java.util.Map<java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig> getTopicConfigMapMap() {
+        return internalGetTopicConfigMap().getMap();
+      }
+      /**
+       * <code>map&lt;string, .com.yimq.common.protobuf.topic.TopicConfig&gt; topicConfigMap = 1;</code>
+       */
+
+      public com.yimq.common.topic.TopicConfigProto.TopicConfig getTopicConfigMapOrDefault(
+          java.lang.String key,
+          com.yimq.common.topic.TopicConfigProto.TopicConfig defaultValue) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig> map =
+            internalGetTopicConfigMap().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+       * <code>map&lt;string, .com.yimq.common.protobuf.topic.TopicConfig&gt; topicConfigMap = 1;</code>
+       */
+
+      public com.yimq.common.topic.TopicConfigProto.TopicConfig getTopicConfigMapOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig> map =
+            internalGetTopicConfigMap().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+      }
+
+      public Builder clearTopicConfigMap() {
+        internalGetMutableTopicConfigMap().getMutableMap()
+            .clear();
+        return this;
+      }
+      /**
+       * <code>map&lt;string, .com.yimq.common.protobuf.topic.TopicConfig&gt; topicConfigMap = 1;</code>
+       */
+
+      public Builder removeTopicConfigMap(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        internalGetMutableTopicConfigMap().getMutableMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig>
+      getMutableTopicConfigMap() {
+        return internalGetMutableTopicConfigMap().getMutableMap();
+      }
+      /**
+       * <code>map&lt;string, .com.yimq.common.protobuf.topic.TopicConfig&gt; topicConfigMap = 1;</code>
+       */
+      public Builder putTopicConfigMap(
+          java.lang.String key,
+          com.yimq.common.topic.TopicConfigProto.TopicConfig value) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        if (value == null) { throw new java.lang.NullPointerException(); }
+        internalGetMutableTopicConfigMap().getMutableMap()
+            .put(key, value);
+        return this;
+      }
+      /**
+       * <code>map&lt;string, .com.yimq.common.protobuf.topic.TopicConfig&gt; topicConfigMap = 1;</code>
+       */
+
+      public Builder putAllTopicConfigMap(
+          java.util.Map<java.lang.String, com.yimq.common.topic.TopicConfigProto.TopicConfig> values) {
+        internalGetMutableTopicConfigMap().getMutableMap()
+            .putAll(values);
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.yimq.common.protobuf.topic.TopicConfigWrapper)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.yimq.common.protobuf.topic.TopicConfigWrapper)
+    private static final com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper();
+    }
+
+    public static com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<TopicConfigWrapper>
+        PARSER = new com.google.protobuf.AbstractParser<TopicConfigWrapper>() {
+      public TopicConfigWrapper parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new TopicConfigWrapper(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<TopicConfigWrapper> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<TopicConfigWrapper> getParserForType() {
+      return PARSER;
+    }
+
+    public com.yimq.common.topic.TopicConfigProto.TopicConfigWrapper getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_yimq_common_protobuf_topic_TopicConfig_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_yimq_common_protobuf_topic_TopicConfig_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_yimq_common_protobuf_topic_TopicConfigWrapper_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_yimq_common_protobuf_topic_TopicConfigWrapper_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_yimq_common_protobuf_topic_TopicConfigWrapper_TopicConfigMapEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_yimq_common_protobuf_topic_TopicConfigWrapper_TopicConfigMapEntry_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -848,11 +1467,16 @@ public final class TopicConfigProto {
   static {
     java.lang.String[] descriptorData = {
       "\n$src/protobuf/topic/TopicConfig.proto\022\036" +
-      "com.yimq.common.protobuf.topic\"_\n\013TopicC" +
-      "onfig\022\r\n\005topic\030\001 \001(\t\022\025\n\rreadQueueNums\030\002 " +
-      "\001(\005\022\026\n\016writeQueueNums\030\003 \001(\005\022\022\n\npermissio" +
-      "n\030\004 \001(\005B)\n\025com.yimq.common.topicB\020TopicC" +
-      "onfigProto"
+      "com.yimq.common.protobuf.topic\"F\n\013TopicC" +
+      "onfig\022\r\n\005topic\030\001 \001(\t\022\021\n\tqueueNums\030\002 \001(\005\022" +
+      "\025\n\rsubscribeType\030\003 \001(\005\"\330\001\n\022TopicConfigWr" +
+      "apper\022^\n\016topicConfigMap\030\001 \003(\0132F.com.yimq" +
+      ".common.protobuf.topic.TopicConfigWrappe" +
+      "r.TopicConfigMapEntry\032b\n\023TopicConfigMapE" +
+      "ntry\022\013\n\003key\030\001 \001(\t\022:\n\005value\030\002 \001(\0132+.com.y" +
+      "imq.common.protobuf.topic.TopicConfig:\0028" +
+      "\001B)\n\025com.yimq.common.topicB\020TopicConfigP" +
+      "roto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -871,7 +1495,19 @@ public final class TopicConfigProto {
     internal_static_com_yimq_common_protobuf_topic_TopicConfig_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_yimq_common_protobuf_topic_TopicConfig_descriptor,
-        new java.lang.String[] { "Topic", "ReadQueueNums", "WriteQueueNums", "Permission", });
+        new java.lang.String[] { "Topic", "QueueNums", "SubscribeType", });
+    internal_static_com_yimq_common_protobuf_topic_TopicConfigWrapper_descriptor =
+      getDescriptor().getMessageTypes().get(1);
+    internal_static_com_yimq_common_protobuf_topic_TopicConfigWrapper_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_yimq_common_protobuf_topic_TopicConfigWrapper_descriptor,
+        new java.lang.String[] { "TopicConfigMap", });
+    internal_static_com_yimq_common_protobuf_topic_TopicConfigWrapper_TopicConfigMapEntry_descriptor =
+      internal_static_com_yimq_common_protobuf_topic_TopicConfigWrapper_descriptor.getNestedTypes().get(0);
+    internal_static_com_yimq_common_protobuf_topic_TopicConfigWrapper_TopicConfigMapEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_yimq_common_protobuf_topic_TopicConfigWrapper_TopicConfigMapEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

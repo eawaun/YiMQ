@@ -7,7 +7,10 @@ option java_outer_classname = "TopicConfigProto";
 
 message TopicConfig {
     optional string topic = 1;
-    optional int32 readQueueNums = 2;
-    optional int32 writeQueueNums = 3;
-    optional int32 permission = 4;
+    optional int32 queueNums = 2;
+    optional int32 subscribeType = 3;
+}
+
+message TopicConfigWrapper {
+    map<string, TopicConfig> topicConfigMap = 1;
 }

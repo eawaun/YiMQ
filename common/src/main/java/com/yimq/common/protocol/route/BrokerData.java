@@ -42,6 +42,24 @@ public class BrokerData implements ProtobufConver<BrokerDataProto.BrokerData> {
         this.brokerAddrs = brokerAddrs;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BrokerData that = (BrokerData) o;
+
+        if (getCluster() != null ? !getCluster().equals(that.getCluster()) : that.getCluster() != null) return false;
+        return getBrokerName() != null ? getBrokerName().equals(that.getBrokerName()) : that.getBrokerName() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getCluster() != null ? getCluster().hashCode() : 0;
+        result = 31 * result + (getBrokerName() != null ? getBrokerName().hashCode() : 0);
+        return result;
+    }
+
     public static BrokerData fromProto(BrokerDataProto.BrokerData brokerDataProto) {
         return new BrokerData(brokerDataProto.getCluster(), brokerDataProto.getBrokerName(), brokerDataProto.getBrokerAddrsMap());
     }

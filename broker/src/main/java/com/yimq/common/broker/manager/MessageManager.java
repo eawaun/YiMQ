@@ -1,5 +1,6 @@
-package com.yimq.common.broker;
+package com.yimq.common.broker.manager;
 
+import com.yimq.common.broker.BrokerController;
 import com.yimq.common.broker.task.PushMessageTask;
 import com.yimq.common.consumer.ConsumerInfo;
 import com.yimq.common.exception.MessageHandlerException;
@@ -8,7 +9,6 @@ import com.yimq.common.topic.TopicConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -54,6 +54,7 @@ public class MessageManager {
 
     public void saveMessage(String topic, Message message) {
         //todo db
+        logger.info("saveMessage: message save in db, topic[{}], queueId[{}]", topic, message.getQueueId());
     }
 
 

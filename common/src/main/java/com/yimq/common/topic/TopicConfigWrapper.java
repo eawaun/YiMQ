@@ -1,40 +1,40 @@
 package com.yimq.common.topic;
 
 import com.yimq.common.ProtobufConver;
-import com.yimq.common.topic.TopicConfig;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class BrokerTopicConfigWrapper implements ProtobufConver<BrokerTopicConfigWrapperProto.BrokerTopicConfigWrapper> {
+public class TopicConfigWrapper implements ProtobufConver<TopicConfigProto.TopicConfigWrapper> {
     private Map<String/* topic */, TopicConfig> brokerTopicConfigMap = new ConcurrentHashMap<>();
 
-    public BrokerTopicConfigWrapper(Map<String, TopicConfig> brokerTopicConfigMap) {
+    public TopicConfigWrapper(Map<String, TopicConfig> brokerTopicConfigMap) {
         this.brokerTopicConfigMap = brokerTopicConfigMap;
     }
 
-    public static BrokerTopicConfigWrapper fromProto(BrokerTopicConfigWrapperProto.BrokerTopicConfigWrapper brokerTopicConfigWrapper) {
+    public static TopicConfigWrapper fromProto(TopicConfigProto.TopicConfigWrapper proto) {
 
-        Map<String, TopicConfigProto.TopicConfig> topicConfigMapProto = brokerTopicConfigWrapper.getBrokerTopicConfigMapMap();
+        Map<String, TopicConfigProto.TopicConfig> topicConfigMapProto = proto.getTopicConfigMapMap();
 
         Map<String, TopicConfig> brokerTopicConfigMap = new ConcurrentHashMap<>(topicConfigMapProto.size());
         topicConfigMapProto.forEach((k, v) -> {
             brokerTopicConfigMap.put(k, TopicConfig.fromProto(v));
         });
 
-        return new BrokerTopicConfigWrapper(brokerTopicConfigMap);
+        return new TopicConfigWrapper(brokerTopicConfigMap);
     }
 
-    @Override
-    public BrokerTopicConfigWrapperProto.BrokerTopicConfigWrapper toProto() {
 
+
+    @Override
+    public TopicConfigProto.TopicConfigWrapper toProto() {
         Map<String, TopicConfigProto.TopicConfig> topicConfigMapProto = new ConcurrentHashMap<>(this.brokerTopicConfigMap.size());
-        this.brokerTopicConfigMap.forEach((k, v) -> {
-            topicConfigMapProto.put(k, v.toProto());
+        this.brokerTopicConfigMap.forEach((topic, topicConfig) -> {
+            topicConfigMapProto.put(topic, topicConfig.toProto());
         });
 
-        return BrokerTopicConfigWrapperProto.BrokerTopicConfigWrapper.newBuilder()
-            .putAllBrokerTopicConfigMap(topicConfigMapProto).build();
+        return TopicConfigProto.TopicConfigWrapper.newBuilder()
+            .putAllTopicConfigMap(topicConfigMapProto).build();
     }
 
     public Map<String, TopicConfig> getBrokerTopicConfigMap() {

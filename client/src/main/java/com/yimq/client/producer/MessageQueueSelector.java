@@ -1,10 +1,12 @@
 package com.yimq.client.producer;
 
-import com.yimq.common.message.Message;
-import com.yimq.common.message.MessageQueue;
-
-import java.util.List;
-
 public interface MessageQueueSelector {
-    MessageQueue select(List<MessageQueue> queues, Object id);
+
+    /**
+     *
+     * @param queueNums
+     * @param id 发送顺序消息时，用来指定queue
+     * @return
+     */
+    int select(int queueNums, Object id);
 }

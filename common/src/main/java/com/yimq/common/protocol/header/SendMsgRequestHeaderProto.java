@@ -31,6 +31,15 @@ public final class SendMsgRequestHeaderProto {
      */
     com.google.protobuf.ByteString
         getTopicBytes();
+
+    /**
+     * <code>optional int32 queueId = 2;</code>
+     */
+    boolean hasQueueId();
+    /**
+     * <code>optional int32 queueId = 2;</code>
+     */
+    int getQueueId();
   }
   /**
    * Protobuf type {@code com.yimq.common.protobuf.header.SendMsgRequestHeader}
@@ -46,6 +55,7 @@ public final class SendMsgRequestHeaderProto {
     }
     private SendMsgRequestHeader() {
       topic_ = "";
+      queueId_ = 0;
     }
 
     @java.lang.Override
@@ -83,6 +93,11 @@ public final class SendMsgRequestHeaderProto {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000001;
               topic_ = bs;
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              queueId_ = input.readInt32();
               break;
             }
           }
@@ -152,6 +167,21 @@ public final class SendMsgRequestHeaderProto {
       }
     }
 
+    public static final int QUEUEID_FIELD_NUMBER = 2;
+    private int queueId_;
+    /**
+     * <code>optional int32 queueId = 2;</code>
+     */
+    public boolean hasQueueId() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional int32 queueId = 2;</code>
+     */
+    public int getQueueId() {
+      return queueId_;
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -167,6 +197,9 @@ public final class SendMsgRequestHeaderProto {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, topic_);
       }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeInt32(2, queueId_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -177,6 +210,10 @@ public final class SendMsgRequestHeaderProto {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, topic_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, queueId_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -199,6 +236,11 @@ public final class SendMsgRequestHeaderProto {
         result = result && getTopic()
             .equals(other.getTopic());
       }
+      result = result && (hasQueueId() == other.hasQueueId());
+      if (hasQueueId()) {
+        result = result && (getQueueId()
+            == other.getQueueId());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -213,6 +255,10 @@ public final class SendMsgRequestHeaderProto {
       if (hasTopic()) {
         hash = (37 * hash) + TOPIC_FIELD_NUMBER;
         hash = (53 * hash) + getTopic().hashCode();
+      }
+      if (hasQueueId()) {
+        hash = (37 * hash) + QUEUEID_FIELD_NUMBER;
+        hash = (53 * hash) + getQueueId();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -345,6 +391,8 @@ public final class SendMsgRequestHeaderProto {
         super.clear();
         topic_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
+        queueId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -373,6 +421,10 @@ public final class SendMsgRequestHeaderProto {
           to_bitField0_ |= 0x00000001;
         }
         result.topic_ = topic_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.queueId_ = queueId_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -419,6 +471,9 @@ public final class SendMsgRequestHeaderProto {
           bitField0_ |= 0x00000001;
           topic_ = other.topic_;
           onChanged();
+        }
+        if (other.hasQueueId()) {
+          setQueueId(other.getQueueId());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -523,6 +578,38 @@ public final class SendMsgRequestHeaderProto {
         onChanged();
         return this;
       }
+
+      private int queueId_ ;
+      /**
+       * <code>optional int32 queueId = 2;</code>
+       */
+      public boolean hasQueueId() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional int32 queueId = 2;</code>
+       */
+      public int getQueueId() {
+        return queueId_;
+      }
+      /**
+       * <code>optional int32 queueId = 2;</code>
+       */
+      public Builder setQueueId(int value) {
+        bitField0_ |= 0x00000002;
+        queueId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 queueId = 2;</code>
+       */
+      public Builder clearQueueId() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        queueId_ = 0;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
@@ -588,9 +675,9 @@ public final class SendMsgRequestHeaderProto {
     java.lang.String[] descriptorData = {
       "\n.src/protobuf/header/SendMsgRequestHead" +
       "er.proto\022\037com.yimq.common.protobuf.heade" +
-      "r\"%\n\024SendMsgRequestHeader\022\r\n\005topic\030\001 \001(\t" +
-      "B<\n\037com.yimq.common.protocol.headerB\031Sen" +
-      "dMsgRequestHeaderProto"
+      "r\"6\n\024SendMsgRequestHeader\022\r\n\005topic\030\001 \001(\t" +
+      "\022\017\n\007queueId\030\002 \001(\005B<\n\037com.yimq.common.pro" +
+      "tocol.headerB\031SendMsgRequestHeaderProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -609,7 +696,7 @@ public final class SendMsgRequestHeaderProto {
     internal_static_com_yimq_common_protobuf_header_SendMsgRequestHeader_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_yimq_common_protobuf_header_SendMsgRequestHeader_descriptor,
-        new java.lang.String[] { "Topic", });
+        new java.lang.String[] { "Topic", "QueueId", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

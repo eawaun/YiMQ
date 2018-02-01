@@ -42,13 +42,13 @@ public class TopicConfig implements ProtobufConver<TopicConfigProto.TopicConfig>
     }
 
     public static TopicConfig fromProto(TopicConfigProto.TopicConfig topicConfig) {
-        return new TopicConfig(topicConfig.getTopic(), topicConfig.getReadQueueNums(), topicConfig.getWriteQueueNums()
-            ,topicConfig.getPermission());
+        return new TopicConfig(topicConfig.getTopic(), topicConfig.getQueueNums()
+            ,topicConfig.getSubscribeType());
     }
 
     @Override
     public TopicConfigProto.TopicConfig toProto() {
-        return TopicConfigProto.TopicConfig.newBuilder().setTopic(getTopic()).setReadQueueNums(getReadQueueNums())
-            .setWriteQueueNums(getWriteQueueNums()).setPermission(getPermission()).build();
+        return TopicConfigProto.TopicConfig.newBuilder().setTopic(getTopic()).setQueueNums(getQueueNums())
+            .setSubscribeType(getSubscribeType()).build();
     }
 }

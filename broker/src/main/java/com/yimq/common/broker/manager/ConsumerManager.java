@@ -1,5 +1,6 @@
-package com.yimq.common.broker;
+package com.yimq.common.broker.manager;
 
+import com.yimq.common.broker.BrokerController;
 import com.yimq.common.consumer.ConsumerGroupInfo;
 import com.yimq.common.consumer.ConsumerInfo;
 import com.yimq.common.consumer.SubscribeType;

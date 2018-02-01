@@ -2,11 +2,14 @@ package com.yimq.common.broker.processor;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.common.broker.BrokerController;
-import com.yimq.common.broker.ConsumerManager;
-import com.yimq.common.broker.MessageManager;
+import com.yimq.common.consumer.ConsumerInfo;
 import com.yimq.common.exception.MessageHandlerException;
 import com.yimq.common.message.Message;
+import com.yimq.common.protocol.ResponseCode;
+import com.yimq.common.protocol.header.RegisterConsumerRequestHeaderProto.RegisterConsumerRequestHeader;
+import com.yimq.common.protocol.header.SendMsgRequestHeaderProto.SendMsgRequestHeader;
 import com.yimq.remoting.netty.NettyRequestProcessor;
+import com.yimq.remoting.protocol.RemotingCommandBuilder;
 import com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand;
 import io.netty.channel.ChannelHandlerContext;
 import com.yimq.common.protocol.RequestCode;
@@ -27,33 +30,40 @@ public class BrokerProcessor implements NettyRequestProcessor {
             case RequestCode.REGISTER_CONSUMER:
                 return this.registerConsumer(ctx, request);
         }
-
         return null;
     }
 
-    private RemotingCommand processSendMessage(ChannelHandlerContext ctx, RemotingCommand request) {
+    private RemotingCommand processSendMessage(ChannelHandlerContext ctx, RemotingCommand request) throws InvalidProtocolBufferException {
         try {
-            String topic = null;
-            Message message = new Message(topic, new byte[12]);
+            SendMsgRequestHeader requestHeader = SendMsgRequestHeader.parseFrom(request.getCustomHeader());
+            Message message = new Message(requestHeader.getTopic(), request.getBody().toByteArray());
             //落地
-            this.brokerController.getMessageManager().saveMessage(topic, message);
+            this.brokerController.getMessageManager().saveMessage(message.getTopic(), message);
 
             //todo 添加到消息队列中，如果是延迟任务，则不添加到队列中，而是放到数据库中
-            this.brokerController.getMessageManager().addMessage(topic, message);
+            this.brokerController.getMessageManager().addMessage(message.getTopic(), message);
 
             //返回成功
-            //todo
-
+            RemotingCommand response = RemotingCommandBuilder.newResponseBuilder(request).setCode(ResponseCode.SUCCESS).build();
+            return response;
         } catch (MessageHandlerException e) {
             e.printStackTrace();
         }
-
-
-        return null;
+        return RemotingCommandBuilder.newResponseBuilder(request).setCode(ResponseCode.SYSTEM_ERROR).build();
     }
 
-    private RemotingCommand registerConsumer(ChannelHandlerContext ctx, RemotingCommand request) {
+    private RemotingCommand registerConsumer(ChannelHandlerContext ctx, RemotingCommand request) throws InvalidProtocolBufferException {
+        RegisterConsumerRequestHeader requestHeader = RegisterConsumerRequestHeader.parseFrom(request.getCustomHeader());
 
-        return null;
+        ConsumerInfo consumerInfo = new ConsumerInfo();
+        consumerInfo.setTopic(requestHeader.getTopic());
+        consumerInfo.setConsumerGroup(requestHeader.getConsumerGroup());
+        consumerInfo.setAddress(ctx.channel().remoteAddress().toString());
+        consumerInfo.setChannel(ctx.channel());
+
+        this.brokerController.getConsumerManager().addConsumer(requestHeader.getTopic(), consumerInfo);
+
+        RemotingCommand response = RemotingCommandBuilder.newResponseBuilder(request).setCode(ResponseCode.SUCCESS).build();
+        return response;
     }
 }
