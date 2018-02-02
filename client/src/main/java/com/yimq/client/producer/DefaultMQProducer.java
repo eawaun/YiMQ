@@ -61,8 +61,7 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
         SendMsgRequestHeader sendMsgRequestHeader = SendMsgRequestHeader.newBuilder().setTopic(msg.getTopic())
             .setQueueId(queueId).build();
 
-        RemotingCommand request = RemotingCommandBuilder.newRequestBuilder()
-            .setCode(RequestCode.SEND_MESSAGE)
+        RemotingCommand request = RemotingCommandBuilder.newRequestBuilder(RequestCode.SEND_MESSAGE)
             .setCustomHeader(sendMsgRequestHeader.toByteString())
             .setBody(ByteString.copyFrom(msg.getBody())).build();
 

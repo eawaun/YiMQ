@@ -9,9 +9,9 @@ import com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand;
 public class RemotingCommandBuilder {
     private static AtomicLong requestIdGenerator = new AtomicLong(0);
 
-    public static RemotingCommand.Builder newRequestBuilder() {
+    public static RemotingCommand.Builder newRequestBuilder(int code) {
         return RemotingCommand.newBuilder().setType(RemotingCommandType.REQUEST_COMMAND).
-            setRequestId(requestIdGenerator.getAndIncrement());
+            setRequestId(requestIdGenerator.getAndIncrement()).setCode(code);
     }
 
     public static RemotingCommand.Builder newResponseBuilder(RemotingCommand request) {

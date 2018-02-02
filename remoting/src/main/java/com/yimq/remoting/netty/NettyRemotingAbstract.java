@@ -58,8 +58,7 @@ public abstract class NettyRemotingAbstract {
                 ctx.writeAndFlush(response);
             } else {
                 String error = "request code " + request.getCode() + " not supported";
-                response = RemotingCommandBuilder.newRequestBuilder()
-                    .setCode(REQUEST_CODE_NOT_SUPPORTED).setRemark(error).build();
+                response = RemotingCommandBuilder.newRequestBuilder(REQUEST_CODE_NOT_SUPPORTED).setRemark(error).build();
                 ctx.writeAndFlush(response);
             }
         };

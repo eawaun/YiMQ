@@ -24,7 +24,7 @@ public class RouteInfoManager {
     private final ReadWriteLock readWriteLock;
     private Map<String/* brokerName */, BrokerData> brokerDataTable;
     private Map<String/* topic */, TopicConfig> topicTable;
-    private Map<String/* topic */, Set<String>>  topicBrokerTable;
+    private Map<String/* topic */, Set<String/* brokerName */>>  topicBrokerTable; //在topic下的broker集合
     private Map<String/* clusterName */, Set<String>> clusterBrokerTable;
 
     public RouteInfoManager() {

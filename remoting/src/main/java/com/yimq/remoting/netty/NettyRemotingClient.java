@@ -117,7 +117,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     }
 
     @Override
-    public void updateNamesrvAddrList(List<String> addrs) {
+    public void updateNamesrvAddrs(List<String> addrs) {
         if (addrs == null || addrs.isEmpty()) {
             return;
         }

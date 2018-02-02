@@ -50,8 +50,8 @@ public class ClientInstance {
         }
         //查询namesrv是否有该topic的路由信息
         GetRouteInfoRequestHeaderProto.GetRouteInfoRequestHeader requestHeader = GetRouteInfoRequestHeaderProto.GetRouteInfoRequestHeader.newBuilder().setTopic(topic).build();
-        RemotingCommand request = RemotingCommandBuilder.newRequestBuilder()
-            .setCode(GET_ROUTEINFO_BY_TOPIC).setCustomHeader(requestHeader.toByteString()).build();
+        RemotingCommand request = RemotingCommandBuilder.newRequestBuilder(GET_ROUTEINFO_BY_TOPIC)
+            .setCustomHeader(requestHeader.toByteString()).build();
 
         RemotingCommand response =
             this.remotingClient.invokeSync(null, request, 3 * 1000);
