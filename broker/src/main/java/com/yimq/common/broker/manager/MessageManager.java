@@ -28,7 +28,7 @@ public class MessageManager {
         this.brokerController = brokerController;
     }
 
-    public void addTopic(TopicConfig topicConfig) {
+    void addTopic(TopicConfig topicConfig) {
         Map<Integer, LinkedBlockingQueue<Message>> queueMap = this.topicQueueMap.get(topicConfig.getTopic());
         if (queueMap == null) {
             queueMap = new ConcurrentHashMap<>();

@@ -56,7 +56,7 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
         RegisterConsumerRequestHeader requestHeader = RegisterConsumerRequestHeader.newBuilder().setConsumerGroup(this.consumerGroup)
             .setTopic(this.topic).build();
 
-        RemotingCommand request = RemotingCommandBuilder.newRequestBuilder().setCode(RequestCode.REGISTER_CONSUMER)
+        RemotingCommand request = RemotingCommandBuilder.newRequestBuilder(RequestCode.REGISTER_CONSUMER)
             .setCustomHeader(requestHeader.toByteString()).build();
 
         TopicRouteData topicRouteData = this.clientInstance.findTopicRouteDataFromNamesrv(this.topic);

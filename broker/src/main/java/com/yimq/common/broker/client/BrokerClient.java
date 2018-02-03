@@ -37,13 +37,13 @@ public class BrokerClient {
         final String brokerName,
         final int brokerId,
         final TopicConfigWrapper topicConfigWrapper,
-        final int timeoutMills) {
+        final long timeoutMills) {
         List<String> namesrvAddrs = this.remotingClient.getNamesrvAddrs();
 
         if (!CollectionUtils.isEmpty(namesrvAddrs)) {
             for (String namesrvAddr : namesrvAddrs) {
                 try {
-                    this.registerBroker(namesrvAddr, clusterName, brokerName, brokerId, topicConfigWrapper, timeoutMills);
+                    this.registerBroker(namesrvAddr, clusterName, brokerName, brokerAddr, brokerId, topicConfigWrapper, timeoutMills);
                     logger.info("registerBrokerToAllNamesrv: register to name server[{}] successfully!", namesrvAddr);
                 } catch (Exception e) {
                     logger.warn("registerBrokerToAllNamesrv: register to name server[{}] fail!", namesrvAddr);
@@ -56,14 +56,15 @@ public class BrokerClient {
     private void registerBroker(
         final String namesrvAddr,
         final String clusterName,
+        final String brokerName,
         final String brokerAddr,
         final int brokerId,
         final TopicConfigWrapper topicConfigWrapper,
-        final int timeoutMills) throws RemotingConnectException, InterruptedException, MQBrokerException {
+        final long timeoutMills) throws RemotingConnectException, InterruptedException, MQBrokerException {
         TopicConfigProto.TopicConfigWrapper topicConfigWrapperProto = topicConfigWrapper.toProto();
 
         RegisterBrokerRequestHeader requestHeader = RegisterBrokerRequestHeader.newBuilder().setClusterName(clusterName)
-            .setBrokerAddr(brokerAddr).setBrokerId(brokerId).build();
+            .setBrokerName(brokerName).setBrokerAddr(brokerAddr).setBrokerId(brokerId).build();
 
         RemotingCommand request = RemotingCommandBuilder.newRequestBuilder(RequestCode.REGISTER_BROKER)
             .setCustomHeader(requestHeader.toByteString()).setBody(topicConfigWrapperProto.toByteString()).build();

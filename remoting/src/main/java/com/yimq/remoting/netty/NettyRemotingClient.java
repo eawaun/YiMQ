@@ -146,6 +146,11 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
         }
     }
 
+    @Override
+    public List<String> getNamesrvAddrs() {
+        return null;
+    }
+
     private static int initIndex() {
         Random r = new Random();
         return Math.abs(r.nextInt() % 999);

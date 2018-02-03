@@ -1,15 +1,18 @@
 package com.yimq.common.broker;
 
+import com.yimq.common.broker.client.BrokerClient;
 import com.yimq.common.broker.manager.ConsumerManager;
 import com.yimq.common.broker.manager.MessageManager;
 import com.yimq.common.broker.manager.TopicManager;
 import com.yimq.common.broker.processor.BrokerProcessor;
+import com.yimq.common.topic.TopicConfigWrapper;
 import com.yimq.remoting.RemotingServer;
 import com.yimq.remoting.common.ThreadFactoryImpl;
 import com.yimq.remoting.netty.NettyClientConfig;
 import com.yimq.remoting.netty.NettyRemotingServer;
 import com.yimq.remoting.netty.NettyServerConfig;
 
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -21,6 +24,7 @@ public class BrokerController {
     private ConsumerManager consumerManager;
     private MessageManager messageManager;
     private TopicManager topicManager;
+    private BrokerClient brokerClient;
 
     private RemotingServer remotingServer;
     private ExecutorService remotingExecutor;
@@ -29,9 +33,7 @@ public class BrokerController {
         this.brokerConfig = brokerConfig;
         this.nettyServerConfig = nettyServerConfig;
         this.nettyClientConfig = nettyClientConfig;
-    }
 
-    public void init() {
         this.consumerManager = new ConsumerManager(this);
         this.messageManager = new MessageManager(this);
         this.topicManager = new TopicManager(this);
@@ -39,19 +41,36 @@ public class BrokerController {
             new ThreadFactoryImpl("BrokerExecutorThread_"));
         this.remotingServer = new NettyRemotingServer(this.nettyServerConfig);
         this.remotingServer.registerProcessor(new BrokerProcessor(this), this.remotingExecutor);
+        this.brokerClient = new BrokerClient(this.nettyClientConfig);
+    }
+
+    public void init() {
 
     }
 
     public void start() throws InterruptedException {
         this.remotingServer.start();
 
-        this.registerBroker();
+        this.brokerClient.start();
+        this.registerBrokerToAllNamesrv();
 
         this.messageManager.dispatchMessage();
     }
 
-    public void registerBroker() {
+    public void registerBrokerToAllNamesrv() {
+        TopicConfigWrapper topicConfigWrapper = this.topicManager.buildTopicConfigWrapper();
+        this.brokerClient.registerBrokerToAllNamesrv(
+            this.brokerConfig.getBrokerClusterName(),
+            this.getBrokerAddr(),
+            this.brokerConfig.getBrokerName(),
+            this.brokerConfig.getBrokerId(),
+            topicConfigWrapper,
+            this.brokerConfig.getRegisterBrokerTimeoutMills()
+        );
+    }
 
+    public String getBrokerAddr() {
+        return this.brokerConfig.getBrokerIP() + ":" + this.nettyServerConfig.getListenPort();
     }
 
     public RemotingServer getRemotingServer() {

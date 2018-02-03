@@ -8,4 +8,9 @@ public class Constant {
     public static final int MASTER_ID = 0;//zero is master, other is slave
 
     public static final String DEFAULT_PRODUCER_GROUP = "DEFAULT_PRODUCER_GROUP";
+
+    public static final String DEFAULT_BROADCAST_TOPIC = "DefaultBroadcastTopic";
+
+    public static final String DEFAULT_GROUP_UNICAST_TOPIC = "DefaultGroupUnicastTopic";
+
 }
