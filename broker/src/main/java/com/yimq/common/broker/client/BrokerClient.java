@@ -17,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class BrokerClient {
     private final static Logger logger = LoggerFactory.getLogger(BrokerClient.class);
@@ -46,7 +48,7 @@ public class BrokerClient {
                     this.registerBroker(namesrvAddr, clusterName, brokerName, brokerAddr, brokerId, topicConfigWrapper, timeoutMills);
                     logger.info("registerBrokerToAllNamesrv: register to name server[{}] successfully!", namesrvAddr);
                 } catch (Exception e) {
-                    logger.warn("registerBrokerToAllNamesrv: register to name server[{}] fail!", namesrvAddr);
+                    logger.warn("registerBrokerToAllNamesrv: register to name server[{}] fail!", namesrvAddr, e);
                 }
             }
 
@@ -79,5 +81,10 @@ public class BrokerClient {
             }
         }
         throw new MQBrokerException("response is null!");
+    }
+
+    public void updateNamesrvAddrList(final String addrs) {
+        List<String> list = Stream.of(addrs.split(";")).collect(Collectors.toList());
+        this.remotingClient.updateNamesrvAddrs(list);
     }
 }

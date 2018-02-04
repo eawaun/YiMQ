@@ -10,4 +10,6 @@ public class ResponseCode {
 
     public static final int REQUEST_CODE_NOT_SUPPORTED = 3;
 
+    public static final int TOPIC_NOT_EXIST = 4;
+
 }

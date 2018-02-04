@@ -1,6 +1,7 @@
 package com.yimq.remoting.netty;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.yimq.common.protocol.ResponseCode;
 import com.yimq.remoting.common.Pair;
 import com.yimq.remoting.common.RemotingUtil;
 import com.yimq.remoting.exception.RemotingSendRequestException;
@@ -58,7 +59,8 @@ public abstract class NettyRemotingAbstract {
                 ctx.writeAndFlush(response);
             } else {
                 String error = "request code " + request.getCode() + " not supported";
-                response = RemotingCommandBuilder.newRequestBuilder(REQUEST_CODE_NOT_SUPPORTED).setRemark(error).build();
+                response = RemotingCommandBuilder.newResponseBuilder(request, ResponseCode.REQUEST_CODE_NOT_SUPPORTED)
+                    .setRemark(error).build();
                 ctx.writeAndFlush(response);
             }
         };

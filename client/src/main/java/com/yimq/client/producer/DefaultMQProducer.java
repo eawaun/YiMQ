@@ -1,9 +1,11 @@
 package com.yimq.client.producer;
 
 import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.client.ClientConfig;
 import com.yimq.client.ClientInstance;
 import com.yimq.client.common.SendResult;
+import com.yimq.client.exception.MQClientException;
 import com.yimq.common.Constant;
 import com.yimq.common.message.Message;
 import com.yimq.common.protocol.RequestCode;
@@ -52,10 +54,9 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
      * default sync
      */
     @Override
-    public SendResult send(Message msg) throws RemotingConnectException, InterruptedException {
+    public SendResult send(Message msg) throws RemotingConnectException, InterruptedException, InvalidProtocolBufferException, MQClientException {
         TopicRouteData topicRouteData = this.clientInstance.findTopicRouteDataFromNamesrv(msg.getTopic());
-
-        BrokerData brokerData = this.clientInstance.chooseBroker(msg.getTopic());
+        BrokerData brokerData = this.clientInstance.chooseBroker(topicRouteData.getBrokerDatas());
         int queueId = this.clientInstance.chooseQueueId(topicRouteData.getTopicConfig().getQueueNums(), null);
 
         SendMsgRequestHeader sendMsgRequestHeader = SendMsgRequestHeader.newBuilder().setTopic(msg.getTopic())

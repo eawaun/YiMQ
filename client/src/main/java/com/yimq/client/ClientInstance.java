@@ -2,6 +2,7 @@ package com.yimq.client;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.client.common.SendResult;
+import com.yimq.client.exception.MQClientException;
 import com.yimq.client.producer.DefaultMessageQueueSelector;
 import com.yimq.client.producer.MessageQueueSelector;
 import com.yimq.common.protocol.header.GetRouteInfoRequestHeaderProto;
@@ -43,7 +44,8 @@ public class ClientInstance {
         this.remotingClient = new NettyRemotingClient(this.nettyClientConfig);
     }
 
-    public TopicRouteData findTopicRouteDataFromNamesrv(String topic) throws InterruptedException, RemotingConnectException {
+    public TopicRouteData findTopicRouteDataFromNamesrv(String topic) throws InterruptedException, RemotingConnectException
+        , InvalidProtocolBufferException, MQClientException {
         TopicRouteData topicRouteData = topicRouteMap.get(topic);
         if (topicRouteData != null) {
             return topicRouteData;
@@ -55,21 +57,23 @@ public class ClientInstance {
 
         RemotingCommand response =
             this.remotingClient.invokeSync(null, request, 3 * 1000);
-
-        try {
-            return TopicRouteData.fromProto(TopicRouteDataProto.TopicRouteData.parseFrom(response.getBody()));
-        } catch (InvalidProtocolBufferException e) {
-            e.printStackTrace();
+        if (response != null) {
+            switch (response.getCode()) {
+                case ResponseCode.TOPIC_NOT_EXIST:
+                    logger.warn("findTopicRouteDataFromNamesrv: topic[{}] doesn't exist in name server", topic);
+                    break;
+                case ResponseCode.SUCCESS:
+                    return TopicRouteData.fromProto(TopicRouteDataProto.TopicRouteData.parseFrom(response.getBody()));
+            }
         }
-
-        return null;
+        throw  new MQClientException(response.getCode(), response.getRemark());
     }
 
-    public BrokerData chooseBroker(String topic) throws RemotingConnectException, InterruptedException {
-        TopicRouteData topicRouteData = findTopicRouteDataFromNamesrv(topic);
-        List<BrokerData> brokerDatas = topicRouteData.getBrokerDatas();
-
+    public BrokerData chooseBroker(List<BrokerData> brokerDatas) throws RemotingConnectException, InterruptedException, InvalidProtocolBufferException, MQClientException {
         int index = Math.abs(this.brokerChooser.getAndIncrement()) % brokerDatas.size();
+        if (index < 0) {
+            index = 0;
+        }
         return brokerDatas.get(index);
     }
 

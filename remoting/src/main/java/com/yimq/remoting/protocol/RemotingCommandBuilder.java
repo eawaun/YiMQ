@@ -22,4 +22,9 @@ public class RemotingCommandBuilder {
         return RemotingCommand.newBuilder().setType(RemotingCommandType.RESPONSE_COMMAND).
             setRequestId(request.getRequestId());
     }
+
+    public static RemotingCommand.Builder newResponseBuilder(RemotingCommand request, int code) {
+        return RemotingCommand.newBuilder().setType(RemotingCommandType.RESPONSE_COMMAND).setCode(code)
+            .setRequestId(request.getRequestId());
+    }
 }

@@ -1,7 +1,9 @@
 package com.yimq.client.consumer;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.client.ClientConfig;
 import com.yimq.client.ClientInstance;
+import com.yimq.client.exception.MQClientException;
 import com.yimq.common.Constant;
 import com.yimq.common.protocol.RequestCode;
 import com.yimq.common.protocol.header.RegisterConsumerRequestHeaderProto.RegisterConsumerRequestHeader;
@@ -35,7 +37,7 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
     }
 
     @Override
-    public void start() throws InterruptedException, RemotingConnectException {
+    public void start() throws InterruptedException, RemotingConnectException, InvalidProtocolBufferException, MQClientException {
         this.nettyClientConfig = new NettyClientConfig();
         this.clientInstance = new ClientInstance(this.nettyClientConfig);
         this.processRequestTaskExecutor = Executors.newFixedThreadPool(this.nettyClientConfig.getProcessRequestTaskThreads(),
@@ -52,7 +54,7 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
 
     }
 
-    private void registerConsumer() throws RemotingConnectException, InterruptedException {
+    private void registerConsumer() throws RemotingConnectException, InterruptedException, InvalidProtocolBufferException, MQClientException {
         RegisterConsumerRequestHeader requestHeader = RegisterConsumerRequestHeader.newBuilder().setConsumerGroup(this.consumerGroup)
             .setTopic(this.topic).build();
 

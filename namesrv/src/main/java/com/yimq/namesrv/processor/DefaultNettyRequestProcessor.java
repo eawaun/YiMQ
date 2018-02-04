@@ -2,6 +2,7 @@ package com.yimq.namesrv.processor;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.common.protocol.RequestCode;
+import com.yimq.common.protocol.ResponseCode;
 import com.yimq.common.protocol.header.GetRouteInfoRequestHeaderProto.GetRouteInfoRequestHeader;
 import com.yimq.common.protocol.header.RegisterBrokerRequestHeaderProto.RegisterBrokerRequestHeader;
 import com.yimq.common.protocol.route.TopicRouteData;
@@ -34,6 +35,8 @@ public class DefaultNettyRequestProcessor implements NettyRequestProcessor {
                 return this.registerBroker(ctx, request);
             case RequestCode.UNREGISTER_BROKER:
                 return this.unregisterBroker(ctx, request);
+            default:
+                break;
         }
 
         return null;
@@ -48,10 +51,13 @@ public class DefaultNettyRequestProcessor implements NettyRequestProcessor {
 
         TopicRouteData topicRouteData = this.namesrvController.getRouteInfoManager().getTopicRouteDataByTopic(requestHeader.getTopic());
 
-        TopicRouteDataProto.TopicRouteData topicRouteDataProto = topicRouteData.toProto();
+        if (topicRouteData != null) {
+            TopicRouteDataProto.TopicRouteData topicRouteDataProto = topicRouteData.toProto();
+            return RemotingCommandBuilder.newResponseBuilder(request, ResponseCode.SUCCESS).
+                setBody(topicRouteDataProto.toByteString()).build();
+        }
 
-        return RemotingCommandBuilder.newResponseBuilder(request).
-            setBody(topicRouteDataProto.toByteString()).build();
+        return RemotingCommandBuilder.newResponseBuilder(request, ResponseCode.TOPIC_NOT_EXIST).build();
     }
 
     private RemotingCommand registerBroker(ChannelHandlerContext ctx, RemotingCommand request) throws InvalidProtocolBufferException {
@@ -68,7 +74,8 @@ public class DefaultNettyRequestProcessor implements NettyRequestProcessor {
             ctx.channel()
         );
 
-        return null;
+        return RemotingCommandBuilder.newResponseBuilder(request, ResponseCode.SUCCESS).build();
+
     }
 
     private RemotingCommand unregisterBroker(ChannelHandlerContext ctx, RemotingCommand request) {

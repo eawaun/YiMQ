@@ -45,7 +45,7 @@ public class BrokerController {
     }
 
     public void init() {
-
+        this.brokerClient.updateNamesrvAddrList(this.brokerConfig.getNamesrvAddr());
     }
 
     public void start() throws InterruptedException {

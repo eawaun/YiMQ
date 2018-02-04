@@ -125,30 +125,28 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
         List<String> old = this.namesrvAddrList.get();
         boolean updated = false;
 
-        if (!addrs.isEmpty()) {
-            if (null == old) {
-                updated = true;
-            } else if (old.size() != addrs.size()) {
-                updated = true;
-            } else {
-                for (String addr : addrs) {
-                    if (!old.contains(addr)) {
-                        updated = true;
-                        break;
-                    }
+        if (null == old) {
+            updated = true;
+        } else if (old.size() != addrs.size()) {
+            updated = true;
+        } else {
+            for (String addr : addrs) {
+                if (!old.contains(addr)) {
+                    updated = true;
+                    break;
                 }
             }
+        }
 
-            if (updated) {
-                Collections.shuffle(addrs);
-                this.namesrvAddrList.set(addrs);
-            }
+        if (updated) {
+            Collections.shuffle(addrs);
+            this.namesrvAddrList.set(addrs);
         }
     }
 
     @Override
     public List<String> getNamesrvAddrs() {
-        return null;
+        return this.namesrvAddrList.get();
     }
 
     private static int initIndex() {

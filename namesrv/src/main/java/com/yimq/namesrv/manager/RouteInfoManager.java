@@ -61,7 +61,13 @@ public class RouteInfoManager {
                 if (registerFirst) {//slave不需要再注册一次topic
                     Map<String, TopicConfig> topicConfigMap = topicConfigWrapper.getBrokerTopicConfigMap();
                     if (topicConfigMap != null) {
-                        topicConfigMap.forEach((topic, topicConfig) -> this.topicTable.put(topic, topicConfig));
+                        topicConfigMap.forEach((topic, topicConfig) -> {
+                            this.topicTable.put(topic, topicConfig);
+
+                            Set<String/* brokerName */> brokersInTopic = this.topicBrokerTable
+                                .computeIfAbsent(topic, k -> Sets.newHashSet());
+                            brokersInTopic.add(brokerName);
+                        });
                     }
                 }
             }
@@ -73,18 +79,28 @@ public class RouteInfoManager {
     }
 
     public TopicRouteData getTopicRouteDataByTopic(final String topic) {
-        TopicConfig topicConfig = this.topicTable.get(topic);
-        if (topicConfig == null) {
-            return null;
+
+        try {
+            this.readWriteLock.readLock().lockInterruptibly();
+            TopicConfig topicConfig = this.topicTable.get(topic);
+            if (topicConfig == null) {
+                return null;
+            }
+
+            Set<String> brokerNames = this.topicBrokerTable.get(topic);
+            if (CollectionUtils.isEmpty(brokerNames)) {
+                return null;
+            }
+
+            List<BrokerData> brokerDatas = brokerNames.stream().map(brokerName -> brokerDataTable.get(brokerName))
+                .collect(Collectors.toList());
+            return new TopicRouteData(topic, topicConfig, brokerDatas);
+        } catch (InterruptedException e) {
+            logger.error("getTopicRouteDataByTopic: exception",e);
+        } finally {
+            this.readWriteLock.readLock().unlock();
         }
 
-        Set<String> brokerNames = this.topicBrokerTable.get(topic);
-        if (CollectionUtils.isEmpty(brokerNames)) {
-            return null;
-        }
-
-        List<BrokerData> brokerDatas = brokerNames.stream().map(brokerName -> brokerDataTable.get(brokerName))
-            .collect(Collectors.toList());
-        return new TopicRouteData(topic, topicConfig, brokerDatas);
+        return null;
     }
 }

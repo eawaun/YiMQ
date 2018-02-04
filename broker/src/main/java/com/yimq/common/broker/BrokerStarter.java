@@ -10,7 +10,9 @@ public class BrokerStarter {
 
     private static void start(String[] args) throws InterruptedException {
         final BrokerConfig brokerConfig = new BrokerConfig();
+        brokerConfig.setRegisterBrokerTimeoutMills(1111000);
         final NettyServerConfig nettyServerConfig = new NettyServerConfig();
+        nettyServerConfig.setListenPort(10911);
         final NettyClientConfig nettyClientConfig = new NettyClientConfig();
 
         BrokerController brokerController = new BrokerController(brokerConfig, nettyServerConfig, nettyClientConfig);
