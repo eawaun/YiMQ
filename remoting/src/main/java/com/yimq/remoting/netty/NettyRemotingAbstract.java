@@ -52,15 +52,19 @@ public abstract class NettyRemotingAbstract {
             RemotingCommand response = null;
             try {
                 response = defaultRequestProcessor.getLeft().process(ctx, request);
-            } catch (InvalidProtocolBufferException e) {
-                logger.error("processRequestCommand: InvalidProtocolBufferException", e);
-            }
-            if (response != null) {
-                ctx.writeAndFlush(response);
-            } else {
-                String error = "request code " + request.getCode() + " not supported";
+                if (response != null) {
+                    ctx.writeAndFlush(response);
+                } else {
+                    String error = "request code " + request.getCode() + " not supported";
+                    response = RemotingCommandBuilder.newResponseBuilder(request, ResponseCode.REQUEST_CODE_NOT_SUPPORTED)
+                        .setRemark(error).build();
+                    ctx.writeAndFlush(response);
+                }
+            } catch (Exception e) {
+                logger.error("processRequestCommand: Exception", e);
+                String errorMessage = "process request exception: " + e.getMessage();
                 response = RemotingCommandBuilder.newResponseBuilder(request, ResponseCode.REQUEST_CODE_NOT_SUPPORTED)
-                    .setRemark(error).build();
+                    .setRemark(errorMessage).build();
                 ctx.writeAndFlush(response);
             }
         };

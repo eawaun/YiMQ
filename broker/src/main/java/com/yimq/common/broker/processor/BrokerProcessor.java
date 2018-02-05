@@ -2,6 +2,7 @@ package com.yimq.common.broker.processor;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.common.broker.BrokerController;
+import com.yimq.common.broker.exception.MQBrokerException;
 import com.yimq.common.consumer.ConsumerInfo;
 import com.yimq.common.exception.MessageHandlerException;
 import com.yimq.common.message.Message;
@@ -23,7 +24,7 @@ public class BrokerProcessor implements NettyRequestProcessor {
     }
 
     @Override
-    public RemotingCommand process(ChannelHandlerContext ctx, RemotingCommand request) throws InvalidProtocolBufferException {
+    public RemotingCommand process(ChannelHandlerContext ctx, RemotingCommand request) throws InvalidProtocolBufferException, MQBrokerException {
         switch (request.getCode()) {
             case RequestCode.SEND_MESSAGE:
                 return this.processSendMessage(ctx, request);
@@ -52,7 +53,7 @@ public class BrokerProcessor implements NettyRequestProcessor {
         return RemotingCommandBuilder.newResponseBuilder(request).setCode(ResponseCode.SYSTEM_ERROR).build();
     }
 
-    private RemotingCommand registerConsumer(ChannelHandlerContext ctx, RemotingCommand request) throws InvalidProtocolBufferException {
+    private RemotingCommand registerConsumer(ChannelHandlerContext ctx, RemotingCommand request) throws InvalidProtocolBufferException, MQBrokerException {
         RegisterConsumerRequestHeader requestHeader = RegisterConsumerRequestHeader.parseFrom(request.getCustomHeader());
 
         ConsumerInfo consumerInfo = new ConsumerInfo();
@@ -63,7 +64,7 @@ public class BrokerProcessor implements NettyRequestProcessor {
 
         this.brokerController.getConsumerManager().addConsumer(requestHeader.getTopic(), consumerInfo);
 
-        RemotingCommand response = RemotingCommandBuilder.newResponseBuilder(request).setCode(ResponseCode.SUCCESS).build();
+        RemotingCommand response = RemotingCommandBuilder.newResponseBuilder(request, ResponseCode.SUCCESS).build();
         return response;
     }
 }

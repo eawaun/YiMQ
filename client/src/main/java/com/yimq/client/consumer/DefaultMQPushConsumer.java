@@ -24,7 +24,7 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
     private String consumerGroup;
     private String topic;
 
-    private long registerConsumerTimeoutMills = 3000;
+    private long registerConsumerTimeoutMills = 3600000;
 
     private ClientInstance clientInstance;
     private ExecutorService processRequestTaskExecutor;
@@ -39,7 +39,8 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
     @Override
     public void start() throws InterruptedException, RemotingConnectException, InvalidProtocolBufferException, MQClientException {
         this.nettyClientConfig = new NettyClientConfig();
-        this.clientInstance = new ClientInstance(this.nettyClientConfig);
+        this.nettyClientConfig.setConnectTimeoutMillis(36000000);//test
+        this.clientInstance = new ClientInstance(this.nettyClientConfig, this);
         this.processRequestTaskExecutor = Executors.newFixedThreadPool(this.nettyClientConfig.getProcessRequestTaskThreads(),
             new ThreadFactoryImpl("RemotingExecutorThread_"));
         this.clientInstance.getRemotingClient().registerProcessor(new ConsumerProcessor(this.messageReceivedListener)

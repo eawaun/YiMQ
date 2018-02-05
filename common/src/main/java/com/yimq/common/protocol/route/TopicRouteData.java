@@ -2,6 +2,7 @@ package com.yimq.common.protocol.route;
 
 import com.yimq.common.ProtobufConver;
 import com.yimq.common.topic.TopicConfig;
+import com.yimq.common.topic.TopicConfigProto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,11 +15,6 @@ public class TopicRouteData implements ProtobufConver<TopicRouteDataProto.TopicR
     public TopicRouteData() {
     }
 
-    public TopicRouteData(String topic, List<BrokerData> brokerDatas) {
-        this.topic = topic;
-        this.brokerDatas = brokerDatas;
-    }
-
     public TopicRouteData(String topic, TopicConfig topicConfig, List<BrokerData> brokerDatas) {
         this.topic = topic;
         this.topicConfig = topicConfig;
@@ -28,15 +24,17 @@ public class TopicRouteData implements ProtobufConver<TopicRouteDataProto.TopicR
     public static TopicRouteData fromProto(TopicRouteDataProto.TopicRouteData proto) {
         List<BrokerData> brokerDataList = proto.getBrokerDatasList().stream().map(BrokerData::fromProto)
             .collect(Collectors.toList());
-        return new TopicRouteData(proto.getTopic(), brokerDataList);
+        TopicConfig topicConfig = TopicConfig.fromProto(proto.getTopicConfig());
+        return new TopicRouteData(proto.getTopic(), topicConfig, brokerDataList);
     }
 
     @Override
     public TopicRouteDataProto.TopicRouteData toProto() {
         List<BrokerDataProto.BrokerData> brokerDataProtoList =
             brokerDatas.stream().map(BrokerData::toProto).collect(Collectors.toList());
-
-        return TopicRouteDataProto.TopicRouteData.newBuilder().setTopic(this.topic).addAllBrokerDatas(brokerDataProtoList)
+        TopicConfigProto.TopicConfig topicConfigProto = this.topicConfig.toProto();
+        return TopicRouteDataProto.TopicRouteData.newBuilder().setTopic(this.topic)
+            .setTopicConfig(topicConfigProto).addAllBrokerDatas(brokerDataProtoList)
             .build();
     }
 

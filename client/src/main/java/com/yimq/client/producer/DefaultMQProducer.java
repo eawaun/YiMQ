@@ -25,7 +25,7 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
 
     private String producerGroup;
 
-    private int sendMsgTimeoutMills = 3000;
+    private int sendMsgTimeoutMills = 3600000;
 
     private Map<String/* topic */, TopicRouteData> topicRouteDataMap = new ConcurrentHashMap<>();
 
@@ -41,7 +41,7 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
 
     @Override
     public void start() {
-        this.clientInstance = new ClientInstance(new NettyClientConfig());
+        this.clientInstance = new ClientInstance(new NettyClientConfig(), this);
         this.clientInstance.start();
     }
 

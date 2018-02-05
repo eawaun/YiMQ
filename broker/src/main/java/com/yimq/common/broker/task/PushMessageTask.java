@@ -4,11 +4,13 @@ import com.google.protobuf.ByteString;
 import com.yimq.common.consumer.ConsumerInfo;
 import com.yimq.common.message.Message;
 import com.yimq.common.protocol.RequestCode;
+import com.yimq.common.protocol.header.SendMsgRequestHeaderProto.SendMsgRequestHeader;
 import com.yimq.remoting.RemotingServer;
 import com.yimq.remoting.exception.RemotingSendRequestException;
 import com.yimq.remoting.exception.RemotingTimeoutException;
 import com.yimq.remoting.protocol.RemotingCommandBuilder;
 import com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand;
+import com.yimq.common.protocol.ResponseCode;
 
 public class PushMessageTask implements Runnable {
 
@@ -29,16 +31,22 @@ public class PushMessageTask implements Runnable {
     @Override
     public void run() {
         //todo 添加重试，成功时修改db
+        SendMsgRequestHeader requestHeader = SendMsgRequestHeader.newBuilder().setTopic(this.topic).build();
         RemotingCommand request = RemotingCommandBuilder.newRequestBuilder(RequestCode.CONSUME_MESSAGE_DIRECTLY)
+            .setCustomHeader(requestHeader.toByteString())
             .setBody(ByteString.copyFrom(message.getBody())).build();
 
         try {
-            this.remotingServer.invokeSync(consumer.getChannel(), request, timeoutMills);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (RemotingSendRequestException e) {
-            e.printStackTrace();
-        } catch (RemotingTimeoutException e) {
+            RemotingCommand response = this.remotingServer.invokeSync(consumer.getChannel(), request, timeoutMills);
+            switch (response.getCode()) {
+                case ResponseCode.SUCCESS:
+                    //
+                    break;
+                default:
+                    //
+            }
+        } catch (InterruptedException | RemotingSendRequestException | RemotingTimeoutException e) {
+            //
             e.printStackTrace();
         }
     }

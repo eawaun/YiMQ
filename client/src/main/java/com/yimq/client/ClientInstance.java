@@ -31,6 +31,7 @@ public class ClientInstance {
 
     private NettyClientConfig nettyClientConfig;
     private NettyRemotingClient remotingClient;
+    private ClientConfig clientConfig;
 
     private final Map<String/* topic */, TopicRouteData> topicRouteMap = new ConcurrentHashMap<>();
 
@@ -39,9 +40,11 @@ public class ClientInstance {
 
     private MessageQueueSelector queueSelector;
 
-    public ClientInstance(NettyClientConfig nettyClientConfig) {
+    public ClientInstance(NettyClientConfig nettyClientConfig, ClientConfig clientConfig) {
+        this.clientConfig = clientConfig;
         this.nettyClientConfig = nettyClientConfig;
         this.remotingClient = new NettyRemotingClient(this.nettyClientConfig);
+        this.remotingClient.updateNamesrvAddrs(this.clientConfig.getNamesrvAddrList());
     }
 
     public TopicRouteData findTopicRouteDataFromNamesrv(String topic) throws InterruptedException, RemotingConnectException
@@ -56,7 +59,7 @@ public class ClientInstance {
             .setCustomHeader(requestHeader.toByteString()).build();
 
         RemotingCommand response =
-            this.remotingClient.invokeSync(null, request, 3 * 1000);
+            this.remotingClient.invokeSync(null, request, this.nettyClientConfig.getConnectTimeoutMillis());
         if (response != null) {
             switch (response.getCode()) {
                 case ResponseCode.TOPIC_NOT_EXIST:

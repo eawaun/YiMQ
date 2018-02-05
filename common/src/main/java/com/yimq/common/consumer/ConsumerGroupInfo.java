@@ -16,6 +16,7 @@ public class ConsumerGroupInfo {
     private AtomicInteger consumerSelector = new AtomicInteger(random.nextInt());
 
     public ConsumerGroupInfo() {
+        this.groupName = groupName;
     }
 
     public ConsumerGroupInfo(String groupName, List<ConsumerInfo> consumers) {

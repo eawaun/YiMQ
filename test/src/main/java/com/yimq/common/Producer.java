@@ -14,7 +14,7 @@ public class Producer {
 
         producer.start();
 
-        Message msg = new Message("TopicTest1", "hello".getBytes());
+        Message msg = new Message(Constant.DEFAULT_BROADCAST_TOPIC, "hello".getBytes());
 
         producer.send(msg);
     }

@@ -75,7 +75,7 @@ public class MessageManager {
                             return;
                         }
                         //获取消息的目标消费者
-                        List<ConsumerInfo> consumers = this.brokerController.getConsumerManager().findConsumers(topicConfig, queueId);
+                        List<ConsumerInfo> consumers = this.brokerController.getConsumerManager().findConsumers(topicConfig.getTopic(), queueId);
 
                         for (ConsumerInfo consumer : consumers) {
                             PushMessageTask task = new PushMessageTask(consumer, this.brokerController.getRemotingServer()

@@ -57,28 +57,17 @@ public final class TopicRouteDataProto {
         int index);
 
     /**
-     * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
+     * <code>optional .com.yimq.common.protobuf.topic.TopicConfig topicConfig = 3;</code>
      */
-    java.util.List<com.yimq.common.protocol.route.QueueDataProto.QueueData> 
-        getQueueDatasList();
+    boolean hasTopicConfig();
     /**
-     * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
+     * <code>optional .com.yimq.common.protobuf.topic.TopicConfig topicConfig = 3;</code>
      */
-    com.yimq.common.protocol.route.QueueDataProto.QueueData getQueueDatas(int index);
+    com.yimq.common.topic.TopicConfigProto.TopicConfig getTopicConfig();
     /**
-     * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
+     * <code>optional .com.yimq.common.protobuf.topic.TopicConfig topicConfig = 3;</code>
      */
-    int getQueueDatasCount();
-    /**
-     * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
-     */
-    java.util.List<? extends com.yimq.common.protocol.route.QueueDataProto.QueueDataOrBuilder> 
-        getQueueDatasOrBuilderList();
-    /**
-     * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
-     */
-    com.yimq.common.protocol.route.QueueDataProto.QueueDataOrBuilder getQueueDatasOrBuilder(
-        int index);
+    com.yimq.common.topic.TopicConfigProto.TopicConfigOrBuilder getTopicConfigOrBuilder();
   }
   /**
    * Protobuf type {@code com.yimq.common.protobuf.route.TopicRouteData}
@@ -95,7 +84,6 @@ public final class TopicRouteDataProto {
     private TopicRouteData() {
       topic_ = "";
       brokerDatas_ = java.util.Collections.emptyList();
-      queueDatas_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -145,12 +133,16 @@ public final class TopicRouteDataProto {
               break;
             }
             case 26: {
-              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                queueDatas_ = new java.util.ArrayList<com.yimq.common.protocol.route.QueueDataProto.QueueData>();
-                mutable_bitField0_ |= 0x00000004;
+              com.yimq.common.topic.TopicConfigProto.TopicConfig.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                subBuilder = topicConfig_.toBuilder();
               }
-              queueDatas_.add(
-                  input.readMessage(com.yimq.common.protocol.route.QueueDataProto.QueueData.PARSER, extensionRegistry));
+              topicConfig_ = input.readMessage(com.yimq.common.topic.TopicConfigProto.TopicConfig.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(topicConfig_);
+                topicConfig_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000002;
               break;
             }
           }
@@ -163,9 +155,6 @@ public final class TopicRouteDataProto {
       } finally {
         if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
           brokerDatas_ = java.util.Collections.unmodifiableList(brokerDatas_);
-        }
-        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-          queueDatas_ = java.util.Collections.unmodifiableList(queueDatas_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -261,39 +250,25 @@ public final class TopicRouteDataProto {
       return brokerDatas_.get(index);
     }
 
-    public static final int QUEUEDATAS_FIELD_NUMBER = 3;
-    private java.util.List<com.yimq.common.protocol.route.QueueDataProto.QueueData> queueDatas_;
+    public static final int TOPICCONFIG_FIELD_NUMBER = 3;
+    private com.yimq.common.topic.TopicConfigProto.TopicConfig topicConfig_;
     /**
-     * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
+     * <code>optional .com.yimq.common.protobuf.topic.TopicConfig topicConfig = 3;</code>
      */
-    public java.util.List<com.yimq.common.protocol.route.QueueDataProto.QueueData> getQueueDatasList() {
-      return queueDatas_;
+    public boolean hasTopicConfig() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
+     * <code>optional .com.yimq.common.protobuf.topic.TopicConfig topicConfig = 3;</code>
      */
-    public java.util.List<? extends com.yimq.common.protocol.route.QueueDataProto.QueueDataOrBuilder> 
-        getQueueDatasOrBuilderList() {
-      return queueDatas_;
+    public com.yimq.common.topic.TopicConfigProto.TopicConfig getTopicConfig() {
+      return topicConfig_ == null ? com.yimq.common.topic.TopicConfigProto.TopicConfig.getDefaultInstance() : topicConfig_;
     }
     /**
-     * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
+     * <code>optional .com.yimq.common.protobuf.topic.TopicConfig topicConfig = 3;</code>
      */
-    public int getQueueDatasCount() {
-      return queueDatas_.size();
-    }
-    /**
-     * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
-     */
-    public com.yimq.common.protocol.route.QueueDataProto.QueueData getQueueDatas(int index) {
-      return queueDatas_.get(index);
-    }
-    /**
-     * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
-     */
-    public com.yimq.common.protocol.route.QueueDataProto.QueueDataOrBuilder getQueueDatasOrBuilder(
-        int index) {
-      return queueDatas_.get(index);
+    public com.yimq.common.topic.TopicConfigProto.TopicConfigOrBuilder getTopicConfigOrBuilder() {
+      return topicConfig_ == null ? com.yimq.common.topic.TopicConfigProto.TopicConfig.getDefaultInstance() : topicConfig_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -305,12 +280,6 @@ public final class TopicRouteDataProto {
       if (!hasTopic()) {
         memoizedIsInitialized = 0;
         return false;
-      }
-      for (int i = 0; i < getQueueDatasCount(); i++) {
-        if (!getQueueDatas(i).isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
       }
       memoizedIsInitialized = 1;
       return true;
@@ -324,8 +293,8 @@ public final class TopicRouteDataProto {
       for (int i = 0; i < brokerDatas_.size(); i++) {
         output.writeMessage(2, brokerDatas_.get(i));
       }
-      for (int i = 0; i < queueDatas_.size(); i++) {
-        output.writeMessage(3, queueDatas_.get(i));
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeMessage(3, getTopicConfig());
       }
       unknownFields.writeTo(output);
     }
@@ -342,9 +311,9 @@ public final class TopicRouteDataProto {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, brokerDatas_.get(i));
       }
-      for (int i = 0; i < queueDatas_.size(); i++) {
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, queueDatas_.get(i));
+          .computeMessageSize(3, getTopicConfig());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -369,8 +338,11 @@ public final class TopicRouteDataProto {
       }
       result = result && getBrokerDatasList()
           .equals(other.getBrokerDatasList());
-      result = result && getQueueDatasList()
-          .equals(other.getQueueDatasList());
+      result = result && (hasTopicConfig() == other.hasTopicConfig());
+      if (hasTopicConfig()) {
+        result = result && getTopicConfig()
+            .equals(other.getTopicConfig());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -390,9 +362,9 @@ public final class TopicRouteDataProto {
         hash = (37 * hash) + BROKERDATAS_FIELD_NUMBER;
         hash = (53 * hash) + getBrokerDatasList().hashCode();
       }
-      if (getQueueDatasCount() > 0) {
-        hash = (37 * hash) + QUEUEDATAS_FIELD_NUMBER;
-        hash = (53 * hash) + getQueueDatasList().hashCode();
+      if (hasTopicConfig()) {
+        hash = (37 * hash) + TOPICCONFIG_FIELD_NUMBER;
+        hash = (53 * hash) + getTopicConfig().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -520,7 +492,7 @@ public final class TopicRouteDataProto {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
           getBrokerDatasFieldBuilder();
-          getQueueDatasFieldBuilder();
+          getTopicConfigFieldBuilder();
         }
       }
       public Builder clear() {
@@ -533,12 +505,12 @@ public final class TopicRouteDataProto {
         } else {
           brokerDatasBuilder_.clear();
         }
-        if (queueDatasBuilder_ == null) {
-          queueDatas_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
+        if (topicConfigBuilder_ == null) {
+          topicConfig_ = null;
         } else {
-          queueDatasBuilder_.clear();
+          topicConfigBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -576,14 +548,13 @@ public final class TopicRouteDataProto {
         } else {
           result.brokerDatas_ = brokerDatasBuilder_.build();
         }
-        if (queueDatasBuilder_ == null) {
-          if (((bitField0_ & 0x00000004) == 0x00000004)) {
-            queueDatas_ = java.util.Collections.unmodifiableList(queueDatas_);
-            bitField0_ = (bitField0_ & ~0x00000004);
-          }
-          result.queueDatas_ = queueDatas_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        if (topicConfigBuilder_ == null) {
+          result.topicConfig_ = topicConfig_;
         } else {
-          result.queueDatas_ = queueDatasBuilder_.build();
+          result.topicConfig_ = topicConfigBuilder_.build();
         }
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -658,31 +629,8 @@ public final class TopicRouteDataProto {
             }
           }
         }
-        if (queueDatasBuilder_ == null) {
-          if (!other.queueDatas_.isEmpty()) {
-            if (queueDatas_.isEmpty()) {
-              queueDatas_ = other.queueDatas_;
-              bitField0_ = (bitField0_ & ~0x00000004);
-            } else {
-              ensureQueueDatasIsMutable();
-              queueDatas_.addAll(other.queueDatas_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.queueDatas_.isEmpty()) {
-            if (queueDatasBuilder_.isEmpty()) {
-              queueDatasBuilder_.dispose();
-              queueDatasBuilder_ = null;
-              queueDatas_ = other.queueDatas_;
-              bitField0_ = (bitField0_ & ~0x00000004);
-              queueDatasBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getQueueDatasFieldBuilder() : null;
-            } else {
-              queueDatasBuilder_.addAllMessages(other.queueDatas_);
-            }
-          }
+        if (other.hasTopicConfig()) {
+          mergeTopicConfig(other.getTopicConfig());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -692,11 +640,6 @@ public final class TopicRouteDataProto {
       public final boolean isInitialized() {
         if (!hasTopic()) {
           return false;
-        }
-        for (int i = 0; i < getQueueDatasCount(); i++) {
-          if (!getQueueDatas(i).isInitialized()) {
-            return false;
-          }
         }
         return true;
       }
@@ -1036,244 +979,122 @@ public final class TopicRouteDataProto {
         return brokerDatasBuilder_;
       }
 
-      private java.util.List<com.yimq.common.protocol.route.QueueDataProto.QueueData> queueDatas_ =
-        java.util.Collections.emptyList();
-      private void ensureQueueDatasIsMutable() {
-        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          queueDatas_ = new java.util.ArrayList<com.yimq.common.protocol.route.QueueDataProto.QueueData>(queueDatas_);
-          bitField0_ |= 0x00000004;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.yimq.common.protocol.route.QueueDataProto.QueueData, com.yimq.common.protocol.route.QueueDataProto.QueueData.Builder, com.yimq.common.protocol.route.QueueDataProto.QueueDataOrBuilder> queueDatasBuilder_;
-
+      private com.yimq.common.topic.TopicConfigProto.TopicConfig topicConfig_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.yimq.common.topic.TopicConfigProto.TopicConfig, com.yimq.common.topic.TopicConfigProto.TopicConfig.Builder, com.yimq.common.topic.TopicConfigProto.TopicConfigOrBuilder> topicConfigBuilder_;
       /**
-       * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
+       * <code>optional .com.yimq.common.protobuf.topic.TopicConfig topicConfig = 3;</code>
        */
-      public java.util.List<com.yimq.common.protocol.route.QueueDataProto.QueueData> getQueueDatasList() {
-        if (queueDatasBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(queueDatas_);
+      public boolean hasTopicConfig() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional .com.yimq.common.protobuf.topic.TopicConfig topicConfig = 3;</code>
+       */
+      public com.yimq.common.topic.TopicConfigProto.TopicConfig getTopicConfig() {
+        if (topicConfigBuilder_ == null) {
+          return topicConfig_ == null ? com.yimq.common.topic.TopicConfigProto.TopicConfig.getDefaultInstance() : topicConfig_;
         } else {
-          return queueDatasBuilder_.getMessageList();
+          return topicConfigBuilder_.getMessage();
         }
       }
       /**
-       * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
+       * <code>optional .com.yimq.common.protobuf.topic.TopicConfig topicConfig = 3;</code>
        */
-      public int getQueueDatasCount() {
-        if (queueDatasBuilder_ == null) {
-          return queueDatas_.size();
-        } else {
-          return queueDatasBuilder_.getCount();
-        }
-      }
-      /**
-       * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
-       */
-      public com.yimq.common.protocol.route.QueueDataProto.QueueData getQueueDatas(int index) {
-        if (queueDatasBuilder_ == null) {
-          return queueDatas_.get(index);
-        } else {
-          return queueDatasBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
-       */
-      public Builder setQueueDatas(
-          int index, com.yimq.common.protocol.route.QueueDataProto.QueueData value) {
-        if (queueDatasBuilder_ == null) {
+      public Builder setTopicConfig(com.yimq.common.topic.TopicConfigProto.TopicConfig value) {
+        if (topicConfigBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureQueueDatasIsMutable();
-          queueDatas_.set(index, value);
+          topicConfig_ = value;
           onChanged();
         } else {
-          queueDatasBuilder_.setMessage(index, value);
+          topicConfigBuilder_.setMessage(value);
         }
+        bitField0_ |= 0x00000004;
         return this;
       }
       /**
-       * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
+       * <code>optional .com.yimq.common.protobuf.topic.TopicConfig topicConfig = 3;</code>
        */
-      public Builder setQueueDatas(
-          int index, com.yimq.common.protocol.route.QueueDataProto.QueueData.Builder builderForValue) {
-        if (queueDatasBuilder_ == null) {
-          ensureQueueDatasIsMutable();
-          queueDatas_.set(index, builderForValue.build());
+      public Builder setTopicConfig(
+          com.yimq.common.topic.TopicConfigProto.TopicConfig.Builder builderForValue) {
+        if (topicConfigBuilder_ == null) {
+          topicConfig_ = builderForValue.build();
           onChanged();
         } else {
-          queueDatasBuilder_.setMessage(index, builderForValue.build());
+          topicConfigBuilder_.setMessage(builderForValue.build());
         }
+        bitField0_ |= 0x00000004;
         return this;
       }
       /**
-       * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
+       * <code>optional .com.yimq.common.protobuf.topic.TopicConfig topicConfig = 3;</code>
        */
-      public Builder addQueueDatas(com.yimq.common.protocol.route.QueueDataProto.QueueData value) {
-        if (queueDatasBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
+      public Builder mergeTopicConfig(com.yimq.common.topic.TopicConfigProto.TopicConfig value) {
+        if (topicConfigBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) == 0x00000004) &&
+              topicConfig_ != null &&
+              topicConfig_ != com.yimq.common.topic.TopicConfigProto.TopicConfig.getDefaultInstance()) {
+            topicConfig_ =
+              com.yimq.common.topic.TopicConfigProto.TopicConfig.newBuilder(topicConfig_).mergeFrom(value).buildPartial();
+          } else {
+            topicConfig_ = value;
           }
-          ensureQueueDatasIsMutable();
-          queueDatas_.add(value);
           onChanged();
         } else {
-          queueDatasBuilder_.addMessage(value);
+          topicConfigBuilder_.mergeFrom(value);
         }
+        bitField0_ |= 0x00000004;
         return this;
       }
       /**
-       * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
+       * <code>optional .com.yimq.common.protobuf.topic.TopicConfig topicConfig = 3;</code>
        */
-      public Builder addQueueDatas(
-          int index, com.yimq.common.protocol.route.QueueDataProto.QueueData value) {
-        if (queueDatasBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureQueueDatasIsMutable();
-          queueDatas_.add(index, value);
+      public Builder clearTopicConfig() {
+        if (topicConfigBuilder_ == null) {
+          topicConfig_ = null;
           onChanged();
         } else {
-          queueDatasBuilder_.addMessage(index, value);
+          topicConfigBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
       /**
-       * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
+       * <code>optional .com.yimq.common.protobuf.topic.TopicConfig topicConfig = 3;</code>
        */
-      public Builder addQueueDatas(
-          com.yimq.common.protocol.route.QueueDataProto.QueueData.Builder builderForValue) {
-        if (queueDatasBuilder_ == null) {
-          ensureQueueDatasIsMutable();
-          queueDatas_.add(builderForValue.build());
-          onChanged();
+      public com.yimq.common.topic.TopicConfigProto.TopicConfig.Builder getTopicConfigBuilder() {
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return getTopicConfigFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .com.yimq.common.protobuf.topic.TopicConfig topicConfig = 3;</code>
+       */
+      public com.yimq.common.topic.TopicConfigProto.TopicConfigOrBuilder getTopicConfigOrBuilder() {
+        if (topicConfigBuilder_ != null) {
+          return topicConfigBuilder_.getMessageOrBuilder();
         } else {
-          queueDatasBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
-       */
-      public Builder addQueueDatas(
-          int index, com.yimq.common.protocol.route.QueueDataProto.QueueData.Builder builderForValue) {
-        if (queueDatasBuilder_ == null) {
-          ensureQueueDatasIsMutable();
-          queueDatas_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          queueDatasBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
-       */
-      public Builder addAllQueueDatas(
-          java.lang.Iterable<? extends com.yimq.common.protocol.route.QueueDataProto.QueueData> values) {
-        if (queueDatasBuilder_ == null) {
-          ensureQueueDatasIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, queueDatas_);
-          onChanged();
-        } else {
-          queueDatasBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
-       */
-      public Builder clearQueueDatas() {
-        if (queueDatasBuilder_ == null) {
-          queueDatas_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
-          onChanged();
-        } else {
-          queueDatasBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
-       */
-      public Builder removeQueueDatas(int index) {
-        if (queueDatasBuilder_ == null) {
-          ensureQueueDatasIsMutable();
-          queueDatas_.remove(index);
-          onChanged();
-        } else {
-          queueDatasBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
-       */
-      public com.yimq.common.protocol.route.QueueDataProto.QueueData.Builder getQueueDatasBuilder(
-          int index) {
-        return getQueueDatasFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
-       */
-      public com.yimq.common.protocol.route.QueueDataProto.QueueDataOrBuilder getQueueDatasOrBuilder(
-          int index) {
-        if (queueDatasBuilder_ == null) {
-          return queueDatas_.get(index);  } else {
-          return queueDatasBuilder_.getMessageOrBuilder(index);
+          return topicConfig_ == null ?
+              com.yimq.common.topic.TopicConfigProto.TopicConfig.getDefaultInstance() : topicConfig_;
         }
       }
       /**
-       * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
+       * <code>optional .com.yimq.common.protobuf.topic.TopicConfig topicConfig = 3;</code>
        */
-      public java.util.List<? extends com.yimq.common.protocol.route.QueueDataProto.QueueDataOrBuilder> 
-           getQueueDatasOrBuilderList() {
-        if (queueDatasBuilder_ != null) {
-          return queueDatasBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(queueDatas_);
-        }
-      }
-      /**
-       * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
-       */
-      public com.yimq.common.protocol.route.QueueDataProto.QueueData.Builder addQueueDatasBuilder() {
-        return getQueueDatasFieldBuilder().addBuilder(
-            com.yimq.common.protocol.route.QueueDataProto.QueueData.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
-       */
-      public com.yimq.common.protocol.route.QueueDataProto.QueueData.Builder addQueueDatasBuilder(
-          int index) {
-        return getQueueDatasFieldBuilder().addBuilder(
-            index, com.yimq.common.protocol.route.QueueDataProto.QueueData.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .com.yimq.common.protobuf.route.QueueData queueDatas = 3;</code>
-       */
-      public java.util.List<com.yimq.common.protocol.route.QueueDataProto.QueueData.Builder> 
-           getQueueDatasBuilderList() {
-        return getQueueDatasFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.yimq.common.protocol.route.QueueDataProto.QueueData, com.yimq.common.protocol.route.QueueDataProto.QueueData.Builder, com.yimq.common.protocol.route.QueueDataProto.QueueDataOrBuilder> 
-          getQueueDatasFieldBuilder() {
-        if (queueDatasBuilder_ == null) {
-          queueDatasBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              com.yimq.common.protocol.route.QueueDataProto.QueueData, com.yimq.common.protocol.route.QueueDataProto.QueueData.Builder, com.yimq.common.protocol.route.QueueDataProto.QueueDataOrBuilder>(
-                  queueDatas_,
-                  ((bitField0_ & 0x00000004) == 0x00000004),
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.yimq.common.topic.TopicConfigProto.TopicConfig, com.yimq.common.topic.TopicConfigProto.TopicConfig.Builder, com.yimq.common.topic.TopicConfigProto.TopicConfigOrBuilder> 
+          getTopicConfigFieldBuilder() {
+        if (topicConfigBuilder_ == null) {
+          topicConfigBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.yimq.common.topic.TopicConfigProto.TopicConfig, com.yimq.common.topic.TopicConfigProto.TopicConfig.Builder, com.yimq.common.topic.TopicConfigProto.TopicConfigOrBuilder>(
+                  getTopicConfig(),
                   getParentForChildren(),
                   isClean());
-          queueDatas_ = null;
+          topicConfig_ = null;
         }
-        return queueDatasBuilder_;
+        return topicConfigBuilder_;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -2057,19 +1878,19 @@ public final class TopicRouteDataProto {
     java.lang.String[] descriptorData = {
       "\n\'src/protobuf/route/TopicRouteData.prot" +
       "o\022\036com.yimq.common.protobuf.route\032#src/p" +
-      "rotobuf/route/BrokerData.proto\032\"src/prot" +
-      "obuf/route/QueueData.proto\"\237\001\n\016TopicRout" +
-      "eData\022\r\n\005topic\030\001 \002(\t\022?\n\013brokerDatas\030\002 \003(" +
-      "\0132*.com.yimq.common.protobuf.route.Broke" +
-      "rData\022=\n\nqueueDatas\030\003 \003(\0132).com.yimq.com" +
-      "mon.protobuf.route.QueueData\"\342\001\n\021TopicRo" +
-      "uteDataMap\022c\n\021topicRouteDataMap\030\001 \003(\0132H." +
-      "com.yimq.common.protobuf.route.TopicRout" +
-      "eDataMap.TopicRouteDataMapEntry\032h\n\026Topic" +
-      "RouteDataMapEntry\022\013\n\003key\030\001 \001(\t\022=\n\005value\030" +
-      "\002 \001(\0132..com.yimq.common.protobuf.route.T" +
-      "opicRouteData:\0028\001B5\n\036com.yimq.common.pro" +
-      "tocol.routeB\023TopicRouteDataProto"
+      "rotobuf/route/BrokerData.proto\032$src/prot" +
+      "obuf/topic/TopicConfig.proto\"\242\001\n\016TopicRo" +
+      "uteData\022\r\n\005topic\030\001 \002(\t\022?\n\013brokerDatas\030\002 " +
+      "\003(\0132*.com.yimq.common.protobuf.route.Bro" +
+      "kerData\022@\n\013topicConfig\030\003 \001(\0132+.com.yimq." +
+      "common.protobuf.topic.TopicConfig\"\342\001\n\021To" +
+      "picRouteDataMap\022c\n\021topicRouteDataMap\030\001 \003" +
+      "(\0132H.com.yimq.common.protobuf.route.Topi" +
+      "cRouteDataMap.TopicRouteDataMapEntry\032h\n\026" +
+      "TopicRouteDataMapEntry\022\013\n\003key\030\001 \001(\t\022=\n\005v" +
+      "alue\030\002 \001(\0132..com.yimq.common.protobuf.ro" +
+      "ute.TopicRouteData:\0028\001B5\n\036com.yimq.commo" +
+      "n.protocol.routeB\023TopicRouteDataProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2083,14 +1904,14 @@ public final class TopicRouteDataProto {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.yimq.common.protocol.route.BrokerDataProto.getDescriptor(),
-          com.yimq.common.protocol.route.QueueDataProto.getDescriptor(),
+          com.yimq.common.topic.TopicConfigProto.getDescriptor(),
         }, assigner);
     internal_static_com_yimq_common_protobuf_route_TopicRouteData_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_com_yimq_common_protobuf_route_TopicRouteData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_yimq_common_protobuf_route_TopicRouteData_descriptor,
-        new java.lang.String[] { "Topic", "BrokerDatas", "QueueDatas", });
+        new java.lang.String[] { "Topic", "BrokerDatas", "TopicConfig", });
     internal_static_com_yimq_common_protobuf_route_TopicRouteDataMap_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_com_yimq_common_protobuf_route_TopicRouteDataMap_fieldAccessorTable = new
@@ -2104,7 +1925,7 @@ public final class TopicRouteDataProto {
         internal_static_com_yimq_common_protobuf_route_TopicRouteDataMap_TopicRouteDataMapEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     com.yimq.common.protocol.route.BrokerDataProto.getDescriptor();
-    com.yimq.common.protocol.route.QueueDataProto.getDescriptor();
+    com.yimq.common.topic.TopicConfigProto.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

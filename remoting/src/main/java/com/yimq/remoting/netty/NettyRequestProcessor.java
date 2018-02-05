@@ -7,5 +7,5 @@ import io.netty.channel.ChannelHandlerContext;
 import static com.yimq.remoting.protocol.RemotingCommandProto.*;
 
 public interface NettyRequestProcessor {
-    RemotingCommand process(ChannelHandlerContext ctx, RemotingCommand request) throws InvalidProtocolBufferException;
+    RemotingCommand process(ChannelHandlerContext ctx, RemotingCommand request) throws Exception;
 }
