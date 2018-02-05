@@ -47,11 +47,7 @@ public class ConsumerManager {
     public void addTopic(TopicConfig topicConfig) {
         this.lockAddTopic.lock();
         try {
-            Map<Integer, List<ConsumerInfo>> queueConsumersMap = new ConcurrentHashMap<>();
-            for (int i = 0; i < topicConfig.getQueueNums(); i++) {
-                queueConsumersMap.put(i, Lists.newArrayList());
-            }
-            this.topicQueueConsumersMap.put(topicConfig.getTopic(), queueConsumersMap);
+            this.createOrRebuildTopicQueueConsumersMap(topicConfig);
 
             List<MessageQueue> queues = Lists.newArrayList();
             for (int i = 0; i < topicConfig.getQueueNums(); i++) {
@@ -89,6 +85,20 @@ public class ConsumerManager {
         }
     }
 
+    private void createOrRebuildTopicQueueConsumersMap(String topic) {
+        TopicConfig topicConfig = this.brokerController.getTopicManager().getTopicConfigMap().get(topic);
+        this.createOrRebuildTopicQueueConsumersMap(topicConfig);
+    }
+
+    private void createOrRebuildTopicQueueConsumersMap(TopicConfig topicConfig) {
+        Map<Integer, List<ConsumerInfo>> queueConsumersMap = new ConcurrentHashMap<>();
+        for (int i = 0; i < topicConfig.getQueueNums(); i++) {
+            queueConsumersMap.put(i, Lists.newArrayList());
+        }
+        this.topicQueueConsumersMap.put(topicConfig.getTopic(), queueConsumersMap);
+    }
+
+
     /**
      * 重新平衡队列与消费者关联关系
      *
@@ -101,6 +111,8 @@ public class ConsumerManager {
      * 第二层是一个topic配置的消息队列数量
      */
     private void rebalanceRelation(String topic) {
+        this.createOrRebuildTopicQueueConsumersMap(topic);//删除原来的关联关系
+
         Map<String/* consumerGroup */, ConsumerGroupInfo> consumerGroupMap = this.topicConsumerGroupMap.get(topic);
 
         TopicConfig topicConfig = this.brokerController.getTopicManager().getTopicConfigMap().get(topic);
