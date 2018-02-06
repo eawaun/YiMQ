@@ -29,7 +29,6 @@ public class ConsumerManager {
 
     /**
      * 队列与消费者列表之间的映射，当从队列当中取消息时，会发送到对应的消费者列表
-     * //todo init
      */
     private Map<String/* topic */, Map<Integer/* queueId */, List<ConsumerInfo>>> topicQueueConsumersMap =
         new ConcurrentHashMap<>();

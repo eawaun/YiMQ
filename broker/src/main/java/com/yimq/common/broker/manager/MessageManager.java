@@ -40,21 +40,21 @@ public class MessageManager {
     }
 
 
-    public void addMessage(String topic, Message message) throws MessageHandlerException {
+    public void addMessage(String topic, Message message, int queueId) throws MessageHandlerException {
         TopicConfig topicConfig = this.brokerController.getTopicManager().getTopicConfigMap().get(topic);
         if (topicConfig == null) {
             throw new MessageHandlerException("addMessage: topic[" + topic + "] doesn't exist!");
         }
 
         Map<Integer, LinkedBlockingQueue<Message>> queueMap = topicQueueMap.get(topic);
-        LinkedBlockingQueue<Message> queue = queueMap.get(message.getQueueId());
+        LinkedBlockingQueue<Message> queue = queueMap.get(queueId);
 
         queue.add(message);
     }
 
-    public void saveMessage(String topic, Message message) {
+    public void saveMessage(String topic, Message message, int queueId) {
         //todo db
-        logger.info("saveMessage: message save in db, topic[{}], queueId[{}]", topic, message.getQueueId());
+        logger.info("saveMessage: message save in db, topic[{}], queueId[{}]", topic, queueId);
     }
 
 

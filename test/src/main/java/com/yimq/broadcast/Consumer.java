@@ -1,10 +1,11 @@
-package com.yimq.common;
+package com.yimq.broadcast;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.client.consumer.ConsumeStatus;
 import com.yimq.client.consumer.DefaultMQPushConsumer;
 import com.yimq.client.consumer.MessageReceivedListener;
 import com.yimq.client.exception.MQClientException;
+import com.yimq.common.Constant;
 import com.yimq.common.message.Message;
 import com.yimq.remoting.exception.RemotingConnectException;
 

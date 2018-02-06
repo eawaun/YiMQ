@@ -38,11 +38,12 @@ public class BrokerProcessor implements NettyRequestProcessor {
         try {
             SendMsgRequestHeader requestHeader = SendMsgRequestHeader.parseFrom(request.getCustomHeader());
             Message message = new Message(requestHeader.getTopic(), request.getBody().toByteArray());
+            int queueId = requestHeader.getQueueId();
             //落地
-            this.brokerController.getMessageManager().saveMessage(message.getTopic(), message);
+            this.brokerController.getMessageManager().saveMessage(message.getTopic(), message, queueId);
 
             //todo 添加到消息队列中，如果是延迟任务，则不添加到队列中，而是放到数据库中
-            this.brokerController.getMessageManager().addMessage(message.getTopic(), message);
+            this.brokerController.getMessageManager().addMessage(message.getTopic(), message, queueId);
 
             //返回成功
             RemotingCommand response = RemotingCommandBuilder.newResponseBuilder(request).setCode(ResponseCode.SUCCESS).build();
