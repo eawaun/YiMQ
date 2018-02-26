@@ -1,5 +1,6 @@
-package com.yimq.common.broker.task;
+package com.yimq.broker.task;
 
+import com.google.common.collect.Lists;
 import com.google.protobuf.ByteString;
 import com.yimq.common.consumer.ConsumerInfo;
 import com.yimq.common.message.Message;
@@ -12,17 +13,19 @@ import com.yimq.remoting.protocol.RemotingCommandBuilder;
 import com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand;
 import com.yimq.common.protocol.ResponseCode;
 
+import java.util.List;
+
 public class PushMessageTask implements Runnable {
 
-    private ConsumerInfo consumer;
+    private List<ConsumerInfo> consumers;
     private RemotingServer remotingServer;
     private String topic;
     private Message message;
 
     private long timeoutMills = 3000;
 
-    public PushMessageTask(ConsumerInfo consumer, RemotingServer remotingServer, String topic, Message message) {
-        this.consumer = consumer;
+    public PushMessageTask(List<ConsumerInfo> consumers, RemotingServer remotingServer, String topic, Message message) {
+        this.consumers = consumers;
         this.remotingServer = remotingServer;
         this.topic = topic;
         this.message = message;
@@ -30,25 +33,38 @@ public class PushMessageTask implements Runnable {
 
     @Override
     public void run() {
-        //todo 添加重试，成功时修改db
-        SendMsgRequestHeader requestHeader = SendMsgRequestHeader.newBuilder().setTopic(this.topic).build();
-        RemotingCommand request = RemotingCommandBuilder.newRequestBuilder(RequestCode.CONSUME_MESSAGE_DIRECTLY)
-            .setCustomHeader(requestHeader.toByteString())
-            .setBody(ByteString.copyFrom(message.getBody())).build();
+        List<String> failConsumerAddrs = Lists.newArrayList();
 
-        try {
-            RemotingCommand response = this.remotingServer.invokeSync(consumer.getChannel(), request, timeoutMills);
-            switch (response.getCode()) {
-                case ResponseCode.SUCCESS:
-                    //
-                    break;
-                default:
-                    //
+        for (ConsumerInfo consumer : consumers) {
+            SendMsgRequestHeader requestHeader = SendMsgRequestHeader.newBuilder().setTopic(this.topic).build();
+            RemotingCommand request = RemotingCommandBuilder.newRequestBuilder(RequestCode.CONSUME_MESSAGE_DIRECTLY)
+                .setCustomHeader(requestHeader.toByteString())
+                .setBody(ByteString.copyFrom(message.getBody())).build();
+
+            try {
+                RemotingCommand response = this.remotingServer.invokeSync(consumer.getChannel(), request, timeoutMills);
+                switch (response.getCode()) {
+                    case ResponseCode.SUCCESS:
+                        //
+                        break;
+                    default:
+                        failConsumerAddrs.add(consumer.getAddress());
+                }
+            } catch (InterruptedException | RemotingSendRequestException | RemotingTimeoutException e) {
+                failConsumerAddrs.add(consumer.getAddress());
+                e.printStackTrace();
             }
-        } catch (InterruptedException | RemotingSendRequestException | RemotingTimeoutException e) {
-            //
-            e.printStackTrace();
         }
+
+        if (failConsumerAddrs.size() == 0) {
+            //消息投递完成，更改消息状态
+
+        } else {
+            //更新发送失败的消费者列表，及下次投递时间
+
+        }
+
+
     }
 
     public Message getMessage() {
@@ -73,14 +89,6 @@ public class PushMessageTask implements Runnable {
 
     public void setTimeoutMills(long timeoutMills) {
         this.timeoutMills = timeoutMills;
-    }
-
-    public ConsumerInfo getConsumer() {
-        return consumer;
-    }
-
-    public void setConsumer(ConsumerInfo consumer) {
-        this.consumer = consumer;
     }
 
     public RemotingServer getRemotingServer() {

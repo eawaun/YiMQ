@@ -1,4 +1,4 @@
-package com.yimq.common.broker;
+package com.yimq.broker;
 
 import com.yimq.remoting.netty.NettyClientConfig;
 import com.yimq.remoting.netty.NettyServerConfig;

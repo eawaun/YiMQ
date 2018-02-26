@@ -1,8 +1,8 @@
-package com.yimq.common.broker.processor;
+package com.yimq.broker.processor;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.yimq.common.broker.BrokerController;
-import com.yimq.common.broker.exception.MQBrokerException;
+import com.yimq.broker.BrokerController;
+import com.yimq.broker.exception.MQBrokerException;
 import com.yimq.common.consumer.ConsumerInfo;
 import com.yimq.common.exception.MessageHandlerException;
 import com.yimq.common.message.Message;

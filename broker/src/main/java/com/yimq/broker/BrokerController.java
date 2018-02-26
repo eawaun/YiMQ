@@ -1,10 +1,10 @@
-package com.yimq.common.broker;
+package com.yimq.broker;
 
-import com.yimq.common.broker.client.BrokerClient;
-import com.yimq.common.broker.manager.ConsumerManager;
-import com.yimq.common.broker.manager.MessageManager;
-import com.yimq.common.broker.manager.TopicManager;
-import com.yimq.common.broker.processor.BrokerProcessor;
+import com.yimq.broker.manager.MessageManager;
+import com.yimq.broker.processor.BrokerProcessor;
+import com.yimq.broker.client.BrokerClient;
+import com.yimq.broker.manager.ConsumerManager;
+import com.yimq.broker.manager.TopicManager;
 import com.yimq.common.topic.TopicConfigWrapper;
 import com.yimq.remoting.RemotingServer;
 import com.yimq.remoting.common.ThreadFactoryImpl;
@@ -12,7 +12,6 @@ import com.yimq.remoting.netty.NettyClientConfig;
 import com.yimq.remoting.netty.NettyRemotingServer;
 import com.yimq.remoting.netty.NettyServerConfig;
 
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

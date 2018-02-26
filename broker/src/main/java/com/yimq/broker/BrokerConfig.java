@@ -1,4 +1,4 @@
-package com.yimq.common.broker;
+package com.yimq.broker;
 
 import com.yimq.common.Constant;
 import com.yimq.remoting.common.RemotingUtil;

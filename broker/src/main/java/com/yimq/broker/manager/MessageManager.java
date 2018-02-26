@@ -1,7 +1,7 @@
-package com.yimq.common.broker.manager;
+package com.yimq.broker.manager;
 
-import com.yimq.common.broker.BrokerController;
-import com.yimq.common.broker.task.PushMessageTask;
+import com.yimq.broker.BrokerController;
+import com.yimq.broker.task.PushMessageTask;
 import com.yimq.common.consumer.ConsumerInfo;
 import com.yimq.common.exception.MessageHandlerException;
 import com.yimq.common.message.Message;
@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 public class MessageManager {
     private final static Logger logger = LoggerFactory.getLogger(MessageManager.class);
@@ -55,13 +56,20 @@ public class MessageManager {
     public void saveMessage(String topic, Message message, int queueId) {
         //todo db
         logger.info("saveMessage: message save in db, topic[{}], queueId[{}]", topic, queueId);
+        //获取消息投递到的消费者列表
+        List<ConsumerInfo> consumers = this.brokerController.getConsumerManager().findConsumers(topic, queueId);
+        String consumersStr = consumers.stream().map(ConsumerInfo::getAddress).collect(Collectors.joining(","));
+        //存消息
+
     }
-
-
 
     public void dispatchMessage() throws InterruptedException {
         Runnable dispatchTask = () -> {
             while (true) {
+                //从db从取出待消费的消息，包含新消息、延迟消息、上次未完成的消息
+
+
+
                 for (Map<Integer/* queueId */, LinkedBlockingQueue<Message>> queueMap : topicQueueMap.values()) {
                     queueMap.forEach((queueId, queue) -> {
                         Message message = queue.poll();
@@ -76,24 +84,13 @@ public class MessageManager {
                         }
                         //获取消息的目标消费者
                         List<ConsumerInfo> consumers = this.brokerController.getConsumerManager().findConsumers(topicConfig.getTopic(), queueId);
-
-                        for (ConsumerInfo consumer : consumers) {
-                            PushMessageTask task = new PushMessageTask(consumer, this.brokerController.getRemotingServer()
-                                , message.getTopic(), message);
-                            this.pushMessageExecutor.submit(task);
-                        }
+                        PushMessageTask task = new PushMessageTask(consumers, this.brokerController.getRemotingServer()
+                            , message.getTopic(), message);
+                        this.pushMessageExecutor.submit(task);
                     });
                 }
             }
         };
         this.dispatchMessageExecutor.submit(dispatchTask);
     }
-
-    public void handleFailOrUnHandleMessage() {
-        //从db取消息，包括延迟发送的消息
-
-        //添加到队列中
-    }
-
-
 }

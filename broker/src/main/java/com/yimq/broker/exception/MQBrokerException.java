@@ -1,4 +1,4 @@
-package com.yimq.common.broker.exception;
+package com.yimq.broker.exception;
 
 public class MQBrokerException extends Exception {
     private int responseCode;

@@ -1,6 +1,6 @@
-package com.yimq.common.broker.client;
+package com.yimq.broker.client;
 
-import com.yimq.common.broker.exception.MQBrokerException;
+import com.yimq.broker.exception.MQBrokerException;
 import com.yimq.common.protocol.RequestCode;
 import com.yimq.common.protocol.ResponseCode;
 import com.yimq.common.protocol.header.RegisterBrokerRequestHeaderProto.RegisterBrokerRequestHeader;

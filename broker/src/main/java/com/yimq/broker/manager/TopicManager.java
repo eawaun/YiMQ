@@ -1,7 +1,7 @@
-package com.yimq.common.broker.manager;
+package com.yimq.broker.manager;
 
+import com.yimq.broker.BrokerController;
 import com.yimq.common.Constant;
-import com.yimq.common.broker.BrokerController;
 import com.yimq.common.consumer.SubscribeType;
 import com.yimq.common.topic.TopicConfig;
 import com.yimq.common.topic.TopicConfigWrapper;

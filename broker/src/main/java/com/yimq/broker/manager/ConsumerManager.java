@@ -1,8 +1,8 @@
-package com.yimq.common.broker.manager;
+package com.yimq.broker.manager;
 
 import com.google.common.collect.Lists;
-import com.yimq.common.broker.BrokerController;
-import com.yimq.common.broker.exception.MQBrokerException;
+import com.yimq.broker.BrokerController;
+import com.yimq.broker.exception.MQBrokerException;
 import com.yimq.common.consumer.ConsumerGroupInfo;
 import com.yimq.common.consumer.ConsumerInfo;
 import com.yimq.common.consumer.SubscribeType;
@@ -143,6 +143,10 @@ public class ConsumerManager {
     }
 
     public List<ConsumerInfo> findConsumers(final String topic, final int queueId) {
-        return this.topicQueueConsumersMap.get(topic).get(queueId);
+        Map<Integer/* queueId */, List<ConsumerInfo>> queueConsumersMap = this.topicQueueConsumersMap.get(topic);
+        if (queueConsumersMap == null) {
+            return null;
+        }
+        return queueConsumersMap.get(queueId);
     }
 }
