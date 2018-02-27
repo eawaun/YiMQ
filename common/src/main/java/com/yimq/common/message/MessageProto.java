@@ -19,25 +19,43 @@ public final class MessageProto {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>optional string topic = 1;</code>
+     * <code>optional int32 queueId = 1;</code>
+     */
+    boolean hasQueueId();
+    /**
+     * <code>optional int32 queueId = 1;</code>
+     */
+    int getQueueId();
+
+    /**
+     * <code>optional int32 delayTime = 2;</code>
+     */
+    boolean hasDelayTime();
+    /**
+     * <code>optional int32 delayTime = 2;</code>
+     */
+    int getDelayTime();
+
+    /**
+     * <code>optional string topic = 3;</code>
      */
     boolean hasTopic();
     /**
-     * <code>optional string topic = 1;</code>
+     * <code>optional string topic = 3;</code>
      */
     java.lang.String getTopic();
     /**
-     * <code>optional string topic = 1;</code>
+     * <code>optional string topic = 3;</code>
      */
     com.google.protobuf.ByteString
         getTopicBytes();
 
     /**
-     * <code>optional bytes body = 2;</code>
+     * <code>optional bytes body = 4;</code>
      */
     boolean hasBody();
     /**
-     * <code>optional bytes body = 2;</code>
+     * <code>optional bytes body = 4;</code>
      */
     com.google.protobuf.ByteString getBody();
   }
@@ -54,6 +72,8 @@ public final class MessageProto {
       super(builder);
     }
     private Message() {
+      queueId_ = 0;
+      delayTime_ = 0;
       topic_ = "";
       body_ = com.google.protobuf.ByteString.EMPTY;
     }
@@ -89,14 +109,24 @@ public final class MessageProto {
               }
               break;
             }
-            case 10: {
-              com.google.protobuf.ByteString bs = input.readBytes();
+            case 8: {
               bitField0_ |= 0x00000001;
+              queueId_ = input.readInt32();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              delayTime_ = input.readInt32();
+              break;
+            }
+            case 26: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000004;
               topic_ = bs;
               break;
             }
-            case 18: {
-              bitField0_ |= 0x00000002;
+            case 34: {
+              bitField0_ |= 0x00000008;
               body_ = input.readBytes();
               break;
             }
@@ -125,16 +155,46 @@ public final class MessageProto {
     }
 
     private int bitField0_;
-    public static final int TOPIC_FIELD_NUMBER = 1;
-    private volatile java.lang.Object topic_;
+    public static final int QUEUEID_FIELD_NUMBER = 1;
+    private int queueId_;
     /**
-     * <code>optional string topic = 1;</code>
+     * <code>optional int32 queueId = 1;</code>
      */
-    public boolean hasTopic() {
+    public boolean hasQueueId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional string topic = 1;</code>
+     * <code>optional int32 queueId = 1;</code>
+     */
+    public int getQueueId() {
+      return queueId_;
+    }
+
+    public static final int DELAYTIME_FIELD_NUMBER = 2;
+    private int delayTime_;
+    /**
+     * <code>optional int32 delayTime = 2;</code>
+     */
+    public boolean hasDelayTime() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional int32 delayTime = 2;</code>
+     */
+    public int getDelayTime() {
+      return delayTime_;
+    }
+
+    public static final int TOPIC_FIELD_NUMBER = 3;
+    private volatile java.lang.Object topic_;
+    /**
+     * <code>optional string topic = 3;</code>
+     */
+    public boolean hasTopic() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional string topic = 3;</code>
      */
     public java.lang.String getTopic() {
       java.lang.Object ref = topic_;
@@ -151,7 +211,7 @@ public final class MessageProto {
       }
     }
     /**
-     * <code>optional string topic = 1;</code>
+     * <code>optional string topic = 3;</code>
      */
     public com.google.protobuf.ByteString
         getTopicBytes() {
@@ -167,16 +227,16 @@ public final class MessageProto {
       }
     }
 
-    public static final int BODY_FIELD_NUMBER = 2;
+    public static final int BODY_FIELD_NUMBER = 4;
     private com.google.protobuf.ByteString body_;
     /**
-     * <code>optional bytes body = 2;</code>
+     * <code>optional bytes body = 4;</code>
      */
     public boolean hasBody() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
+      return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>optional bytes body = 2;</code>
+     * <code>optional bytes body = 4;</code>
      */
     public com.google.protobuf.ByteString getBody() {
       return body_;
@@ -195,10 +255,16 @@ public final class MessageProto {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, topic_);
+        output.writeInt32(1, queueId_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(2, body_);
+        output.writeInt32(2, delayTime_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, topic_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeBytes(4, body_);
       }
       unknownFields.writeTo(output);
     }
@@ -209,11 +275,19 @@ public final class MessageProto {
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, topic_);
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, queueId_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, body_);
+          .computeInt32Size(2, delayTime_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, topic_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(4, body_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -231,6 +305,16 @@ public final class MessageProto {
       com.yimq.common.message.MessageProto.Message other = (com.yimq.common.message.MessageProto.Message) obj;
 
       boolean result = true;
+      result = result && (hasQueueId() == other.hasQueueId());
+      if (hasQueueId()) {
+        result = result && (getQueueId()
+            == other.getQueueId());
+      }
+      result = result && (hasDelayTime() == other.hasDelayTime());
+      if (hasDelayTime()) {
+        result = result && (getDelayTime()
+            == other.getDelayTime());
+      }
       result = result && (hasTopic() == other.hasTopic());
       if (hasTopic()) {
         result = result && getTopic()
@@ -252,6 +336,14 @@ public final class MessageProto {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasQueueId()) {
+        hash = (37 * hash) + QUEUEID_FIELD_NUMBER;
+        hash = (53 * hash) + getQueueId();
+      }
+      if (hasDelayTime()) {
+        hash = (37 * hash) + DELAYTIME_FIELD_NUMBER;
+        hash = (53 * hash) + getDelayTime();
+      }
       if (hasTopic()) {
         hash = (37 * hash) + TOPIC_FIELD_NUMBER;
         hash = (53 * hash) + getTopic().hashCode();
@@ -389,10 +481,14 @@ public final class MessageProto {
       }
       public Builder clear() {
         super.clear();
-        topic_ = "";
+        queueId_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
-        body_ = com.google.protobuf.ByteString.EMPTY;
+        delayTime_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
+        topic_ = "";
+        bitField0_ = (bitField0_ & ~0x00000004);
+        body_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -420,9 +516,17 @@ public final class MessageProto {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.topic_ = topic_;
+        result.queueId_ = queueId_;
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
+        }
+        result.delayTime_ = delayTime_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.topic_ = topic_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
         }
         result.body_ = body_;
         result.bitField0_ = to_bitField0_;
@@ -467,8 +571,14 @@ public final class MessageProto {
 
       public Builder mergeFrom(com.yimq.common.message.MessageProto.Message other) {
         if (other == com.yimq.common.message.MessageProto.Message.getDefaultInstance()) return this;
+        if (other.hasQueueId()) {
+          setQueueId(other.getQueueId());
+        }
+        if (other.hasDelayTime()) {
+          setDelayTime(other.getDelayTime());
+        }
         if (other.hasTopic()) {
-          bitField0_ |= 0x00000001;
+          bitField0_ |= 0x00000004;
           topic_ = other.topic_;
           onChanged();
         }
@@ -503,15 +613,79 @@ public final class MessageProto {
       }
       private int bitField0_;
 
-      private java.lang.Object topic_ = "";
+      private int queueId_ ;
       /**
-       * <code>optional string topic = 1;</code>
+       * <code>optional int32 queueId = 1;</code>
        */
-      public boolean hasTopic() {
+      public boolean hasQueueId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>optional string topic = 1;</code>
+       * <code>optional int32 queueId = 1;</code>
+       */
+      public int getQueueId() {
+        return queueId_;
+      }
+      /**
+       * <code>optional int32 queueId = 1;</code>
+       */
+      public Builder setQueueId(int value) {
+        bitField0_ |= 0x00000001;
+        queueId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 queueId = 1;</code>
+       */
+      public Builder clearQueueId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        queueId_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int delayTime_ ;
+      /**
+       * <code>optional int32 delayTime = 2;</code>
+       */
+      public boolean hasDelayTime() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional int32 delayTime = 2;</code>
+       */
+      public int getDelayTime() {
+        return delayTime_;
+      }
+      /**
+       * <code>optional int32 delayTime = 2;</code>
+       */
+      public Builder setDelayTime(int value) {
+        bitField0_ |= 0x00000002;
+        delayTime_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 delayTime = 2;</code>
+       */
+      public Builder clearDelayTime() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        delayTime_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object topic_ = "";
+      /**
+       * <code>optional string topic = 3;</code>
+       */
+      public boolean hasTopic() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional string topic = 3;</code>
        */
       public java.lang.String getTopic() {
         java.lang.Object ref = topic_;
@@ -528,7 +702,7 @@ public final class MessageProto {
         }
       }
       /**
-       * <code>optional string topic = 1;</code>
+       * <code>optional string topic = 3;</code>
        */
       public com.google.protobuf.ByteString
           getTopicBytes() {
@@ -544,36 +718,36 @@ public final class MessageProto {
         }
       }
       /**
-       * <code>optional string topic = 1;</code>
+       * <code>optional string topic = 3;</code>
        */
       public Builder setTopic(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000001;
+  bitField0_ |= 0x00000004;
         topic_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string topic = 1;</code>
+       * <code>optional string topic = 3;</code>
        */
       public Builder clearTopic() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ = (bitField0_ & ~0x00000004);
         topic_ = getDefaultInstance().getTopic();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string topic = 1;</code>
+       * <code>optional string topic = 3;</code>
        */
       public Builder setTopicBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000001;
+  bitField0_ |= 0x00000004;
         topic_ = value;
         onChanged();
         return this;
@@ -581,34 +755,34 @@ public final class MessageProto {
 
       private com.google.protobuf.ByteString body_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>optional bytes body = 2;</code>
+       * <code>optional bytes body = 4;</code>
        */
       public boolean hasBody() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
+        return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>optional bytes body = 2;</code>
+       * <code>optional bytes body = 4;</code>
        */
       public com.google.protobuf.ByteString getBody() {
         return body_;
       }
       /**
-       * <code>optional bytes body = 2;</code>
+       * <code>optional bytes body = 4;</code>
        */
       public Builder setBody(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000002;
+  bitField0_ |= 0x00000008;
         body_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional bytes body = 2;</code>
+       * <code>optional bytes body = 4;</code>
        */
       public Builder clearBody() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000008);
         body_ = getDefaultInstance().getBody();
         onChanged();
         return this;
@@ -677,9 +851,10 @@ public final class MessageProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\"src/protobuf/message/Message.proto\022 co" +
-      "m.yimq.common.protobuf.message\"&\n\007Messag" +
-      "e\022\r\n\005topic\030\001 \001(\t\022\014\n\004body\030\002 \001(\014B\'\n\027com.yi" +
-      "mq.common.messageB\014MessageProto"
+      "m.yimq.common.protobuf.message\"J\n\007Messag" +
+      "e\022\017\n\007queueId\030\001 \001(\005\022\021\n\tdelayTime\030\002 \001(\005\022\r\n" +
+      "\005topic\030\003 \001(\t\022\014\n\004body\030\004 \001(\014B\'\n\027com.yimq.c" +
+      "ommon.messageB\014MessageProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -698,7 +873,7 @@ public final class MessageProto {
     internal_static_com_yimq_common_protobuf_message_Message_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_yimq_common_protobuf_message_Message_descriptor,
-        new java.lang.String[] { "Topic", "Body", });
+        new java.lang.String[] { "QueueId", "DelayTime", "Topic", "Body", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

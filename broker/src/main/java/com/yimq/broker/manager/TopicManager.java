@@ -28,7 +28,6 @@ public class TopicManager {
 
     public void addTopic(TopicConfig topicConfig) {
         getTopicConfigMap().put(topicConfig.getTopic(), topicConfig);
-        this.brokerController.getMessageManager().addTopic(topicConfig);
         this.brokerController.getConsumerManager().addTopic(topicConfig);
     }
 

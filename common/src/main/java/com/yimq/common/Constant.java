@@ -13,4 +13,5 @@ public class Constant {
 
     public static final String DEFAULT_GROUP_UNICAST_TOPIC = "DefaultGroupUnicastTopic";
 
+    public static final int RETRY_COUNT = 5;
 }

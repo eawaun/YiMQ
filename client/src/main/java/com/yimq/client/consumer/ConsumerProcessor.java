@@ -1,10 +1,8 @@
 package com.yimq.client.consumer;
 
-import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.common.message.Message;
 import com.yimq.common.message.MessageProto;
-import com.yimq.common.protocol.header.SendMsgRequestHeaderProto.SendMsgRequestHeader;
 import com.yimq.remoting.netty.NettyRequestProcessor;
 import com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand;
 import com.yimq.common.protocol.RequestCode;
@@ -29,8 +27,7 @@ public class ConsumerProcessor implements NettyRequestProcessor {
     }
 
     private RemotingCommand consumeMessageDirectly(ChannelHandlerContext ctx, RemotingCommand request) throws InvalidProtocolBufferException {
-        SendMsgRequestHeader sendMsgRequestHeader = SendMsgRequestHeader.parseFrom(request.getCustomHeader());
-        Message message = new Message(sendMsgRequestHeader.getTopic(), request.getBody().toByteArray());
+        Message message = Message.fromProto(MessageProto.Message.parseFrom(request.getBody()));
 
         ConsumeStatus consumeStatus = messageReceivedListener.consumeMessage(message);
         switch (consumeStatus) {

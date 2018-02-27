@@ -1,16 +1,28 @@
 package com.yimq.common.message;
 
-public class Message {
-    private int id;
+import com.google.protobuf.ByteString;
+import com.yimq.common.ProtobufConver;
+
+public class Message implements ProtobufConver<MessageProto.Message> {
     private int queueId;
     private String producer;
-    private int delay_time;
+    private int delayTime;
     private String topic;
     private byte[] body;
 
     public Message(String topic, byte[] body) {
         this.topic = topic;
         this.body = body;
+    }
+
+    public Message(int queueId, int delayTime, String topic, byte[] body) {
+        this.queueId = queueId;
+        this.delayTime = delayTime;
+        this.topic = topic;
+        this.body = body;
+    }
+
+    public Message() {
     }
 
     public String getTopic() {
@@ -29,14 +41,6 @@ public class Message {
         this.body = body;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public int getQueueId() {
         return queueId;
     }
@@ -53,11 +57,22 @@ public class Message {
         this.producer = producer;
     }
 
-    public int getDelay_time() {
-        return delay_time;
+    public int getDelayTime() {
+        return delayTime;
     }
 
-    public void setDelay_time(int delay_time) {
-        this.delay_time = delay_time;
+    public void setDelayTime(int delayTime) {
+        this.delayTime = delayTime;
+    }
+
+    public static Message fromProto(MessageProto.Message messageProto) {
+        return new Message(messageProto.getQueueId(), messageProto.getDelayTime(), messageProto.getTopic()
+            , messageProto.getBody().toByteArray());
+    }
+
+    @Override
+    public MessageProto.Message toProto() {
+        return MessageProto.Message.newBuilder().setQueueId(getQueueId()).setDelayTime(getDelayTime())
+            .setTopic(getTopic()).setBody(ByteString.copyFrom(getBody())).build();
     }
 }

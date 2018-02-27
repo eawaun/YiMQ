@@ -9,7 +9,6 @@ import com.yimq.client.exception.MQClientException;
 import com.yimq.common.Constant;
 import com.yimq.common.message.Message;
 import com.yimq.common.protocol.RequestCode;
-import com.yimq.common.protocol.header.SendMsgRequestHeaderProto.SendMsgRequestHeader;
 import com.yimq.common.protocol.route.BrokerData;
 import com.yimq.common.protocol.route.TopicRouteData;
 import com.yimq.remoting.exception.RemotingConnectException;
@@ -26,6 +25,8 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
     private String producerGroup;
 
     private int sendMsgTimeoutMills = 3600000;
+
+    private int delayTime;
 
     private Map<String/* topic */, TopicRouteData> topicRouteDataMap = new ConcurrentHashMap<>();
 
@@ -58,13 +59,12 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
         TopicRouteData topicRouteData = this.clientInstance.findTopicRouteDataFromNamesrv(msg.getTopic());
         BrokerData brokerData = this.clientInstance.chooseBroker(topicRouteData.getBrokerDatas());
         int queueId = this.clientInstance.chooseQueueId(topicRouteData.getTopicConfig().getQueueNums(), null);
+        msg.setQueueId(queueId);
 
-        SendMsgRequestHeader sendMsgRequestHeader = SendMsgRequestHeader.newBuilder().setTopic(msg.getTopic())
-            .setQueueId(queueId).build();
+        msg.setDelayTime(getDelayTime());
 
         RemotingCommand request = RemotingCommandBuilder.newRequestBuilder(RequestCode.SEND_MESSAGE)
-            .setCustomHeader(sendMsgRequestHeader.toByteString())
-            .setBody(ByteString.copyFrom(msg.getBody())).build();
+            .setBody(msg.toProto().toByteString()).build();
 
         String brokerAddr = brokerData.getBrokerAddrs().get(Constant.MASTER_ID);
         return this.clientInstance.sendSync(brokerAddr, request, this.sendMsgTimeoutMills);
@@ -77,5 +77,13 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
 
     public void setSendMsgTimeoutMills(int sendMsgTimeoutMills) {
         this.sendMsgTimeoutMills = sendMsgTimeoutMills;
+    }
+
+    public int getDelayTime() {
+        return delayTime;
+    }
+
+    public void setDelayTime(int delayTime) {
+        this.delayTime = delayTime;
     }
 }

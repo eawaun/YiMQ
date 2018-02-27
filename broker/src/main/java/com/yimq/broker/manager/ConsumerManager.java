@@ -36,6 +36,8 @@ public class ConsumerManager {
     private Lock lockAddConsumer = new ReentrantLock();
     private Map<String/* topic */, List<MessageQueue>> messageQueueInTopic = new ConcurrentHashMap<>();
 
+    private Map<String/* address */, ConsumerInfo> consumerInfoMap = new ConcurrentHashMap<>();
+
     public ConsumerManager(BrokerController brokerController) {
         this.brokerController = brokerController;
     }
@@ -77,6 +79,8 @@ public class ConsumerManager {
                 consumerGroupMap.put(newConsumer.getConsumerGroup(), consumerGroup);
             }
             consumerGroup.addConsumer(newConsumer);
+
+            consumerInfoMap.put(newConsumer.getAddress(), newConsumer);
 
             this.rebalanceRelation(topic);
         } finally {
@@ -148,5 +152,9 @@ public class ConsumerManager {
             return null;
         }
         return queueConsumersMap.get(queueId);
+    }
+
+    public ConsumerInfo getConsumerInfoByAddress(String address) {
+        return consumerInfoMap.get(address);
     }
 }

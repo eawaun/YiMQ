@@ -2,7 +2,79 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yimq.broker.mapper.MessageMapper">
-    <select id="select" resultType="com.yimq.common.model.MessageModel">
-        select * from Message where id = #{id}
+    <sql id="columns">
+        id, topic, queue_id, create_time, update_time, delay_time, producer, consumer_list, retry_count, content, status
+    </sql>
+
+    <sql id="tableName">message</sql>
+
+    <select id="selectByStatus" resultType="com.yimq.broker.model.MessagePO">
+        select
+        <include refid="columns"/>
+        from
+        <include refid="tableName"/>
+        where
+        status = #{status}
     </select>
+
+    <select id="selectByStatusList" resultType="com.yimq.broker.model.MessagePO">
+        select
+        <include refid="columns"/>
+        from
+        <include refid="tableName"/>
+        where
+        status in
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <insert id="save">
+        insert into
+        <include refid="tableName"/>
+        (<include refid="columns"/>)
+        VALUES
+        (#{id}, #{topic}, #{queueId}, #{createTime}, #{updateTime}, #{delayTime}, #{producer}, #{consumerList}, #{retryCount},
+        #{content}, #{status});
+    </insert>
+    
+    <update id="updateStatusByStatus">
+        update
+        <include refid="tableName"/>
+        SET
+        status = #{toStatus}
+        WHERE
+        id = #{id}
+        AND
+        status = #{fromStatus}
+        AND
+        updateTime = #{updateTimeLock}
+    </update>
+
+    <update id="updateStatusByStatusList">
+        update
+        <include refid="tableName"/>
+        SET
+        status = #{toStatus}
+        WHERE
+        id = #{id}
+        AND
+        status IN
+        <foreach collection="list" item="item" separator=",">
+            #{item}
+        </foreach>
+        AND
+        updateTime = #{updateTimeLock}
+    </update>
+
+    <update id="updateFailConsumers">
+        update
+        <include refid="tableName"/>
+        SET
+        status = #{toStatus}, consumer_list = #{failConsumers}, delay_time = #{delayTime}
+        WHERE
+        id = #{id}
+        AND
+        status = #{fromStatus}
+    </update>
 </mapper>

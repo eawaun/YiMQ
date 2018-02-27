@@ -4,11 +4,10 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.broker.BrokerController;
 import com.yimq.broker.exception.MQBrokerException;
 import com.yimq.common.consumer.ConsumerInfo;
-import com.yimq.common.exception.MessageHandlerException;
 import com.yimq.common.message.Message;
+import com.yimq.common.message.MessageProto;
 import com.yimq.common.protocol.ResponseCode;
 import com.yimq.common.protocol.header.RegisterConsumerRequestHeaderProto.RegisterConsumerRequestHeader;
-import com.yimq.common.protocol.header.SendMsgRequestHeaderProto.SendMsgRequestHeader;
 import com.yimq.remoting.netty.NettyRequestProcessor;
 import com.yimq.remoting.protocol.RemotingCommandBuilder;
 import com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand;
@@ -36,19 +35,17 @@ public class BrokerProcessor implements NettyRequestProcessor {
 
     private RemotingCommand processSendMessage(ChannelHandlerContext ctx, RemotingCommand request) throws InvalidProtocolBufferException {
         try {
-            SendMsgRequestHeader requestHeader = SendMsgRequestHeader.parseFrom(request.getCustomHeader());
-            Message message = new Message(requestHeader.getTopic(), request.getBody().toByteArray());
-            int queueId = requestHeader.getQueueId();
+            MessageProto.Message messageProto = MessageProto.Message.parseFrom(request.getBody());
+            Message message = Message.fromProto(messageProto);
+            message.setProducer(ctx.channel().remoteAddress().toString());
             //落地
-            this.brokerController.getMessageManager().saveMessage(message.getTopic(), message, queueId);
-
-            //todo 添加到消息队列中，如果是延迟任务，则不添加到队列中，而是放到数据库中
-            this.brokerController.getMessageManager().addMessage(message.getTopic(), message, queueId);
-
-            //返回成功
-            RemotingCommand response = RemotingCommandBuilder.newResponseBuilder(request).setCode(ResponseCode.SUCCESS).build();
-            return response;
-        } catch (MessageHandlerException e) {
+            boolean result = this.brokerController.getMessageManager().saveMessage(message);
+            if (result) {
+                //返回成功
+                RemotingCommand response = RemotingCommandBuilder.newResponseBuilder(request).setCode(ResponseCode.SUCCESS).build();
+                return response;
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return RemotingCommandBuilder.newResponseBuilder(request).setCode(ResponseCode.SYSTEM_ERROR).build();
