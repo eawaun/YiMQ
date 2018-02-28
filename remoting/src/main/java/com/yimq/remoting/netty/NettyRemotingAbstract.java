@@ -63,7 +63,7 @@ public abstract class NettyRemotingAbstract {
             } catch (Exception e) {
                 logger.error("processRequestCommand: Exception", e);
                 String errorMessage = "process request exception: " + e.getMessage();
-                response = RemotingCommandBuilder.newResponseBuilder(request, ResponseCode.REQUEST_CODE_NOT_SUPPORTED)
+                response = RemotingCommandBuilder.newResponseBuilder(request, ResponseCode.SYSTEM_ERROR)
                     .setRemark(errorMessage).build();
                 ctx.writeAndFlush(response);
             }

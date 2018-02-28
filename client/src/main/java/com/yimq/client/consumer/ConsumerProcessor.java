@@ -3,7 +3,9 @@ package com.yimq.client.consumer;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.common.message.Message;
 import com.yimq.common.message.MessageProto;
+import com.yimq.common.protocol.ResponseCode;
 import com.yimq.remoting.netty.NettyRequestProcessor;
+import com.yimq.remoting.protocol.RemotingCommandBuilder;
 import com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand;
 import com.yimq.common.protocol.RequestCode;
 import io.netty.channel.ChannelHandlerContext;
@@ -32,12 +34,12 @@ public class ConsumerProcessor implements NettyRequestProcessor {
         ConsumeStatus consumeStatus = messageReceivedListener.consumeMessage(message);
         switch (consumeStatus) {
             case CONSUME_SUCCESS:
-                //success
-                break;
+                RemotingCommand response = RemotingCommandBuilder.newResponseBuilder(request, ResponseCode.SUCCESS).build();
+                return response;
             case RECONSUME_LATER:
             default:
-                //fail
         }
-        return null;
+        RemotingCommand response = RemotingCommandBuilder.newResponseBuilder(request, ResponseCode.SYSTEM_BUSY).build();
+        return response;
     }
 }

@@ -73,7 +73,7 @@ public class PushMessageTask implements Runnable {
                     mapper.updateStatusByStatus(messagePO.getId(), MessageStatus.FAIL, MessageStatus.ING, messagePO.getUpdateTime());
                 } else {
                     //更新发送失败的消费者列表，及下次投递时间 todo 默认10秒后
-                    String consumersStr = failConsumerAddrs.stream().collect(Collectors.joining(","));
+                    String consumersStr = failConsumerAddrs.stream().collect(Collectors.joining(",", "", ","));
                     mapper.updateFailConsumers(messagePO.getId(), MessageStatus.WAIT, MessageStatus.ING, consumersStr
                         , TimeUtil.getTimestampInt() + 10);
                 }
