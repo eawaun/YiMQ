@@ -1,6 +1,8 @@
 package com.yimq.broker.model;
 
-public class MessagePO {
+import java.io.Serializable;
+
+public class MessagePO implements Serializable {
     private Long id;
     private String topic;
     private Integer queueId;

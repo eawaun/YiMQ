@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yimq.broker.mapper.MessageMapper">
+
     <sql id="columns">
         id, topic, queue_id, create_time, update_time, delay_time, producer, consumer_list, retry_count, content, status
     </sql>
@@ -23,6 +24,10 @@
         from
         <include refid="tableName"/>
         where
+        <![CDATA[
+        delay_time <= unix_timestamp(now())
+        ]]>
+        AND
         status in
         <foreach collection="list" item="item" separator="," open="(" close=")">
             #{item}
@@ -42,16 +47,16 @@
         update
         <include refid="tableName"/>
         SET
-        status = #{toStatus}
+        status = #{toStatus}, update_time = unix_timestamp(now())
         WHERE
         id = #{id}
         AND
         status = #{fromStatus}
         AND
-        updateTime = #{updateTimeLock}
+        update_time = #{updateTimeLock}
     </update>
 
-    <update id="updateStatusByStatusList">
+    <update id="lockMessageToIng">
         update
         <include refid="tableName"/>
         SET
@@ -60,18 +65,18 @@
         id = #{id}
         AND
         status IN
-        <foreach collection="list" item="item" separator=",">
+        <foreach collection="fromStatusList" item="item" separator="," open="(" close=")">
             #{item}
         </foreach>
         AND
-        updateTime = #{updateTimeLock}
+        update_time = #{updateTimeLock}
     </update>
 
     <update id="updateFailConsumers">
         update
         <include refid="tableName"/>
         SET
-        status = #{toStatus}, consumer_list = #{failConsumers}, delay_time = #{delayTime}
+        status = #{toStatus}, consumer_list = #{failConsumers}, delay_time = #{delayTime}, update_time = unix_timestamp(now())
         WHERE
         id = #{id}
         AND

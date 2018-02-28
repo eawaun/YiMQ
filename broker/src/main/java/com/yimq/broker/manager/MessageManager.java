@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -37,7 +38,7 @@ public class MessageManager {
         logger.info("saveMessage: message save in db, topic[{}], queueId[{}]", message.getTopic(), message.getQueueId());
         //获取消息投递到的消费者列表
         List<ConsumerInfo> consumers = this.brokerController.getConsumerManager().findConsumers(message.getTopic(), message.getQueueId());
-        String consumersStr = consumers.stream().map(ConsumerInfo::getAddress).collect(Collectors.joining(","));
+        String consumersStr = consumers.stream().map(ConsumerInfo::getAddress).collect(Collectors.joining(",", "", ","));
         //存消息
         MessagePO messagePO = new MessagePO();
         messagePO.setId(IdGenerator.getInstance().generate());
@@ -52,19 +53,16 @@ public class MessageManager {
         messagePO.setContent(message.getBody());
         messagePO.setStatus(MessageStatus.NEW);
 
-        try (SqlSession session = SqlSessionFactorySingleton.getInstance().openSession()) {
+        try (SqlSession session = SqlSessionFactorySingleton.getInstance().openSession(true)) {
             MessageMapper mapper = session.getMapper(MessageMapper.class);
             int result = mapper.save(messagePO);
-            if (result > 0) {
-                return true;
-            }
-            return false;
+            return result > 0;
         }
     }
 
     public void dispatchMessage() throws InterruptedException {
         Runnable dispatchTask = () -> {
-            SqlSession session = SqlSessionFactorySingleton.getInstance().openSession();
+            SqlSession session = SqlSessionFactorySingleton.getInstance().openSession(true);
             try {
                 MessageMapper mapper = session.getMapper(MessageMapper.class);
                 List<Integer> statusList = Arrays.asList(MessageStatus.NEW, MessageStatus.WAIT);
@@ -73,16 +71,23 @@ public class MessageManager {
                     List<MessagePO> messagePOS = mapper.selectByStatusList(statusList);
 
                     //并发情况下，过滤掉更新状态到处理中但失败的消息（可能其它线程已更新过），采用乐观锁
-                    messagePOS = messagePOS.stream().filter(messageModel ->
-                        mapper.updateStatusByStatusList(messageModel.getId(), MessageStatus.ING, statusList, messageModel.getUpdateTime()) > 0)
+                    messagePOS = messagePOS.stream().filter(messagePO ->
+                        mapper.lockMessageToIng(messagePO.getId(), MessageStatus.ING, messagePO.getUpdateTime(), statusList) > 0)
                         .collect(Collectors.toList());
 
-                    for (MessagePO messageModel : messagePOS) {
-                        List<ConsumerInfo> consumers = Arrays.stream(messageModel.getConsumerList().split(","))
-                            .map(this.brokerController.getConsumerManager()::getConsumerInfoByAddress).collect(Collectors.toList());
+                    for (MessagePO messagePO : messagePOS) {
+                        if (messagePO.getConsumerList() == null || Objects.equals(messagePO.getConsumerList(), "")) {
+                            //消息投递完成，更改消息状态
+                            mapper.updateStatusByStatus(messagePO.getId(), MessageStatus.SUCCESS, MessageStatus.ING, messagePO.getUpdateTime());
+                            continue;
+                        }
+
+                        String[] strs = messagePO.getConsumerList().split(",");
+                        List<ConsumerInfo> consumers = Arrays.stream(strs)
+                            .map(this.brokerController.getConsumerManager()::getConsumerInfoByAddress).filter(Objects::nonNull).collect(Collectors.toList());
 
                         PushMessageTask task = new PushMessageTask(consumers, this.brokerController.getRemotingServer()
-                            , messageModel);
+                            , messagePO);
                         this.pushMessageExecutor.submit(task);
                     }
 

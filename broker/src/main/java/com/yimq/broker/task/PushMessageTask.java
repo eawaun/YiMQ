@@ -63,7 +63,7 @@ public class PushMessageTask implements Runnable {
             }
         }
 
-        try (SqlSession session = SqlSessionFactorySingleton.getInstance().openSession()) {
+        try (SqlSession session = SqlSessionFactorySingleton.getInstance().openSession(true)) {
             MessageMapper mapper = session.getMapper(MessageMapper.class);
             if (failConsumerAddrs.size() == 0) {
                 //消息投递完成，更改消息状态
