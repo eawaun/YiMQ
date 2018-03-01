@@ -1,4 +1,4 @@
-package com.yimq.groupunicast;
+package main.java.com.yimq.groupunicast;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.client.exception.MQClientException;

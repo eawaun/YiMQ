@@ -1,4 +1,4 @@
-package com.yimq.broadcast;
+package main.java.com.yimq.broadcast;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.client.exception.MQClientException;

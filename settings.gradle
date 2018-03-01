@@ -2,7 +2,7 @@ rootProject.name = 'YiMQ'
 include 'client'
 include 'broker'
 include 'namesrv'
-include 'test'
+include 'demo'
 include 'common'
 include 'remoting'
 
