@@ -68,7 +68,6 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
                     ChannelPipeline pipeline = ch.pipeline();
-
                     pipeline.addLast(new ProtobufVarint32FrameDecoder());
                     pipeline.addLast(new ProtobufDecoder(RemotingCommand.getDefaultInstance()));
                     pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
@@ -81,9 +80,8 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
             InetSocketAddress addr = (InetSocketAddress) channelFuture.channel().localAddress();
             this.port = addr.getPort();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            throw new RuntimeException("server bootstrap start InterruptedException", e);
         }
-
     }
 
     @Override

@@ -3,8 +3,12 @@ package com.yimq.client;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.client.common.SendResult;
 import com.yimq.client.exception.MQClientException;
+import com.yimq.client.producer.DefaultMQProducer;
 import com.yimq.client.producer.DefaultMessageQueueSelector;
 import com.yimq.client.producer.MessageQueueSelector;
+import com.yimq.common.Constant;
+import com.yimq.common.message.Message;
+import com.yimq.common.protocol.RequestCode;
 import com.yimq.common.protocol.header.GetRouteInfoRequestHeaderProto;
 import com.yimq.common.protocol.route.BrokerData;
 import com.yimq.common.protocol.route.TopicRouteData;
@@ -31,7 +35,6 @@ public class ClientInstance {
 
     private NettyClientConfig nettyClientConfig;
     private NettyRemotingClient remotingClient;
-    private ClientConfig clientConfig;
 
     private final Map<String/* topic */, TopicRouteData> topicRouteMap = new ConcurrentHashMap<>();
 
@@ -40,11 +43,10 @@ public class ClientInstance {
 
     private MessageQueueSelector queueSelector;
 
-    public ClientInstance(NettyClientConfig nettyClientConfig, ClientConfig clientConfig) {
-        this.clientConfig = clientConfig;
-        this.nettyClientConfig = nettyClientConfig;
+    public ClientInstance(List<String> namesrvAddrList) {
+        this.nettyClientConfig = new NettyClientConfig();
         this.remotingClient = new NettyRemotingClient(this.nettyClientConfig);
-        this.remotingClient.updateNamesrvAddrs(this.clientConfig.getNamesrvAddrList());
+        this.remotingClient.updateNamesrvAddrs(namesrvAddrList);
     }
 
     public TopicRouteData findTopicRouteDataFromNamesrv(String topic) throws InterruptedException, RemotingConnectException
@@ -69,7 +71,7 @@ public class ClientInstance {
                     return TopicRouteData.fromProto(TopicRouteDataProto.TopicRouteData.parseFrom(response.getBody()));
             }
         }
-        throw  new MQClientException(response.getCode(), response.getRemark());
+        throw new MQClientException(response.getCode(), response.getRemark());
     }
 
     public BrokerData chooseBroker(List<BrokerData> brokerDatas) throws RemotingConnectException, InterruptedException, InvalidProtocolBufferException, MQClientException {
@@ -82,6 +84,30 @@ public class ClientInstance {
 
     public int chooseQueueId(int queueNums, Object id) {
         return this.queueSelector.select(queueNums, id);
+    }
+
+    public SendResult send(Message msg, long sendMsgTimeoutMills) throws InterruptedException, MQClientException, InvalidProtocolBufferException, RemotingConnectException {
+        return send(msg, null, null, sendMsgTimeoutMills);
+    }
+
+    public SendResult send(Message msg, MessageQueueSelector selector, Object id, long sendMsgTimeoutMills) throws InterruptedException, MQClientException, InvalidProtocolBufferException, RemotingConnectException {
+        TopicRouteData topicRouteData = this.findTopicRouteDataFromNamesrv(msg.getTopic());
+        BrokerData brokerData = this.chooseBroker(topicRouteData.getBrokerDatas());
+
+        int queueId;
+        if (selector != null && id != null) {
+            this.setQueueSelector(selector);
+            queueId = this.chooseQueueId(topicRouteData.getTopicConfig().getQueueNums(), id);
+        } else {
+            queueId = this.chooseQueueId(topicRouteData.getTopicConfig().getQueueNums(), 0);
+        }
+        msg.setQueueId(queueId);
+
+        RemotingCommand request = RemotingCommandBuilder.newRequestBuilder(RequestCode.SEND_MESSAGE)
+            .setBody(msg.toProto().toByteString()).build();
+
+        String brokerAddr = brokerData.getBrokerAddrs().get(Constant.MASTER_ID);
+        return sendSync(brokerAddr, request, sendMsgTimeoutMills);
     }
 
     public SendResult sendSync(final String addr, final RemotingCommand request, final long timeoutMills) throws RemotingConnectException, InterruptedException {

@@ -28,7 +28,7 @@ public class MessageManager {
     private BrokerController brokerController;
 
     private ExecutorService dispatchMessageExecutor = Executors.newSingleThreadExecutor();
-    private ExecutorService pushMessageExecutor = Executors.newFixedThreadPool(4);
+    private ExecutorService pushMessageExecutor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
 
     public MessageManager(BrokerController brokerController) {
         this.brokerController = brokerController;
@@ -69,7 +69,6 @@ public class MessageManager {
                 while (true) {
                     //从db从取出待消费的消息，包含新消息、延迟消息、上次未完成的消息
                     List<MessagePO> messagePOS = mapper.selectByStatusList(statusList);
-
                     //并发情况下，过滤掉更新状态到处理中但失败的消息（可能其它线程已更新过），采用乐观锁
                     messagePOS = messagePOS.stream().filter(messagePO ->
                         mapper.lockMessageToIng(messagePO.getId(), MessageStatus.ING, messagePO.getUpdateTime(), statusList) > 0)
@@ -77,7 +76,7 @@ public class MessageManager {
 
                     for (MessagePO messagePO : messagePOS) {
                         if (messagePO.getConsumerList() == null || Objects.equals(messagePO.getConsumerList(), "")) {
-                            //消息投递完成，更改消息状态
+                            //无消费者需要投递，更改消息状态为成功
                             mapper.updateStatusByStatus(messagePO.getId(), MessageStatus.SUCCESS, MessageStatus.ING, messagePO.getUpdateTime());
                             continue;
                         }
@@ -91,7 +90,7 @@ public class MessageManager {
                         this.pushMessageExecutor.submit(task);
                     }
 
-                    Thread.sleep(4000L);//todo
+                    Thread.sleep(3000L);//todo
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

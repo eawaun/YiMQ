@@ -10,4 +10,6 @@ import com.yimq.remoting.exception.RemotingConnectException;
 public interface MQProducer extends MQAction {
 
     SendResult send(Message msg) throws RemotingConnectException, InterruptedException, InvalidProtocolBufferException, MQClientException;
+
+    SendResult send(Message msg, MessageQueueSelector selector, int id) throws RemotingConnectException, InterruptedException, InvalidProtocolBufferException, MQClientException;
 }

@@ -1,6 +1,5 @@
 package com.yimq.client.producer;
 
-import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.client.ClientConfig;
 import com.yimq.client.ClientInstance;
@@ -8,15 +7,9 @@ import com.yimq.client.common.SendResult;
 import com.yimq.client.exception.MQClientException;
 import com.yimq.common.Constant;
 import com.yimq.common.message.Message;
-import com.yimq.common.protocol.RequestCode;
-import com.yimq.common.protocol.route.BrokerData;
 import com.yimq.common.protocol.route.TopicRouteData;
 import com.yimq.remoting.exception.RemotingConnectException;
-import com.yimq.remoting.netty.NettyClientConfig;
-import com.yimq.remoting.protocol.RemotingCommandBuilder;
-import com.yimq.remoting.protocol.RemotingCommandProto.RemotingCommand;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -24,7 +17,7 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
 
     private String producerGroup;
 
-    private int sendMsgTimeoutMills = 3600000;
+    private int sendMsgTimeoutMills = 3000;
 
     private int delayTime;
 
@@ -42,7 +35,7 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
 
     @Override
     public void start() {
-        this.clientInstance = new ClientInstance(new NettyClientConfig(), this);
+        this.clientInstance = new ClientInstance(this.getNamesrvAddrList());
         this.clientInstance.start();
     }
 
@@ -52,22 +45,19 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
     }
 
     /**
-     * default sync
+     * default send msg
      */
     @Override
     public SendResult send(Message msg) throws RemotingConnectException, InterruptedException, InvalidProtocolBufferException, MQClientException {
-        TopicRouteData topicRouteData = this.clientInstance.findTopicRouteDataFromNamesrv(msg.getTopic());
-        BrokerData brokerData = this.clientInstance.chooseBroker(topicRouteData.getBrokerDatas());
-        int queueId = this.clientInstance.chooseQueueId(topicRouteData.getTopicConfig().getQueueNums(), null);
-        msg.setQueueId(queueId);
+        return this.clientInstance.send(msg, this.getSendMsgTimeoutMills());
+    }
 
-        msg.setDelayTime(getDelayTime());
-
-        RemotingCommand request = RemotingCommandBuilder.newRequestBuilder(RequestCode.SEND_MESSAGE)
-            .setBody(msg.toProto().toByteString()).build();
-
-        String brokerAddr = brokerData.getBrokerAddrs().get(Constant.MASTER_ID);
-        return this.clientInstance.sendSync(brokerAddr, request, this.sendMsgTimeoutMills);
+    /**
+     * send order msg
+     */
+    @Override
+    public SendResult send(Message msg, MessageQueueSelector selector, int id) throws RemotingConnectException, InterruptedException, InvalidProtocolBufferException, MQClientException {
+        return this.clientInstance.send(msg, selector, id, this.getSendMsgTimeoutMills());
     }
 
 

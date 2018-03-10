@@ -1,4 +1,4 @@
-package com.yimq.broadcast;
+package com.yimq.delay;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.client.consumer.ConsumeStatus;
@@ -8,8 +8,6 @@ import com.yimq.client.exception.MQClientException;
 import com.yimq.common.Constant;
 import com.yimq.common.message.Message;
 import com.yimq.remoting.exception.RemotingConnectException;
-
-import java.util.Arrays;
 
 public class Consumer {
     public static void main(String[] args) throws InterruptedException, MQClientException, InvalidProtocolBufferException, RemotingConnectException {

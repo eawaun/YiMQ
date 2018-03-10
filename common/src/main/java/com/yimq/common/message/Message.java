@@ -4,6 +4,7 @@ import com.google.protobuf.ByteString;
 import com.yimq.common.ProtobufConver;
 
 public class Message implements ProtobufConver<MessageProto.Message> {
+    private int id;
     private int queueId;
     private String producer;
     private int delayTime;
@@ -23,6 +24,14 @@ public class Message implements ProtobufConver<MessageProto.Message> {
     }
 
     public Message() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTopic() {

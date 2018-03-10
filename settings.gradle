@@ -5,4 +5,5 @@ include 'namesrv'
 include 'demo'
 include 'common'
 include 'remoting'
+include 'web'
 

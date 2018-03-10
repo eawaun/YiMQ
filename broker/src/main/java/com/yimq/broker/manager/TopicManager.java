@@ -24,6 +24,10 @@ public class TopicManager {
         String defaultGroupUnicastTopic = Constant.DEFAULT_GROUP_UNICAST_TOPIC;
         TopicConfig groupUnicastTopic = new TopicConfig(defaultGroupUnicastTopic, 3, SubscribeType.GROUP_UNICAST);
         this.addTopic(groupUnicastTopic);
+
+        String defaultOrderTopic = Constant.DEFAULT_ORDER_TOPIC;
+        TopicConfig orderTopicTopicConfig = new TopicConfig(defaultOrderTopic, 2, SubscribeType.GROUP_UNICAST);
+        this.addTopic(orderTopicTopicConfig);
     }
 
     public void addTopic(TopicConfig topicConfig) {

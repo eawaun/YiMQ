@@ -1,4 +1,4 @@
-package main.java.com.yimq.groupunicast;
+package com.yimq.order;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.yimq.client.consumer.ConsumeStatus;
@@ -9,20 +9,20 @@ import com.yimq.common.Constant;
 import com.yimq.common.message.Message;
 import com.yimq.remoting.exception.RemotingConnectException;
 
-public class ConsumerB {
+public class ConsumerGroupA {
     public static void main(String[] args) throws InterruptedException, MQClientException, InvalidProtocolBufferException, RemotingConnectException {
-        DefaultMQPushConsumer pushConsumer = new DefaultMQPushConsumer("defaultConsumerGroupB");
+        DefaultMQPushConsumer pushConsumer = new DefaultMQPushConsumer("defaultConsumerGroupA");
 
         pushConsumer.setNamesrvAddr("localhost:8888");
 
-        pushConsumer.subscribe(Constant.DEFAULT_GROUP_UNICAST_TOPIC);
+        pushConsumer.subscribe(Constant.DEFAULT_ORDER_TOPIC);
 
         pushConsumer.registerMessageListener(new MessageReceivedListener() {
             @Override
             public ConsumeStatus consumeMessage(Message message) {
                 String topic = message.getTopic();
                 String content = new String(message.getBody());
-                System.out.println(topic + "  content: " + content);
+                System.out.println("topic: " + topic + "  content: " + content);
                 return ConsumeStatus.CONSUME_SUCCESS;
             }
         });
